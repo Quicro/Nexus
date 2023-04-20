@@ -1,6 +1,7 @@
 using PadocEF;
 using PadocEF.Extentions;
 using PadocEF.Models;
+using PadocQuantum;
 using System.Globalization;
 using System.Resources;
 
@@ -92,14 +93,7 @@ namespace PatdocQuantum {
         }
 
         private void tASKSToolStripMenuItem_Click(object sender, EventArgs e) {
-            var text = string.Join(
-             "\n",
-             DatabaseManager.tasks.Select(
-                 t => $"Task ID: {t.Id}, Status: {t.Status}, IsCompleted: {t.IsCompleted}, IsCanceled: {t.IsCanceled}, IsFaulted: {t.IsFaulted}, Exception: {t.Exception?.Message}, AsyncState: {t.AsyncState}"
-             )
-         );
-
-            MessageBox.Show(text);
+            new PadocTaskForm() { MdiParent = this}.Show();
 
         }
     }

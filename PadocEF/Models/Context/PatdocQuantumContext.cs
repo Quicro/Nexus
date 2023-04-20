@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using PadocEF.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace PadocEF.Models.Context;
 
-public partial class PatdocQuantumContext : DbContext
-{
-    public PatdocQuantumContext()
-    {
+public partial class PatdocQuantumContext : DbContext {
+    public PatdocQuantumContext() {
     }
 
     public PatdocQuantumContext(DbContextOptions<PatdocQuantumContext> options)
-        : base(options)
-    {
+        : base(options) {
     }
 
     public virtual DbSet<Claim> Claim { get; set; }
@@ -33,13 +27,10 @@ public partial class PatdocQuantumContext : DbContext
     public virtual DbSet<UserRole> UserRole { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=icv-sqltest;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False");
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Claim>(entity =>
-        {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<Claim>(entity => {
             entity.ToTable("Claim", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -52,8 +43,7 @@ public partial class PatdocQuantumContext : DbContext
                 .HasConstraintName("FK_Claim_Policy");
         });
 
-        modelBuilder.Entity<Client>(entity =>
-        {
+        modelBuilder.Entity<Client>(entity => {
             entity.ToTable("Client", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -61,16 +51,14 @@ public partial class PatdocQuantumContext : DbContext
             entity.Property(e => e.Number).IsUnicode(false);
         });
 
-        modelBuilder.Entity<Permission>(entity =>
-        {
+        modelBuilder.Entity<Permission>(entity => {
             entity.ToTable("Permission", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).IsUnicode(false);
         });
 
-        modelBuilder.Entity<Policy>(entity =>
-        {
+        modelBuilder.Entity<Policy>(entity => {
             entity.ToTable("Policy", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -83,16 +71,14 @@ public partial class PatdocQuantumContext : DbContext
                 .HasConstraintName("FK_Policy_Client");
         });
 
-        modelBuilder.Entity<Role>(entity =>
-        {
+        modelBuilder.Entity<Role>(entity => {
             entity.ToTable("Role", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).IsUnicode(false);
         });
 
-        modelBuilder.Entity<RolePermission>(entity =>
-        {
+        modelBuilder.Entity<RolePermission>(entity => {
             entity.ToTable("RolePermission", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -110,8 +96,7 @@ public partial class PatdocQuantumContext : DbContext
                 .HasConstraintName("FK_RolePermission_Role");
         });
 
-        modelBuilder.Entity<User>(entity =>
-        {
+        modelBuilder.Entity<User>(entity => {
             entity.ToTable("User", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -124,8 +109,7 @@ public partial class PatdocQuantumContext : DbContext
             entity.Property(e => e.Phone).IsUnicode(false);
         });
 
-        modelBuilder.Entity<UserRole>(entity =>
-        {
+        modelBuilder.Entity<UserRole>(entity => {
             entity.ToTable("UserRole", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");

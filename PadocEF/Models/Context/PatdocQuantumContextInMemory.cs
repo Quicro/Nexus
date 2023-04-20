@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using PadocEF.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace PadocEF.Models.Context;
 

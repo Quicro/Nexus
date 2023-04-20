@@ -8,13 +8,11 @@ namespace PatdocQuantum {
 
         List<Policy>? policies;
         public CancellationTokenSource source;
-        CancellationToken token;
 
         public PoliciesForm() {
             InitializeComponent();
 
             source = new();
-            token = source.Token;
         }
 
         private void DataLoad(object sender, EventArgs e) {
@@ -23,7 +21,7 @@ namespace PatdocQuantum {
             DatabaseManager.Load(
                 Program.Context.Policy.Include(p => p.Claim).Include(p => p.Client),
                 DataLoading,
-                token
+                source
             );
         }
 
