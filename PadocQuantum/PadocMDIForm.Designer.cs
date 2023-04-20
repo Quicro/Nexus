@@ -37,15 +37,16 @@
             rolesToolStripMenuItem = new ToolStripMenuItem();
             dATABASEToolStripMenuItem = new ToolStripMenuItem();
             tASKSToolStripMenuItem = new ToolStripMenuItem();
+            txtURL = new ToolStripTextBox();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { dossiersToolStripMenuItem, adminToolStripMenuItem, dATABASEToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { dossiersToolStripMenuItem, adminToolStripMenuItem, dATABASEToolStripMenuItem, txtURL });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(1143, 24);
+            menuStrip.Size = new Size(1841, 27);
             menuStrip.TabIndex = 1;
             menuStrip.Text = "menuStrip";
             // 
@@ -53,14 +54,14 @@
             // 
             dossiersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { polissenToolStripMenuItem, schadesToolStripMenuItem });
             dossiersToolStripMenuItem.Name = "dossiersToolStripMenuItem";
-            dossiersToolStripMenuItem.Size = new Size(58, 20);
+            dossiersToolStripMenuItem.Size = new Size(58, 23);
             dossiersToolStripMenuItem.Tag = "StartMenu.Dossier.Schade;StartMenu.Dossier.Polis";
             dossiersToolStripMenuItem.Text = "$FILES$";
             // 
             // polissenToolStripMenuItem
             // 
             polissenToolStripMenuItem.Name = "polissenToolStripMenuItem";
-            polissenToolStripMenuItem.Size = new Size(180, 22);
+            polissenToolStripMenuItem.Size = new Size(134, 22);
             polissenToolStripMenuItem.Tag = "StartMenu.Dossier.Polis";
             polissenToolStripMenuItem.Text = "$POLICIES$";
             polissenToolStripMenuItem.Click += polissenToolStripMenuItem_Click;
@@ -69,45 +70,45 @@
             // 
             schadesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aOToolStripMenuItem, bRAToolStripMenuItem, bASBAGToolStripMenuItem, bAXToolStripMenuItem, oMNToolStripMenuItem });
             schadesToolStripMenuItem.Name = "schadesToolStripMenuItem";
-            schadesToolStripMenuItem.Size = new Size(180, 22);
+            schadesToolStripMenuItem.Size = new Size(134, 22);
             schadesToolStripMenuItem.Tag = "StartMenu.Dossier.Schade";
             schadesToolStripMenuItem.Text = "$CLAIMS$";
             // 
             // aOToolStripMenuItem
             // 
             aOToolStripMenuItem.Name = "aOToolStripMenuItem";
-            aOToolStripMenuItem.Size = new Size(180, 22);
+            aOToolStripMenuItem.Size = new Size(135, 22);
             aOToolStripMenuItem.Text = "1 - AO";
             // 
             // bRAToolStripMenuItem
             // 
             bRAToolStripMenuItem.Name = "bRAToolStripMenuItem";
-            bRAToolStripMenuItem.Size = new Size(180, 22);
+            bRAToolStripMenuItem.Size = new Size(135, 22);
             bRAToolStripMenuItem.Text = "3 - BRA";
             // 
             // bASBAGToolStripMenuItem
             // 
             bASBAGToolStripMenuItem.Name = "bASBAGToolStripMenuItem";
-            bASBAGToolStripMenuItem.Size = new Size(180, 22);
+            bASBAGToolStripMenuItem.Size = new Size(135, 22);
             bASBAGToolStripMenuItem.Text = "5 - BASBAG";
             // 
             // bAXToolStripMenuItem
             // 
             bAXToolStripMenuItem.Name = "bAXToolStripMenuItem";
-            bAXToolStripMenuItem.Size = new Size(180, 22);
+            bAXToolStripMenuItem.Size = new Size(135, 22);
             bAXToolStripMenuItem.Text = "6 - BAX";
             // 
             // oMNToolStripMenuItem
             // 
             oMNToolStripMenuItem.Name = "oMNToolStripMenuItem";
-            oMNToolStripMenuItem.Size = new Size(180, 22);
+            oMNToolStripMenuItem.Size = new Size(135, 22);
             oMNToolStripMenuItem.Text = "7 - OMN";
             // 
             // adminToolStripMenuItem
             // 
             adminToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { usersToolStripMenuItem, rolesToolStripMenuItem });
             adminToolStripMenuItem.Name = "adminToolStripMenuItem";
-            adminToolStripMenuItem.Size = new Size(70, 20);
+            adminToolStripMenuItem.Size = new Size(70, 23);
             adminToolStripMenuItem.Tag = "StartMenu.Admin";
             adminToolStripMenuItem.Text = "$ADMIN$";
             // 
@@ -127,7 +128,7 @@
             // 
             dATABASEToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tASKSToolStripMenuItem });
             dATABASEToolStripMenuItem.Name = "dATABASEToolStripMenuItem";
-            dATABASEToolStripMenuItem.Size = new Size(87, 20);
+            dATABASEToolStripMenuItem.Size = new Size(87, 23);
             dATABASEToolStripMenuItem.Tag = "StartMenu.Database";
             dATABASEToolStripMenuItem.Text = "$DATABASE$";
             // 
@@ -138,11 +139,19 @@
             tASKSToolStripMenuItem.Text = "$TASKS$";
             tASKSToolStripMenuItem.Click += tASKSToolStripMenuItem_Click;
             // 
+            // toolStripTextBox1
+            // 
+            txtURL.Alignment = ToolStripItemAlignment.Right;
+            txtURL.Name = "toolStripTextBox1";
+            txtURL.Size = new Size(500, 23);
+            txtURL.Text = "padoc://";
+            txtURL.KeyPress += toolStripTextBox1_KeyPress;
+            // 
             // PadocMDIForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1143, 618);
+            ClientSize = new Size(1841, 810);
             Controls.Add(menuStrip);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip;
@@ -171,5 +180,6 @@
         private ToolStripMenuItem oMNToolStripMenuItem;
         private ToolStripMenuItem dATABASEToolStripMenuItem;
         private ToolStripMenuItem tASKSToolStripMenuItem;
+        private ToolStripTextBox txtURL;
     }
 }

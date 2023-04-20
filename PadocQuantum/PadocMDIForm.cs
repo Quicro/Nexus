@@ -9,34 +9,25 @@ namespace PatdocQuantum {
     public partial class PadocMDIForm : Form {
         User loggedInUser;
 
-        public PadocMDIForm() {
+        public PadocMDIForm(string arg) {
             InitializeComponent();
-
-
             TranslateWorkItem(menuStrip.Items);
             IterateMenuItems(menuStrip.Items);
-        }
 
-        protected void updateTextOfControl(Control control) {
+            txtURL.Text = arg;
+            RequestHandler.Handle(arg);
         }
 
         internal void loginAsUser(User loggedInUser) {
             this.loggedInUser = loggedInUser;
-
             IterateMenuItems(menuStrip.Items);
-
         }
 
         private void PadocMDIForm_Load(object sender, EventArgs e) {
 #if DEBUG
-
-            PoliciesForm zz = new() {
-                MdiParent = this,
-                StartPosition = FormStartPosition.CenterParent
-            };
-
-            zz.Show();
+            loginAsUser(DatabaseManager.context.User.Find(1));
 #endif
+#if !DEBUG
 
             LoginForm loginForm = new LoginForm() {
                 MdiParent = this,
@@ -44,6 +35,8 @@ namespace PatdocQuantum {
             };
 
             loginForm.Show();
+            
+#endif
         }
 
         private void TranslateWorkItem(ToolStripItemCollection items) {
@@ -95,6 +88,12 @@ namespace PatdocQuantum {
         private void tASKSToolStripMenuItem_Click(object sender, EventArgs e) {
             new PadocTaskForm() { MdiParent = this}.Show();
 
+        }
+
+        private void toolStripTextBox1_KeyPress(object sender, KeyPressEventArgs e) {
+            if (e.KeyChar == '\r') {
+                RequestHandler.Handle(txtURL.Text);
+            }
         }
     }
 }
