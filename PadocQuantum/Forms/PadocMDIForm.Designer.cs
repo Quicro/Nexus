@@ -26,15 +26,12 @@
             menuStrip = new MenuStrip();
             dossiersToolStripMenuItem = new ToolStripMenuItem();
             polissenToolStripMenuItem = new ToolStripMenuItem();
-            schadesToolStripMenuItem = new ToolStripMenuItem();
-            aOToolStripMenuItem = new ToolStripMenuItem();
-            bRAToolStripMenuItem = new ToolStripMenuItem();
-            bASBAGToolStripMenuItem = new ToolStripMenuItem();
-            bAXToolStripMenuItem = new ToolStripMenuItem();
-            oMNToolStripMenuItem = new ToolStripMenuItem();
+            cLIENTToolStripMenuItem = new ToolStripMenuItem();
+            claimsToolStripMenuItem = new ToolStripMenuItem();
             adminToolStripMenuItem = new ToolStripMenuItem();
             usersToolStripMenuItem = new ToolStripMenuItem();
             rolesToolStripMenuItem = new ToolStripMenuItem();
+            pERMISSIONToolStripMenuItem = new ToolStripMenuItem();
             dATABASEToolStripMenuItem = new ToolStripMenuItem();
             tASKSToolStripMenuItem = new ToolStripMenuItem();
             txtURL = new ToolStripTextBox();
@@ -52,7 +49,7 @@
             // 
             // dossiersToolStripMenuItem
             // 
-            dossiersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { polissenToolStripMenuItem, schadesToolStripMenuItem });
+            dossiersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { polissenToolStripMenuItem, cLIENTToolStripMenuItem, claimsToolStripMenuItem });
             dossiersToolStripMenuItem.Name = "dossiersToolStripMenuItem";
             dossiersToolStripMenuItem.Size = new Size(58, 23);
             dossiersToolStripMenuItem.Tag = "StartMenu.Dossier.Schade;StartMenu.Dossier.Polis";
@@ -61,52 +58,28 @@
             // polissenToolStripMenuItem
             // 
             polissenToolStripMenuItem.Name = "polissenToolStripMenuItem";
-            polissenToolStripMenuItem.Size = new Size(134, 22);
+            polissenToolStripMenuItem.Size = new Size(180, 22);
             polissenToolStripMenuItem.Tag = "StartMenu.Dossier.Polis";
             polissenToolStripMenuItem.Text = "$POLICIES$";
             polissenToolStripMenuItem.Click += polissenToolStripMenuItem_Click;
             // 
-            // schadesToolStripMenuItem
+            // cLIENTToolStripMenuItem
             // 
-            schadesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aOToolStripMenuItem, bRAToolStripMenuItem, bASBAGToolStripMenuItem, bAXToolStripMenuItem, oMNToolStripMenuItem });
-            schadesToolStripMenuItem.Name = "schadesToolStripMenuItem";
-            schadesToolStripMenuItem.Size = new Size(134, 22);
-            schadesToolStripMenuItem.Tag = "StartMenu.Dossier.Schade";
-            schadesToolStripMenuItem.Text = "$CLAIMS$";
+            cLIENTToolStripMenuItem.Name = "cLIENTToolStripMenuItem";
+            cLIENTToolStripMenuItem.Size = new Size(180, 22);
+            cLIENTToolStripMenuItem.Text = "CLIENT";
+            cLIENTToolStripMenuItem.Click += cLIENTToolStripMenuItem_Click;
             // 
-            // aOToolStripMenuItem
+            // claimsToolStripMenuItem
             // 
-            aOToolStripMenuItem.Name = "aOToolStripMenuItem";
-            aOToolStripMenuItem.Size = new Size(135, 22);
-            aOToolStripMenuItem.Text = "1 - AO";
-            // 
-            // bRAToolStripMenuItem
-            // 
-            bRAToolStripMenuItem.Name = "bRAToolStripMenuItem";
-            bRAToolStripMenuItem.Size = new Size(135, 22);
-            bRAToolStripMenuItem.Text = "3 - BRA";
-            // 
-            // bASBAGToolStripMenuItem
-            // 
-            bASBAGToolStripMenuItem.Name = "bASBAGToolStripMenuItem";
-            bASBAGToolStripMenuItem.Size = new Size(135, 22);
-            bASBAGToolStripMenuItem.Text = "5 - BASBAG";
-            // 
-            // bAXToolStripMenuItem
-            // 
-            bAXToolStripMenuItem.Name = "bAXToolStripMenuItem";
-            bAXToolStripMenuItem.Size = new Size(135, 22);
-            bAXToolStripMenuItem.Text = "6 - BAX";
-            // 
-            // oMNToolStripMenuItem
-            // 
-            oMNToolStripMenuItem.Name = "oMNToolStripMenuItem";
-            oMNToolStripMenuItem.Size = new Size(135, 22);
-            oMNToolStripMenuItem.Text = "7 - OMN";
+            claimsToolStripMenuItem.Name = "claimsToolStripMenuItem";
+            claimsToolStripMenuItem.Size = new Size(180, 22);
+            claimsToolStripMenuItem.Text = "Claims";
+            claimsToolStripMenuItem.Click += claimsToolStripMenuItem_Click;
             // 
             // adminToolStripMenuItem
             // 
-            adminToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { usersToolStripMenuItem, rolesToolStripMenuItem });
+            adminToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { usersToolStripMenuItem, rolesToolStripMenuItem, pERMISSIONToolStripMenuItem });
             adminToolStripMenuItem.Name = "adminToolStripMenuItem";
             adminToolStripMenuItem.Size = new Size(70, 23);
             adminToolStripMenuItem.Tag = "StartMenu.Admin";
@@ -115,14 +88,23 @@
             // usersToolStripMenuItem
             // 
             usersToolStripMenuItem.Name = "usersToolStripMenuItem";
-            usersToolStripMenuItem.Size = new Size(120, 22);
+            usersToolStripMenuItem.Size = new Size(180, 22);
             usersToolStripMenuItem.Text = "$USERS$";
+            usersToolStripMenuItem.Click += usersToolStripMenuItem_Click;
             // 
             // rolesToolStripMenuItem
             // 
             rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
-            rolesToolStripMenuItem.Size = new Size(120, 22);
+            rolesToolStripMenuItem.Size = new Size(180, 22);
             rolesToolStripMenuItem.Text = "$ROLES$";
+            rolesToolStripMenuItem.Click += rolesToolStripMenuItem_Click;
+            // 
+            // pERMISSIONToolStripMenuItem
+            // 
+            pERMISSIONToolStripMenuItem.Name = "pERMISSIONToolStripMenuItem";
+            pERMISSIONToolStripMenuItem.Size = new Size(180, 22);
+            pERMISSIONToolStripMenuItem.Text = "PERMISSION";
+            pERMISSIONToolStripMenuItem.Click += pERMISSIONToolStripMenuItem_Click;
             // 
             // dATABASEToolStripMenuItem
             // 
@@ -139,10 +121,10 @@
             tASKSToolStripMenuItem.Text = "$TASKS$";
             tASKSToolStripMenuItem.Click += tASKSToolStripMenuItem_Click;
             // 
-            // toolStripTextBox1
+            // txtURL
             // 
             txtURL.Alignment = ToolStripItemAlignment.Right;
-            txtURL.Name = "toolStripTextBox1";
+            txtURL.Name = "txtURL";
             txtURL.Size = new Size(500, 23);
             txtURL.Text = "padoc://";
             txtURL.KeyPress += toolStripTextBox1_KeyPress;
@@ -169,17 +151,14 @@
         private MenuStrip menuStrip;
         private ToolStripMenuItem dossiersToolStripMenuItem;
         private ToolStripMenuItem polissenToolStripMenuItem;
-        private ToolStripMenuItem schadesToolStripMenuItem;
         private ToolStripMenuItem adminToolStripMenuItem;
         private ToolStripMenuItem usersToolStripMenuItem;
         private ToolStripMenuItem rolesToolStripMenuItem;
-        private ToolStripMenuItem aOToolStripMenuItem;
-        private ToolStripMenuItem bRAToolStripMenuItem;
-        private ToolStripMenuItem bASBAGToolStripMenuItem;
-        private ToolStripMenuItem bAXToolStripMenuItem;
-        private ToolStripMenuItem oMNToolStripMenuItem;
         private ToolStripMenuItem dATABASEToolStripMenuItem;
         private ToolStripMenuItem tASKSToolStripMenuItem;
         private ToolStripTextBox txtURL;
+        private ToolStripMenuItem pERMISSIONToolStripMenuItem;
+        private ToolStripMenuItem cLIENTToolStripMenuItem;
+        private ToolStripMenuItem claimsToolStripMenuItem;
     }
 }

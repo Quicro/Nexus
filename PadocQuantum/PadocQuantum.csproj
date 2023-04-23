@@ -9,14 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Classes.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Classes.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +19,24 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PadocEF\PadocEF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Forms\PadocForms\ClaimForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\PadocForms\ClientForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\PadocForms\UserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\PadocForms\PermissionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\PadocForms\PolicyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

@@ -6,15 +6,15 @@ namespace PadocQuantum {
             if (input is null)
                 return;
 
-            input =  input.ToLower().Trim();
+            input = input.ToLower().Trim();
             foreach (string protocol in Program.protocols) {
                 input = input.Replace(protocol.ToLower() + "://", "");
                 input = input.Replace("\\", "/");
             }
             string[] dataPoints = input.Split("/");
 
-            if (dataPoints.Length == 2 && 
-                    (   dataPoints[0] == "policies" ||
+            if (dataPoints.Length == 2 &&
+                    (dataPoints[0] == "policies" ||
                         dataPoints[0] == "policy"
                     )
                 ) {
@@ -39,6 +39,5 @@ namespace PadocQuantum {
                 MessageBox.Show($"Open gebruiker met ID: {dataPoints[1]}");
             }
         }
-    
     }
 }

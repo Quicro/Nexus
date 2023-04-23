@@ -31,13 +31,15 @@
             // 
             // theGrid
             // 
+            theGrid.AllowUserToAddRows = false;
+            theGrid.AllowUserToDeleteRows = false;
             theGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            theGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             theGrid.Location = new Point(15, 17);
             theGrid.Name = "theGrid";
             theGrid.RowTemplate.Height = 25;
             theGrid.Size = new Size(499, 366);
             theGrid.TabIndex = 0;
+            theGrid.CellClick += theGrid_CellContentClick;
             // 
             // lblStatus
             // 

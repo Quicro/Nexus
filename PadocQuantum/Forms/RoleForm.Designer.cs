@@ -1,5 +1,5 @@
-﻿namespace PatdocQuantum {
-    partial class PoliciesForm {
+﻿namespace PadocQuantum.Forms {
+    partial class RoleForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -23,29 +23,40 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            padocGrid1 = new PadocQuantum.Controls.PadocGrid();
+            textBox1 = new TextBox();
+            padocGrid = new Controls.PadocGrid();
             SuspendLayout();
             // 
-            // padocGrid1
+            // textBox1
             // 
-            padocGrid1.Location = new Point(12, 12);
-            padocGrid1.Name = "padocGrid1";
-            padocGrid1.Size = new Size(548, 426);
-            padocGrid1.TabIndex = 8;
+            textBox1.Location = new Point(612, 12);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(100, 23);
+            textBox1.TabIndex = 0;
             // 
-            // PoliciesForm
+            // padocGrid
+            // 
+            padocGrid.Location = new Point(12, 12);
+            padocGrid.Name = "padocGrid";
+            padocGrid.Size = new Size(531, 403);
+            padocGrid.TabIndex = 1;
+            // 
+            // RoleForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(567, 447);
-            Controls.Add(padocGrid1);
-            Name = "PoliciesForm";
-            Text = "PoliciesForm";
-            Load += DataLoad;
+            ClientSize = new Size(800, 450);
+            Controls.Add(padocGrid);
+            Controls.Add(textBox1);
+            Name = "RoleForm";
+            Text = "RoleForm";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
-        private PadocQuantum.Controls.PadocGrid padocGrid1;
+
+        public TextBox textBox1;
+        public Controls.PadocGrid padocGrid;
     }
 }

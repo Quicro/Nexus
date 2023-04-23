@@ -1,5 +1,4 @@
 ﻿using PadocEF;
-using static PadocEF.DatabaseManager;
 
 namespace PadocQuantum {
     public partial class PadocTaskForm : Form {

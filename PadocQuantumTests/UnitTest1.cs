@@ -8,13 +8,13 @@ namespace MyProject.Tests {
 
         [TestInitialize]
         public void CleanInMemoryDatabase() {
-            var options = new DbContextOptionsBuilder<PatdocQuantumContextInMemory>()
+            var options = new DbContextOptionsBuilder<PadocQuantumContextInMemory>()
                 .Options;
 
-            using (var context = new PatdocQuantumContextInMemory()) {
+            using (var context = new PadocQuantumContextInMemory()) {
                 if (context.GetType().Name.Contains("InMemory")) {
                     var dbSetProperties = context.GetType().GetProperties()
-                        .Where(p => 
+                        .Where(p =>
                             p.PropertyType.IsGenericType &&
                             p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>)
                         );
@@ -32,7 +32,7 @@ namespace MyProject.Tests {
         [TestMethod]
         [TestCategory("Policy")]
         public void MyTest1() {
-            using (var context = new PatdocQuantumContextInMemory()) {
+            using (var context = new PadocQuantumContextInMemory()) {
                 var count = context.Policy.Count();
                 Assert.AreEqual(0, count);
             }
@@ -43,7 +43,7 @@ namespace MyProject.Tests {
         [TestCategory("Policy")]
         public void MyTest2() {
 
-            using (var context = new PatdocQuantumContextInMemory()) {
+            using (var context = new PadocQuantumContextInMemory()) {
 
 
                 context.Policy.Add(new PadocEF.Models.Policy());
@@ -57,7 +57,7 @@ namespace MyProject.Tests {
         [TestMethod]
         [TestCategory("Policy")]
         public void MyTest3() {
-            using (var context = new PatdocQuantumContextInMemory()) {
+            using (var context = new PadocQuantumContextInMemory()) {
                 var count = context.Policy.Count();
                 Assert.AreEqual(0, count);
             }

@@ -29,7 +29,7 @@ namespace PatdocQuantum {
             username = txtUsername.Text;
             password = txtPassword.Text;
 
-            User? loggedInUser = UserExtentions.validate(username, password);
+            User? loggedInUser = UserExtention.validate(username, password);
             if (loggedInUser is null) {
                 MessageBox.Show("Combination does not exist", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } else {

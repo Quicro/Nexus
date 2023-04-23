@@ -1,16 +1,21 @@
 using Microsoft.Win32;
 using PadocEF.Models.Context;
+using PadocQuantum;
+using PadocQuantum.FormControllers;
 using System.Globalization;
+using System.Reflection;
 
 namespace PatdocQuantum {
     internal static class Program {
 
         public static string[] protocols = new string[] { "Padoc", "Patdoc", "pa" };
-        public static PatdocQuantumContext Context = new PatdocQuantumContext();
+        public static PadocQuantumContext context = new PadocQuantumContext();
 
         [STAThread]
         static void Main(params string[] args) {
             CreateProtols();
+
+
 
             Thread.CurrentThread.CurrentCulture = new CultureInfo("nl");
 
@@ -19,7 +24,7 @@ namespace PatdocQuantum {
         }
 
         private static void CreateProtols() {
-            var applicationPath = @"C:\Users\q.croes\source\repos\PadocQuantum\PadocQuantum\bin\Debug\net7.0-windows\PadocQuantum.exe";
+            var applicationPath = @"C:\Users\q.croes\source\repos\PadocQuantum\PadocQuantum\bin\Release\net7.0-windows\PadocQuantum.exe";
             var iconPath = @"P:\logoPadoc/logoPadoc-removebg-preview.ico";
             var KeyTest = Registry.CurrentUser.OpenSubKey("Software", true).OpenSubKey("Classes", true);
 

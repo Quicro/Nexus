@@ -2,11 +2,11 @@
 
 namespace PadocEF.Models.Context;
 
-public partial class PatdocQuantumContext : DbContext {
-    public PatdocQuantumContext() {
+public partial class PadocQuantumContext : DbContext {
+    public PadocQuantumContext() {
     }
 
-    public PatdocQuantumContext(DbContextOptions<PatdocQuantumContext> options)
+    public PadocQuantumContext(DbContextOptions<PadocQuantumContext> options)
         : base(options) {
     }
 
