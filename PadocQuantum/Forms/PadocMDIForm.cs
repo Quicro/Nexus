@@ -137,5 +137,9 @@ namespace PatdocQuantum {
                 DatabaseManager.context.Permission
             ).loadGrid();
         }
+
+        private void stelEenVraagToolStripMenuItem_Click(object sender, EventArgs e) {
+            new PadocAI.AIForm().Show();
+        }
     }
 }

@@ -35,12 +35,14 @@
             dATABASEToolStripMenuItem = new ToolStripMenuItem();
             tASKSToolStripMenuItem = new ToolStripMenuItem();
             txtURL = new ToolStripTextBox();
+            aIToolStripMenuItem = new ToolStripMenuItem();
+            stelEenVraagToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { dossiersToolStripMenuItem, adminToolStripMenuItem, dATABASEToolStripMenuItem, txtURL });
+            menuStrip.Items.AddRange(new ToolStripItem[] { dossiersToolStripMenuItem, adminToolStripMenuItem, dATABASEToolStripMenuItem, txtURL, aIToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1841, 27);
@@ -58,7 +60,7 @@
             // polissenToolStripMenuItem
             // 
             polissenToolStripMenuItem.Name = "polissenToolStripMenuItem";
-            polissenToolStripMenuItem.Size = new Size(180, 22);
+            polissenToolStripMenuItem.Size = new Size(134, 22);
             polissenToolStripMenuItem.Tag = "StartMenu.Dossier.Polis";
             polissenToolStripMenuItem.Text = "$POLICIES$";
             polissenToolStripMenuItem.Click += polissenToolStripMenuItem_Click;
@@ -66,14 +68,14 @@
             // cLIENTToolStripMenuItem
             // 
             cLIENTToolStripMenuItem.Name = "cLIENTToolStripMenuItem";
-            cLIENTToolStripMenuItem.Size = new Size(180, 22);
+            cLIENTToolStripMenuItem.Size = new Size(134, 22);
             cLIENTToolStripMenuItem.Text = "CLIENT";
             cLIENTToolStripMenuItem.Click += cLIENTToolStripMenuItem_Click;
             // 
             // claimsToolStripMenuItem
             // 
             claimsToolStripMenuItem.Name = "claimsToolStripMenuItem";
-            claimsToolStripMenuItem.Size = new Size(180, 22);
+            claimsToolStripMenuItem.Size = new Size(134, 22);
             claimsToolStripMenuItem.Text = "Claims";
             claimsToolStripMenuItem.Click += claimsToolStripMenuItem_Click;
             // 
@@ -88,21 +90,21 @@
             // usersToolStripMenuItem
             // 
             usersToolStripMenuItem.Name = "usersToolStripMenuItem";
-            usersToolStripMenuItem.Size = new Size(180, 22);
+            usersToolStripMenuItem.Size = new Size(141, 22);
             usersToolStripMenuItem.Text = "$USERS$";
             usersToolStripMenuItem.Click += usersToolStripMenuItem_Click;
             // 
             // rolesToolStripMenuItem
             // 
             rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
-            rolesToolStripMenuItem.Size = new Size(180, 22);
+            rolesToolStripMenuItem.Size = new Size(141, 22);
             rolesToolStripMenuItem.Text = "$ROLES$";
             rolesToolStripMenuItem.Click += rolesToolStripMenuItem_Click;
             // 
             // pERMISSIONToolStripMenuItem
             // 
             pERMISSIONToolStripMenuItem.Name = "pERMISSIONToolStripMenuItem";
-            pERMISSIONToolStripMenuItem.Size = new Size(180, 22);
+            pERMISSIONToolStripMenuItem.Size = new Size(141, 22);
             pERMISSIONToolStripMenuItem.Text = "PERMISSION";
             pERMISSIONToolStripMenuItem.Click += pERMISSIONToolStripMenuItem_Click;
             // 
@@ -110,14 +112,14 @@
             // 
             dATABASEToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tASKSToolStripMenuItem });
             dATABASEToolStripMenuItem.Name = "dATABASEToolStripMenuItem";
-            dATABASEToolStripMenuItem.Size = new Size(87, 23);
+            dATABASEToolStripMenuItem.Size = new Size(86, 23);
             dATABASEToolStripMenuItem.Tag = "StartMenu.Database";
             dATABASEToolStripMenuItem.Text = "$DATABASE$";
             // 
             // tASKSToolStripMenuItem
             // 
             tASKSToolStripMenuItem.Name = "tASKSToolStripMenuItem";
-            tASKSToolStripMenuItem.Size = new Size(119, 22);
+            tASKSToolStripMenuItem.Size = new Size(118, 22);
             tASKSToolStripMenuItem.Text = "$TASKS$";
             tASKSToolStripMenuItem.Click += tASKSToolStripMenuItem_Click;
             // 
@@ -128,6 +130,20 @@
             txtURL.Size = new Size(500, 23);
             txtURL.Text = "padoc://";
             txtURL.KeyPress += toolStripTextBox1_KeyPress;
+            // 
+            // aIToolStripMenuItem
+            // 
+            aIToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { stelEenVraagToolStripMenuItem });
+            aIToolStripMenuItem.Name = "aIToolStripMenuItem";
+            aIToolStripMenuItem.Size = new Size(30, 23);
+            aIToolStripMenuItem.Text = "AI";
+            // 
+            // stelEenVraagToolStripMenuItem
+            // 
+            stelEenVraagToolStripMenuItem.Name = "stelEenVraagToolStripMenuItem";
+            stelEenVraagToolStripMenuItem.Size = new Size(180, 22);
+            stelEenVraagToolStripMenuItem.Text = "Stel een vraag";
+            stelEenVraagToolStripMenuItem.Click += stelEenVraagToolStripMenuItem_Click;
             // 
             // PadocMDIForm
             // 
@@ -160,5 +176,7 @@
         private ToolStripMenuItem pERMISSIONToolStripMenuItem;
         private ToolStripMenuItem cLIENTToolStripMenuItem;
         private ToolStripMenuItem claimsToolStripMenuItem;
+        private ToolStripMenuItem aIToolStripMenuItem;
+        private ToolStripMenuItem stelEenVraagToolStripMenuItem;
     }
 }

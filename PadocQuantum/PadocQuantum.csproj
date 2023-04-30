@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PadocAI\PadocAI.csproj" />
     <ProjectReference Include="..\PadocEF\PadocEF.csproj" />
     <ProjectReference Include="..\PadocLogging\PadocLogging.csproj" />
   </ItemGroup>

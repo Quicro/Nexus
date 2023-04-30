@@ -54,8 +54,10 @@ namespace PadocQuantum {
             }
 
             PadocTask task = (PadocTask)cell.Tag;
-            task.source.Cancel();
-            task.isCanceled = true;
+            if (task is not null) {
+                task.source.Cancel();
+                task.isCanceled = true;
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e) {
