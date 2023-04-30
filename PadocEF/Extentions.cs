@@ -2,11 +2,11 @@
 using PadocEF.Models;
 
 namespace PadocEF.Extentions {
-    public class Extentions<T> where T : class {
+    public class Extentions<T> where T : class, IPadocEntity {
         protected Extentions<T> extentions = new();
 
-        public T get(int ID) => DatabaseManager.context.Set<T>().Single(obj => (int)typeof(T).GetProperty("Id").GetValue(obj) == ID);
-        public List<T> get(string name) => DatabaseManager.context.Set<T>().Where(obj => (string)typeof(T).GetProperty("Name").GetValue(obj) == name).ToList();
+        public static IQueryable<T> getQueryable(int ID) => DatabaseManager.context.Set<T>().Where(x => x.Id == ID);
+        public static T get(int ID) => DatabaseManager.context.Set<T>().Single(x => x.Id == ID);
     }
 
     public sealed class ClaimExtention : Extentions<Claim> {

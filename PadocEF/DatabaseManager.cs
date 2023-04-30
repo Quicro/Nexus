@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PadocEF.Models;
 using PadocEF.Models.Context;
+using PadocQuantum.Logging;
 
 namespace PadocEF {
 #if DEBUG
@@ -55,7 +56,7 @@ namespace PadocEF {
                     task.Wait();
                     list = task.Result;
                 } catch (AggregateException aggexp) {
-
+                    Logger.DatabaseManagerError(aggexp.Message);
                 }
             }, source.Token);
 

@@ -1,8 +1,9 @@
 ﻿using PadocQuantum.Controls;
+using PadocQuantum.Logging;
 using PatdocQuantum;
 
 namespace PadocQuantum.FormControllers {
-    internal partial class PadocFormController<T, F> where F : Form, new() {
+    internal partial class PadocFormController<T, F> : PadocFormControllerBase where F : Form, new() {
         public F form;
         public PadocGrid padocGrid;
         public IQueryable<T> query;
@@ -10,14 +11,25 @@ namespace PadocQuantum.FormControllers {
         Type derivedType;
 
         public PadocFormController(Type derivedType) {
+            list.Add(this);
+            ID = list.Count;
+
+            this.derivedType = derivedType;
+            Logger.FormControllerStarted(derivedType, ID);
+
             form = new F() {
                 MdiParent = PadocMDIForm.mdiForm,
                 StartPosition = FormStartPosition.CenterParent
             };
+            form.FormClosed += Form_FormClosed;
 
             derivedType = derivedType;
             columns = new();
             padocGrid = (PadocGrid)typeof(F).GetField("padocGrid").GetValue(form);
+        }
+
+        private void Form_FormClosed(object? sender, FormClosedEventArgs e) {
+            Logger.FormControllerClosed(derivedType, ID);
         }
 
         public PadocFormController<T, F> addColumn(PadocColumn<T, F> column) {
@@ -130,5 +142,10 @@ namespace PadocQuantum.FormControllers {
                 }
             });
         }
+    }
+
+    internal class PadocFormControllerBase {
+        public static List<PadocFormControllerBase> list = new();
+        public int ID;
     }
 }
