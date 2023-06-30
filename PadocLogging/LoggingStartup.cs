@@ -1,19 +1,19 @@
 ﻿namespace PadocQuantum.Logging {
     public class LoggingStartup {
         static void Main(string[] args) {
-            Logger.LogDebug("hi");
-            Logger.LogInfo("hi");
-            Logger.LogError("hi");
+            LoggerBla.LogDebug("hi");
+            LoggerBla.LogInfo("hi");
+            LoggerBla.LogError("hi");
 
-            Logger.ApplicationStarted();
-            Logger.ApplicationEnded();
-            Logger.ApplicationCrashed();
+            LoggerBla.ApplicationStarted();
+            LoggerBla.ApplicationEnded();
+            LoggerBla.ApplicationCrashed();
         }
 
         
     }
 
-    public static class Logger {
+    public static class LoggerBla {
         public static void ApplicationStarted() => LogInfo(1, "Application started");
         public static void ApplicationEnded() => LogDebug(2, "Application ended");
         public static void ApplicationCrashed() => LogError(-3, "Application crashed");
@@ -25,6 +25,7 @@
         public static void FormControllerStartedBy(Type startFormController, int startID, Type endFormController, int endID) => LogInfo(9, $"{startFormController.Name} with ID: {startID} started {endFormController.Name} with ID: {endID}");
         public static void FormControllerClosed(Type formController ,int ID) => LogInfo(10, $"{formController.Name} closed with ID: {ID}");
         public static void DatabaseManagerError(string msg) => LogError(-11, $"Loading data caused an error: \n{msg}");
+        public static void OpenForbiddenTypeError(string typeName) => LogError(-12, $"User tried to open the type {typeName} in typeViewer");
         public static void TEMPLATE() => LogInfo(0, $"");
 
         const ConsoleColor debug = ConsoleColor.Green;

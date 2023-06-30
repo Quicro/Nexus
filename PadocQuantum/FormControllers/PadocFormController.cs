@@ -15,7 +15,7 @@ namespace PadocQuantum.FormControllers {
             ID = list.Count;
 
             this.derivedType = derivedType;
-            Logger.FormControllerStarted(derivedType, ID);
+            LoggerBla.FormControllerStarted(derivedType, ID);
 
             form = new F() {
                 MdiParent = PadocMDIForm.mdiForm,
@@ -29,7 +29,7 @@ namespace PadocQuantum.FormControllers {
         }
 
         private void Form_FormClosed(object? sender, FormClosedEventArgs e) {
-            Logger.FormControllerClosed(derivedType, ID);
+            LoggerBla.FormControllerClosed(derivedType, ID);
         }
 
         public PadocFormController<T, F> addColumn(PadocColumn<T, F> column) {

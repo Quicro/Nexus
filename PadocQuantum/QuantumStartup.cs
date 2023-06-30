@@ -11,7 +11,7 @@ namespace PatdocQuantum {
 
         [STAThread]
         static void Main(params string[] args) {
-            Logger.ApplicationStarted();
+            LoggerBla.ApplicationStarted();
 
             try {
                 CreateProtols();
@@ -21,11 +21,11 @@ namespace PatdocQuantum {
                 ApplicationConfiguration.Initialize();
                 Application.Run(new PadocMDIForm(args.Length != 0 ? args[0] : null));
             } catch (Exception) {
-                Logger.ApplicationCrashed();
+                LoggerBla.ApplicationCrashed();
                 throw;
             }
 
-            Logger.ApplicationEnded();
+            LoggerBla.ApplicationEnded();
         }
 
         private static void CreateProtols() {
@@ -40,7 +40,7 @@ namespace PatdocQuantum {
                 key.CreateSubKey(@"shell\open\command").SetValue("", "\"" + applicationPath + "\" %1 externalSource");
             }
 
-            Logger.ApplicationProtocolCreated();
+            LoggerBla.ApplicationProtocolCreated();
         }
     }
 }

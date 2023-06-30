@@ -6,19 +6,17 @@ using PadocQuantum.Logging;
 namespace PadocEF {
 #if DEBUG
     public class DatabaseManager : GenericDatabaseManager<PadocQuantumContextInMemory> {
-        static GenericDatabaseManager<PadocQuantumContextInMemory> databaseManager;
-#endif
-#if !DEBUG
-        public class DatabaseManager : GenericDatabaseManager<PadocQuantumContext> {
         static GenericDatabaseManager<PadocQuantumContext> databaseManager;
 #endif
-
-
+#if !DEBUG
+    public class DatabaseManager : GenericDatabaseManager<PadocQuantumContext> {
+        static GenericDatabaseManager<PadocQuantumContext> databaseManager;
+#endif
     }
 
     public class GenericDatabaseManager<T> where T : PadocQuantumContext, new() {
 #if DEBUG
-        public static PadocQuantumContextInMemory context = new();
+        public static PadocQuantumContext context = new();
 #endif
 #if !DEBUG
         public static PadocQuantumContext context = new();
@@ -56,7 +54,7 @@ namespace PadocEF {
                     task.Wait();
                     list = task.Result;
                 } catch (AggregateException aggexp) {
-                    Logger.DatabaseManagerError(aggexp.Message);
+                    LoggerBla.DatabaseManagerError(aggexp.Message);
                 }
             }, source.Token);
 

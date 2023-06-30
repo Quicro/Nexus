@@ -5,9 +5,9 @@ using PatdocQuantum;
 namespace PadocQuantum {
     internal static class RequestHandler {
         public static void Handle(string input) {
-            Logger.RequestHandlerStarted(input);
+            LoggerBla.RequestHandlerStarted(input);
             if (input is null) {
-                Logger.RequestHandlerEnded();
+                LoggerBla.RequestHandlerEnded();
                 return;
             }
 
@@ -22,43 +22,43 @@ namespace PadocQuantum {
             int.TryParse(dataPoints[1].ToLower(), out id);
 
             if (dataPoints.Length == 2 && (dataPoints[0] == "policies" || dataPoints[0] == "policy")) {
-                Logger.RequestHandlerHit();
+                LoggerBla.RequestHandlerHit();
                 new FormControllers.PolicyFormController(
                     PadocEF.Extentions.PolicyExtention.getQueryable(id)
                 ).loadGrid();
             }
             if (dataPoints.Length == 2 && (dataPoints[0] == "claims" || dataPoints[0] == "claim")) {
-                Logger.RequestHandlerHit();
+                LoggerBla.RequestHandlerHit();
                 new FormControllers.ClaimFormController(
                     PadocEF.Extentions.ClaimExtention.getQueryable(id)
                 ).loadGrid();
             }
             if (dataPoints.Length == 2 && (dataPoints[0] == "clients" || dataPoints[0] == "client")) {
-                Logger.RequestHandlerHit();
+                LoggerBla.RequestHandlerHit();
                 new FormControllers.ClientFormController(
                     PadocEF.Extentions.ClientExtention.getQueryable(id)
                 ).loadGrid();
             }
             if (dataPoints.Length == 2 && (dataPoints[0] == "users" || dataPoints[0] == "user")) {
-                Logger.RequestHandlerHit();
+                LoggerBla.RequestHandlerHit();
                 new FormControllers.UserFormController(
                     PadocEF.Extentions.UserExtention.getQueryable(id)
                 ).loadGrid();
             }
             if (dataPoints.Length == 2 && (dataPoints[0] == "roles" || dataPoints[0] == "role")) {
-                Logger.RequestHandlerHit();
+                LoggerBla.RequestHandlerHit();
                 new FormControllers.RoleFormController(
                     PadocEF.Extentions.RoleExtention.getQueryable(id)
                 ).loadGrid();
             }
             if (dataPoints.Length == 2 && (dataPoints[0] == "permissions" || dataPoints[0] == "permission")) {
-                Logger.RequestHandlerHit();
+                LoggerBla.RequestHandlerHit();
                 new FormControllers.PermissionFormController(
                     PadocEF.Extentions.PermissionExtention.getQueryable(id)
                 ).loadGrid();
             }
 
-            Logger.RequestHandlerEnded();
+            LoggerBla.RequestHandlerEnded();
         }
     }
 }
