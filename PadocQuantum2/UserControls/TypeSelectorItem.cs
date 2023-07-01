@@ -30,7 +30,6 @@ namespace PadocQuantum2.BigControls
             IPacketReceiver viewerController = (IPacketReceiver)Activator.CreateInstance(typeof(ViewerController));
             Packet packet = new PacketType(type);
 
-            Logger.debug(packet.query.GetType().Name);
 
             sender.send(viewerController, packet);
         }

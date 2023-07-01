@@ -52,7 +52,7 @@ namespace PadocQuantum2 {
         public IPacketSender sender;
         public IQueryable query;
         public IQueryable<IPadocEntity> genericQuery() {
-            var aa = (IQueryable<IPadocEntity>)Helper.callGenerixMethod(query, "Cast", new Type[] { packetType });
+            var aa = (IQueryable<IPadocEntity>)Helper.callGenericMethod(query, "Cast", new Type[] { packetType });
             return aa;
         }
         public Type packetType;

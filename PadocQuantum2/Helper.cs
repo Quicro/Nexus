@@ -13,16 +13,27 @@ namespace PadocQuantum2 {
             return obj is IList;
         }
 
+        public static bool isCollection(Type obj) {
+            return obj.Name.ToString().StartsWith("ICollection");
+        }
+
         public static object callMethod(object obj, string methodName) {
             object? v = obj.GetType().GetMethod(methodName).Invoke(obj, null);
             Type type = v.GetType();
             return v;
         }
 
-        public static object callGenerixMethod(object obj, string methodName, Type[] types) {
+        public static object callGenericMethod(object obj, string methodName, Type[] types, params object[] parameters) {
             MethodInfo v = obj.GetType().GetMethod(methodName);
             v.MakeGenericMethod(types);
-            var aa = v.Invoke(obj, null);
+            var aa = v.Invoke(obj, parameters);
+            Type type = aa.GetType();
+            return v;
+        }
+        public static object callStaticGenericMethod(Type callType, string methodName, Type[] types, params object[] parameters) {
+            MethodInfo v = callType.GetMethod(methodName);
+            v.MakeGenericMethod(types);
+            var aa = v.Invoke(null, parameters);
             Type type = aa.GetType();
             return v;
         }
@@ -37,6 +48,7 @@ namespace PadocQuantum2 {
             var query = methodInfo.Invoke(DatabaseManager.context, null) as IQueryable<IPadocEntity>;
             return query;
         }
+
         /// <summary> typeof(T).IsAssignableFrom(obj.GetType()); </summary>
         public static bool isSubOf<T>(object obj) {
             bool returnValue = typeof(T).IsAssignableFrom(obj.GetType());
@@ -49,10 +61,21 @@ namespace PadocQuantum2 {
             return returnValue;
         }
 
-        /// <summary> typeof(Entity).IsAssignableFrom(obj); </summary>
+        /// <summary>
+        /// Checks if the specified type is a subtype of IPadocEntity or represents a nullable ID (int or string).
+        /// </summary>
+        /// <param name="obj">The type to check.</param>
+        /// <returns>
+        /// <c>true</c> if the type is a subtype of IPadocEntity or represents a nullable ID (int or string);
+        /// otherwise, <c>false</c>.
+        /// </returns>
         public static bool isSubTypeOfEntity(Type obj) {
-            bool returnValue = typeof(IPadocEntity).IsAssignableFrom(obj);
-            return returnValue;
+            bool assignableFromIPadocEntity = typeof(IPadocEntity).IsAssignableFrom(obj);
+            bool isNullable = obj.IsGenericType &&
+                                obj.GetGenericTypeDefinition() == typeof(Nullable<>);
+            bool isGenericStringOrInt = isNullable && new[] { typeof(string), typeof(int) }.Contains(obj.GetGenericArguments()[0]);
+
+            return assignableFromIPadocEntity || isGenericStringOrInt;
         }
 
         /// <summary> if (isList(obj)) obj.GetType().GetGenericArguments()[0]; </summary>

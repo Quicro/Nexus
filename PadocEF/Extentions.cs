@@ -5,18 +5,61 @@ using System.Reflection;
 
 namespace PadocEF.Extentions {
 
+    /// <summary>
+    /// The Extentions class provides a set of static methods for querying entities in the database.
+    /// These methods are used to retrieve related entities based on the type of the entity and the method name.
+    /// </summary>
     public class Extentions {
-        public static IQueryable<IPadocEntity> getQueryable2(IPadocEntity entity, Type referenceType, string methodName = null) {
+        static IQueryable<IPadocEntity> ConstructAndInvokeGenericQueryable(IPadocEntity entity, Type referenceType, string methodName = null) {
             Type entityType = entity.GetType();
 
             // Construct the generic getQueryable<T, R> method based on the entity and reference types
-            MethodInfo genericMethod = typeof(Extentions).GetMethod("getQueryable")
+            MethodInfo genericMethod = typeof(Extentions).GetMethod(nameof(getQueryable))
                 .MakeGenericMethod(entityType, referenceType);
 
             // Invoke the constructed generic method with the entity and methodName parameters
             IQueryable<IPadocEntity> result = (IQueryable<IPadocEntity>)genericMethod.Invoke(null, new object[] { entity, methodName });
 
             return result;
+        }
+
+
+        static IQueryable<IPadocEntity> ConstructAndInvokeRelatedGenericQueryable(IPadocEntity entity, Type referenceType, string methodName = null) {
+            Type entityType = entity.GetType();
+
+            // Construct the generic getQueryable<T, R> method based on the entity and reference types
+            MethodInfo genericMethod = typeof(Extentions).GetMethod(nameof(getRelatedQueryable))
+                .MakeGenericMethod(entityType, referenceType);
+
+            // Invoke the constructed generic method with the entity and methodName parameters
+            IQueryable<IPadocEntity> result = (IQueryable<IPadocEntity>)genericMethod.Invoke(null, new object[] { entity, methodName });
+
+            return result;
+        }
+
+        public static IQueryable<R> getQueryableByID<R, T>(IPadocEntity entity, int ID)
+
+            where R : class, IPadocEntity
+            where T : class, IPadocEntity {
+
+            var set = DatabaseManager.context.Set<T>();
+            IQueryable<R> a = ConstructAndInvokeGenericQueryable(entity, typeof(R)).Where(e => e.Id == ID).Cast<R>();
+            return a;
+
+        }
+
+
+        public static IQueryable<T> getRelatedQueryableByID<R, T>(IPadocEntity entity)
+
+            where R : class, IPadocEntity
+            where T : class, IPadocEntity {
+
+            var set = DatabaseManager.context.Set<T>();
+            IQueryable<T> a = ConstructAndInvokeRelatedGenericQueryable(entity, typeof(T)).Cast<T>();
+            var __sql = a.ToQueryString();
+            return a;
+
+
         }
 
         public static IQueryable<R> getQueryable<T, R>(T entity, string methodName = null)
@@ -54,21 +97,63 @@ namespace PadocEF.Extentions {
 
             return null;
         }
+
+        public static IQueryable<R> getRelatedQueryable<T, R>(T entity, string methodName = null)
+            where T : class, IPadocEntity
+            where R : class, IPadocEntity {
+            Type entityType = typeof(T);
+            Type extensionType = Assembly.GetExecutingAssembly().GetTypes()
+                .FirstOrDefault(t => t.IsSubclassOf(typeof(Extentions<>).MakeGenericType(entityType)));
+
+            if (extensionType == null) {
+                throw new InvalidOperationException($"No extension class found for type '{entityType.Name}'.");
+            }
+
+            // Find the method in the extension class
+            MethodInfo method = null;
+            var methods = extensionType.GetMethods();
+
+            if (methodName.IsNullOrEmpty()) {
+                method = methods
+                    .FirstOrDefault(m => m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
+            } else {
+                method = methods
+                    .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
+            }
+
+            // Invoke the method if found, otherwise return null
+            if (method != null) {
+                var queryable = (IQueryable<R>)method.Invoke(null, new object[] { entity });
+                return queryable;
+            }
+
+            return null;
+        }
     }
 
+    /// <summary>
+    /// The Extentions class is a generic class that provides extension methods for any class that implements the IPadocEntity interface.
+    /// It is used to generate the IQueryable&lt;T&gt; needed for fetching the related entities from the database.
+    /// </summary>
+    /// <example>
+    /// This sample shows how to use the Extentions class to get an IQueryable of related entities.
+    /// <code>
+    /// Extentions&lt;Client&gt; clientExtentions = new Extentions&lt;Client&gt;();
+    /// IQueryable&lt;Policy&gt; relatedPolicies = clientExtentions.getQueryable(clientID);
+    /// </code>
+    /// </example>
+    /// <typeparam name="T">The type of the class that implements the IPadocEntity interface.</typeparam>
     public class Extentions<T> where T : class, IPadocEntity {
         protected Extentions<T> extentions = new();
 
         public static IQueryable<T> getQueryable(int ID) => DatabaseManager.context.Set<T>().Where(x => x.Id == ID);
         public static T get(int ID) => DatabaseManager.context.Set<T>().Single(x => x.Id == ID);
-
-
     }
 
     public sealed class ClaimExtention : Extentions<Claim> {
         public static IQueryable<Policy> getPolicy(Claim claim) {
             IQueryable<Policy> queryable = DatabaseManager.context.Claim
-                .Include(c => c.Policy)
+                //.Include(c => c.Policy)
                 .Select(c => c.Policy);
 
             return queryable;
@@ -195,9 +280,8 @@ namespace PadocEF.Extentions {
         }
 
         public static IQueryable<Claim> getClaims(Policy policy) {
-            IQueryable<Claim> queryable = DatabaseManager.context.Policy
-                .Include(policy => policy.Claim)
-                .SelectMany(policy => policy.Claim);
+            IQueryable<Claim> queryable = DatabaseManager.context.Claim
+                .Where(c => c.Policy == policy);
 
             return queryable;
         }

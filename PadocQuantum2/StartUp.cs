@@ -18,12 +18,7 @@ namespace PadocQuantum2
             string dateTime = $"{DateTime.Now:HH:mm:ss dd/MM/yy}";
 
             Logger.logTitle("Padoc");
-            Logger.logHeader("                                                                                                                    ");
-            Logger.logHeader("                                             **********************                                                 ");
-            Logger.logHeader("                                             ||      Padoc       ||                                                 ");
-            Logger.logHeader("                                             **********************                                                 ");
-            Logger.logHeader($" Started at {dateTime}                                                                                             ");
-            Logger.logHeader("                                                                                                                    \n");
+            Logger.logHeader($"Started at {dateTime}    \n");
 
             Logger.ApplicationStarted();
 
@@ -47,9 +42,8 @@ namespace PadocQuantum2
         public static void doMyFirstPacket() {
             var sender = new PacketSender();
             IPacketReceiver viewerController = (IPacketReceiver)Activator.CreateInstance(typeof(ViewerController));
-            PacketType packet = new PacketType(typeof(Claim));
+            PacketType packet = new PacketType(typeof(Policy));
 
-            Logger.debug(packet.query.GetType().Name);
 
             sender.send(viewerController, packet);
         }
@@ -61,7 +55,6 @@ namespace PadocQuantum2
 
             packet.query = DatabaseManager.context.Policy.Where(p => p.Id == policyID);
 
-            Logger.debug(packet.query.GetType().Name);
 
             sender.send(editorController, packet);
         }

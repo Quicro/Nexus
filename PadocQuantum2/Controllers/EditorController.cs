@@ -2,6 +2,7 @@
 using PadocQuantum2.BigControls;
 using PadocQuantum2.BigForms;
 using PadocQuantum2.Interfaces;
+using PadocQuantum2.Logging;
 using System.Reflection;
 
 namespace PadocQuantum2.Controllers
@@ -22,7 +23,7 @@ namespace PadocQuantum2.Controllers
         }
 
         public void handle(Packet packet) {
-            throw new NotImplementedException();
+            Logger.info("handle as EditorController");
         }
     }
 
