@@ -110,74 +110,81 @@ namespace PadocQuantum2.Controllers {
                     }
 
                     //O- (Null)
-                    else if (isList(value) == false && isSubTypeOfEntity(columnType) == false) {
-                        textItem = value.ToString();
-                    }
+                    else {
 
-                    //E- (Single)
-                    else if (isList(value) == false && isSubTypeOfEntity(columnType) == true) {
-                        if (column.Name.EndsWith("Id") && column.Name != "Id") {
-                            PropertyInfo reference = type.GetProperties().Where(c => c.Name == column.Name.Replace("Id", "")).Single();
-                            Type referenceType = reference.PropertyType;
-                            if (value is not null) {
-                                int refID = (int)value;
+                        var list = isList(value);
+                        var subTypeOfEntity = isSubTypeOfEntity(columnType);
+                        var listOf = isListOf<IPadocEntity>(value);
 
-                                MethodInfo getQueryableMethod = typeof(Extentions)
-                                    .GetMethod(nameof(Extentions.getQueryableByID))
-                                    .MakeGenericMethod(referenceType, type);
-                                IQueryable<IPadocEntity> queryOfRelatedEntities = ((IQueryable)getQueryableMethod.Invoke(null, new object[] { entity, refID })).Cast<IPadocEntity>();
+                        PacketRelationshipType packetRelationshipType = Helper.getPacketRelationshipType(value, columnType);
 
-                                if (columnType.Name.StartsWith("Nullable")) {
-                                    packet = Create<PacketSingle, ViewerController>(referenceType, queryOfRelatedEntities);
-                                } else {
-                                    packet = Create<PacketSingle, ViewerController>(columnType, queryOfRelatedEntities);
-                                }
-
-                            } else {
-                                ;
-                            }
+                        if (list == false && subTypeOfEntity == false) {
+                            textItem = value.ToString();
                         }
-                        //packetItem = Packet.byEntity((Entity)value);
-                        textItem = value.ToString();
-                        fontItem = fontReference;
-                        foreColor = Color.Blue;
-                    }
+
+                        //E- (Single)
+                        else if (list == false && subTypeOfEntity == true) {
+                            if (column.Name.EndsWith("Id") && column.Name != "Id") {
+                                PropertyInfo reference = type.GetProperties().Where(c => c.Name == column.Name.Replace("Id", "")).Single();
+                                Type referenceType = reference.PropertyType;
+                                if (value is not null) {
+                                    int refID = (int)value;
+
+                                    MethodInfo getQueryableMethod = typeof(Extentions)
+                                        .GetMethod(nameof(Extentions.getQueryableByID))
+                                        .MakeGenericMethod(referenceType, type);
+                                    IQueryable<IPadocEntity> queryOfRelatedEntities = ((IQueryable)getQueryableMethod.Invoke(null, new object[] { entity, refID })).Cast<IPadocEntity>();
+
+                                    if (columnType.Name.StartsWith("Nullable")) {
+                                        packet = Create<PacketSingle, ViewerController>(referenceType, queryOfRelatedEntities);
+                                    } else {
+                                        packet = Create<PacketSingle, ViewerController>(columnType, queryOfRelatedEntities);
+                                    }
+
+                                } else {
+                                    ;
+                                }
+                            }
+                            //packetItem = Packet.byEntity((Entity)value);
+                            textItem = value.ToString();
+                            fontItem = fontReference;
+                            foreColor = Color.Blue;
+                        }
 
                     //O+ (DummyArray)
-                    else if (isList(value) == true && isListOf<IPadocEntity>(value) == false) {
-                        textItem = getListType(value).Name + "[]";
-                        fontItem = fontReference;
-                        foreColor = Color.Blue;
-                    }
-
-                    //E+ (Array)
-                    else if (isList(value) == true && isListOf<IPadocEntity>(value) == true) {
-                        var referenceType = getListType(value);
-
-
-                        MethodInfo getQueryableMethod = typeof(Extentions)
-                            .GetMethod(nameof(Extentions.getRelatedQueryableByID))
-                            .MakeGenericMethod(type, referenceType);
-
-                        IQueryable<IPadocEntity> queryOfRelatedEntities = ((IQueryable)getQueryableMethod.Invoke(null, new object[] { entity })).Cast<IPadocEntity>();
-
-                        if (columnType.Name.StartsWith("ICollection") ) {
-                            Type genericType = columnType.GetGenericArguments()[0];
-                            Logger.debug(genericType.Name);
-
-                            packet = Create<PacketArray, ViewerController>(genericType, queryOfRelatedEntities);
-                        } else {
-                            packet = Create<PacketArray, ViewerController>(columnType, queryOfRelatedEntities);
+                    else if (list == true && listOf == false) {
+                            textItem = getListType(value).Name + "[]";
+                            fontItem = fontReference;
+                            foreColor = Color.Blue;
                         }
 
+                    //E+ (Array)
+                    else if (list == true && listOf == true) {
+                            var referenceType = getListType(value);
 
 
-                        textItem = getListType(value).Name + "[]";
-                        fontItem = fontReference;
-                        foreColor = Color.Blue;
+                            MethodInfo getQueryableMethod = typeof(Extentions)
+                                .GetMethod(nameof(Extentions.getRelatedQueryableByID))
+                                .MakeGenericMethod(type, referenceType);
+
+                            IQueryable<IPadocEntity> queryOfRelatedEntities = ((IQueryable)getQueryableMethod.Invoke(null, new object[] { entity })).Cast<IPadocEntity>();
+
+                            if (columnType.Name.StartsWith("ICollection")) {
+                                Type genericType = columnType.GetGenericArguments()[0];
+                                Logger.debug(genericType.Name);
+
+                                packet = Create<PacketArray, ViewerController>(genericType, queryOfRelatedEntities);
+                            } else {
+                                packet = Create<PacketArray, ViewerController>(columnType, queryOfRelatedEntities);
+                            }
+
+
+
+                            textItem = getListType(value).Name + "[]";
+                            fontItem = fontReference;
+                            foreColor = Color.Blue;
+                        }
                     }
-
-
 
 
 
