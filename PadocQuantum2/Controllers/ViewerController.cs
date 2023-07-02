@@ -98,7 +98,7 @@ namespace PadocQuantum2.Controllers {
                     object value = column.GetValue(entity);
                     Type columnType = column.PropertyType;
                     IQueryable<IPadocEntity> query = getQuery(type).Where(e => e.Id == entity.Id);
-                    Packet packet = Create<PacketSingleEditor, EditorController>(type, query);
+                    Packet packet = Packet.Create<EditorController, PacketSingleEditor>(type, query, viewerUserControl);
                     string textItem = "error";
                     Font fontItem = fontDefault;
                     Color foreColor = Color.Black;
@@ -188,26 +188,6 @@ namespace PadocQuantum2.Controllers {
 
                 listView.Items.Add(listViewItem);
             }
-        }
-
-        private Packet Create<T, C>(Type type, IQueryable query) where T : Packet, new() where C : IController, new() {
-            return CreatePacket<C, T>(type, query, new C());
-        }
-
-        private Packet CreatePacket<C, P>(Type type, IQueryable queryable, IController controller)
-            where C : IController, new()
-            where P : Packet, new() {
-
-            Packet packet = new P() {
-                handler = controller ?? new C(),
-                query = queryable,
-                handlerEnum = HandlerEnum.Single,
-                sender = viewerUserControl
-                ,
-                packetType = type
-            };
-
-            return packet;
         }
     }
 }

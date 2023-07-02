@@ -1,6 +1,8 @@
 ﻿using PadocEF;
 using PadocEF.Models;
+using PadocQuantum2.BigControls;
 using PadocQuantum2.Interfaces;
+using PadocQuantum2.Logging;
 using System.Reflection;
 
 namespace PadocQuantum2 {
@@ -61,6 +63,22 @@ namespace PadocQuantum2 {
         public bool isList => handlerEnum.HasFlag(HandlerEnum.flagList);
 
 
+
+        public static Packet Create<C, P>(Type type, IQueryable query, ViewerUserControl viewerUserControl)
+        where C : IController, new()
+        where P : Packet, new() {
+            Logger.debug($"Made new Packet: {typeof(C).Name} {typeof(P).Name} {type.Name}");
+
+            Packet packet = new P() {
+                sender = viewerUserControl,
+                handler = new C(),
+                query = query,
+                handlerEnum = HandlerEnum.Single,
+                packetType = type
+            };
+
+            return packet;
+        }
 
         public override string ToString() => throw new NotImplementedException();
 
