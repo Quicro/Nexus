@@ -51,10 +51,7 @@ namespace PadocQuantum2 {
         public IPacketReceiver handler;
         public IPacketSender sender;
         public IQueryable query;
-        public IQueryable<IPadocEntity> genericQuery() {
-            var aa = (IQueryable<IPadocEntity>)Helper.callGenericMethod(query, "Cast", new Type[] { packetType });
-            return aa;
-        }
+
         public Type packetType;
         public List<IPadocEntity> entities { get; set; }
 
@@ -121,17 +118,6 @@ namespace PadocQuantum2 {
         }
 
         //public override string ToString() => $"Single<{type.Name}>({getEntity().id})";
-    }
-
-    /// <summary>
-    /// Packet for an 0, 1 or many Dummy entities. Each dummy has one value.
-    /// </summary>
-    public sealed class PacketDummyArray : Packet  {
-        public PacketDummyArray() {
-            handlerEnum = HandlerEnum.DummyArray;
-        }
-
-        //public override string ToString() => $"DummyArray<{type.Name}>[{entities.Count}]";
     }
 
     /// <summary>

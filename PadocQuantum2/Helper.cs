@@ -2,6 +2,7 @@
 using PadocEF;
 using PadocEF.Models;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -17,18 +18,18 @@ namespace PadocQuantum2 {
             return obj.Name.ToString().StartsWith("ICollection");
         }
 
-        public static object callMethod(object obj, string methodName) {
-            object? v = obj.GetType().GetMethod(methodName).Invoke(obj, null);
-            Type type = v.GetType();
-            return v;
+        public static object? callMethod(object obj, string methodName, params object[] parameters) {
+            MethodInfo method = obj.GetType().GetMethod(methodName);
+            Type type = method.GetType();
+            object? result = method.Invoke(obj, parameters);
+            return result;
         }
 
-        public static object callGenericMethod(object obj, string methodName, Type[] types, params object[] parameters) {
-            MethodInfo v = obj.GetType().GetMethod(methodName);
-            v.MakeGenericMethod(types);
-            var aa = v.Invoke(obj, parameters);
-            Type type = aa.GetType();
-            return v;
+        public static object? callGenericMethod(object obj, string methodName, Type[] types, params object[] parameters) {
+            MethodInfo method = obj.GetType().GetMethod(methodName);
+            MethodInfo genericMethod = method.MakeGenericMethod(types);
+            object? result = genericMethod.Invoke(obj, parameters);
+            return result;
         }
         public static object callStaticGenericMethod(Type callType, string methodName, Type[] types, params object[] parameters) {
             MethodInfo v = callType.GetMethod(methodName);
@@ -147,12 +148,25 @@ namespace PadocQuantum2 {
             return list;
         }
 
-        public static string toDisplayString(object value) {
-            if (value is IList)
-                return getListType(value).Name + "[" + (value as IList).Count + "]";
-            if (value is IPadocEntity)
-                return (value as IPadocEntity).ToString();
-            throw new Exception();
+        public enum PacketRelationshipType {
+            Dummy, Array, Single
+        }
+
+        internal static PacketRelationshipType getPacketRelationshipType(bool list, bool subTypeOfEntity, bool listOf) {
+            if (list) {
+                if (listOf) {
+                    return PacketRelationshipType.Array;
+                } else {
+                    Debugger.Break();
+                    throw new NotImplementedException("not possible in EF");
+                }
+            } else {
+                if (subTypeOfEntity) {
+                    return PacketRelationshipType.Single;
+                } else {
+                    return PacketRelationshipType.Dummy;
+                }
+            }
         }
     }
 }
