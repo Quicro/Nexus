@@ -1,4 +1,5 @@
-﻿using PadocEF.Models;
+﻿
+using PadocEF.Models;
 using PadocQuantum2.BigControls;
 using PadocQuantum2.BigForms;
 using PadocQuantum2.Interfaces;
@@ -87,6 +88,46 @@ namespace PadocQuantum2.Controllers {
             }
 
             editor.Show();
+        }
+
+        public static void doDummy<C>(Editor editor, C item) {
+
+
+        }
+
+        public static void doSingle<C>(Editor editor, C item)
+            where C : IPadocEntity, new() {
+
+
+        }
+
+        public static void doArray<T, C>(Editor editor, T array) 
+            where T: List<C>
+            where C: IPadocEntity, new()
+        {
+
+
+            /*foreach (C item in array) {
+                Logger.debug("type in generic bla  "+item.GetType().Name);
+
+                editor.dataGridView1.DataSource = array;
+                editor.dataGridView1.Text = "CHANGED QUINNEn";
+
+                if (item is Claim claim) {
+                    claim.Name = "changed bitch2";
+                }
+            }
+
+            if (array is List<Claim> claims) {
+                claims.Add(new Claim(
+                    
+                ) { 
+                    Name = "newly made"
+                    ,Number = "48"
+                });
+            }
+
+            DatabaseManager.context.SaveChanges();*/
         }
     }
 }
