@@ -32,10 +32,10 @@ namespace PadocQuantum2 {
         }
         public static object callStaticGenericMethod(Type callType, string methodName, Type[] types, params object[] parameters) {
             MethodInfo v = callType.GetMethod(methodName);
-            v.MakeGenericMethod(types);
-            var aa = v.Invoke(null, parameters);
+            MethodInfo genericMethod = v.MakeGenericMethod(types);
+            var aa = genericMethod.Invoke(null, parameters);
             Type type = aa.GetType();
-            return v;
+            return aa;
         }
 
         /// <summary> typeof(T).IsAssignableFrom(obj.GetType()); </summary>

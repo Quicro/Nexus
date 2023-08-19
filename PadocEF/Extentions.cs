@@ -10,6 +10,22 @@ namespace PadocEF.Extentions {
     /// These methods are used to retrieve related entities based on the type of the entity and the method name.
     /// </summary>
     public class Extentions {
+        static Dictionary<Tuple<Type, Type>, Type> mappingMoreMoreRelations = new Dictionary<Tuple<Type, Type>, Type>();
+
+        static Extentions() {
+            mappingMoreMoreRelations.Add(new(typeof(User), typeof(UserRole)), typeof(Role));
+            mappingMoreMoreRelations.Add(new(typeof(Role), typeof(UserRole)), typeof(User));
+            mappingMoreMoreRelations.Add(new(typeof(Role), typeof(RolePermission)), typeof(Permission));
+            mappingMoreMoreRelations.Add(new(typeof(Permission), typeof(RolePermission)), typeof(User));
+        }
+
+        public static Type getPossibleMoreMoreRelationType(Type entityType, Type referenceType) { 
+            return mappingMoreMoreRelations
+                .Where(tuple => tuple.Key.Item1 == entityType && tuple.Key.Item2 == referenceType)
+                .Select(tuple => tuple.Value)
+                .FirstOrDefault();
+        }
+
         static IQueryable<IPadocEntity> ConstructAndInvokeGenericQueryable(IPadocEntity entity, Type referenceType, string methodName = null) {
             Type entityType = entity.GetType();
 
@@ -111,7 +127,7 @@ namespace PadocEF.Extentions {
 
             // Find the method in the extension class
             MethodInfo method = null;
-            var methods = extensionType.GetMethods();
+            var methods = extensionType.GetMethods().Where(m => !(m.Name.Contains("ToString") | m.Name.Contains("ToString") || m.Name.Contains("Equals") || m.Name.Contains("GetHashCode") || m.Name.Contains("GetType")));
 
             if (methodName.IsNullOrEmpty()) {
                 method = methods
@@ -153,7 +169,8 @@ namespace PadocEF.Extentions {
     public sealed class ClaimExtention : Extentions<Claim> {
         public static IQueryable<Policy> getPolicy(Claim claim) {
             IQueryable<Policy> queryable = DatabaseManager.context.Claim
-                //.Include(c => c.Policy)
+                .Where(c => c == claim)
+                .Include(c => c.Policy)
                 .Select(c => c.Policy);
 
             return queryable;
@@ -274,6 +291,7 @@ namespace PadocEF.Extentions {
         public static IQueryable<Client> getClient(Policy policy) {
             IQueryable<Client> queryable = DatabaseManager.context.Policy
                 .Include(policy => policy.Client)
+                .Where(p => p == policy)
                 .Select(policy => policy.Client);
 
             return queryable;

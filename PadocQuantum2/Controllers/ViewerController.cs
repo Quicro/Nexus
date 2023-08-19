@@ -36,6 +36,13 @@ namespace PadocQuantum2.Controllers {
             viewerUserControl.Parent = viewerForm;
 
             viewerUserControl.controller = this;
+
+            viewerForm.FormClosing += (sender, e) => {
+                if (e.CloseReason == CloseReason.UserClosing) {
+                    e.Cancel = true; // Cancel the close operation
+                    viewerForm.Hide();     // Hide the form
+                }
+            };
         }
 
         public void handle(Packet packet) {
@@ -43,11 +50,8 @@ namespace PadocQuantum2.Controllers {
                 Logger.ViewerPacketHasNoEntitiesError();
                 throw new Exception();
             }
-            List<IPadocEntity> entities = null;
 
             packet.entities = packet.getEntities();
-
-
 
             listView.BeginUpdate();
 
@@ -64,6 +68,7 @@ namespace PadocQuantum2.Controllers {
             }
 
             listView.EndUpdate();
+
 
             viewerForm.Show();
         }
@@ -117,61 +122,47 @@ namespace PadocQuantum2.Controllers {
                         if (packetRelationshipType == PacketRelationshipType.Dummy) {
                             textItem = value.ToString();
                         }
-                        var listOf = isListOf<IPadocEntity>(value);
+
                         if (packetRelationshipType == PacketRelationshipType.Single) {
                             if (column.Name.EndsWith("Id") && column.Name != "Id") {
                                 PropertyInfo reference = type.GetProperties().Where(c => c.Name == column.Name.Replace("Id", "")).Single();
                                 Type referenceType = reference.PropertyType;
                                 int refID = (int)value;
-                        //E- (Single)
-                        else if (list == false && subTypeOfEntity == true) {
-                            if (column.Name.EndsWith("Id") && column.Name != "Id") {
-                                PropertyInfo reference = type.GetProperties().Where(c => c.Name == column.Name.Replace("Id", "")).Single();
-                                Type referenceType = reference.PropertyType;
-                                if (value is not null) {
-                                if (columnType.Name.StartsWith("Nullable")) {
-                                    packet = Create<PacketSingle, ViewerController>(referenceType, queryOfRelatedEntities);
-                                } else {
-                                    packet = Create<PacketSingle, ViewerController>(columnType, queryOfRelatedEntities);
-                                }
-                            }
-                                IQueryable<IPadocEntity> queryOfRelatedEntities = ((IQueryable)getQueryableMethod.Invoke(null, new object[] { entity, refID })).Cast<IPadocEntity>();
-                            textItem = value.ToString();
-                            fontItem = fontReference;
-                            foreColor = Color.Blue;
+
+                                IQueryable<IPadocEntity> queryOfRelatedEntities = (IQueryable<IPadocEntity>)callStaticGenericMethod(
+                                    typeof(Extentions),
+                                    nameof(Extentions.getQueryableByID),
+                                    new Type[] { referenceType, type },
+                                    new object[] { entity, refID }
+                                );
+                                var __sql__ = queryOfRelatedEntities.ToQueryString();
+
+                                packet = Packet.Create<ViewerController, PacketSingle>(referenceType, queryOfRelatedEntities, viewerUserControl);
+                                textItem = referenceType.Name;
+                                fontItem = fontReference;
+                                foreColor = Color.Blue;
+                            } else
+                                //ik wil graag weten waarom ik dit hierin had gezet, het vangt niks
+                                ;
                         }
-                                }
+
                         if (packetRelationshipType == PacketRelationshipType.Array) {
                             var referenceType = getListType(value);
+
+                            referenceType = Extentions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
+
+                            IQueryable<IPadocEntity> queryOfRelatedEntities = (IQueryable<IPadocEntity>)callStaticGenericMethod(
+                                typeof(Extentions),
+                                nameof(Extentions.getRelatedQueryableByID),
+                                new Type[] { type, referenceType },
+                                new object[] { entity }
+                            );
+                            var __sql__ = queryOfRelatedEntities.ToQueryString();
+
+                            packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, viewerUserControl);
                             fontItem = fontReference;
                             foreColor = Color.Blue;
-                        }
-
-                    //E+ (Array)
-                    else if (list == true && listOf == true) {
-                            var referenceType = getListType(value);
-
-                            if (columnType.Name.StartsWith("ICollection")) {
-                                Type genericType = columnType.GetGenericArguments()[0];
-                                Logger.debug(genericType.Name);
-
-                                packet = Create<PacketArray, ViewerController>(genericType, queryOfRelatedEntities);
-                            } else {
-                                packet = Create<PacketArray, ViewerController>(columnType, queryOfRelatedEntities);
-                            }
-
                             textItem = getListType(value).Name + "[]";
-                            fontItem = fontReference;
-                            foreColor = Color.Blue;
-                        }
-                    }
-                            }
-
-
-
-                            textItem = getListType(value).Name + "[]";
-                            fontItem = fontReference;
-                            foreColor = Color.Blue;
                         }
                     }
 
@@ -184,10 +175,10 @@ namespace PadocQuantum2.Controllers {
                         ForeColor = foreColor
                     });
                 }
-
-
                 listView.Items.Add(listViewItem);
             }
+
+
         }
     }
 }

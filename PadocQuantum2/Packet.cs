@@ -73,7 +73,6 @@ namespace PadocQuantum2 {
                 sender = viewerUserControl,
                 handler = new C(),
                 query = query,
-                handlerEnum = HandlerEnum.Single,
                 packetType = type
             };
 
@@ -113,10 +112,6 @@ namespace PadocQuantum2 {
             packet.setEntities(entities);
             return packet;
         }
-        /// <summary> Creates a packet (Single) for the given entity </summary>
-        public static PacketSingle byEntity(Type type, IQueryable<IPadocEntity> query) {
-            return new PacketSingle(query);
-        }
 
         /// <summary> Creates a packet (Type) for the given type </summary>
         public static PacketType byType(Type type) {
@@ -129,9 +124,6 @@ namespace PadocQuantum2 {
     /// </summary>
     public sealed class PacketSingle : Packet  {
         public PacketSingle() {
-        }
-
-        public PacketSingle(IQueryable<IPadocEntity> qeury) {
             handlerEnum = HandlerEnum.Single;
         }
 
