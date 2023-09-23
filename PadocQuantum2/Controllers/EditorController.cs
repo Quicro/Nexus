@@ -1,5 +1,4 @@
-﻿
-using PadocEF.Models;
+﻿using PadocEF.Models;
 using PadocQuantum2.BigControls;
 using PadocQuantum2.BigForms;
 using PadocQuantum2.Interfaces;
@@ -9,11 +8,11 @@ using static PadocQuantum2.Helper;
 
 namespace PadocQuantum2.Controllers {
     public class EditorController : IController {
-        public Editor editor;
-        public EditorUserControl editorUserControl;
+        public Editor editor; //ref => BigForms
+        public EditorUserControl editorUserControl; //ref => BigControls
 
         public EditorController() {
-            editor = new Editor();
+            editor = new Editor();//ref => BigForms
             editor.MdiParent = PadocMDIForm.singleton;
 
             editorUserControl = editor.editorUserControl;
@@ -90,18 +89,18 @@ namespace PadocQuantum2.Controllers {
             editor.Show();
         }
 
-        public static void doDummy<C>(Editor editor, C item) {
+        public static void doDummy<C>(Editor editor, C item) {//ref => BigForms
 
 
         }
 
-        public static void doSingle<C>(Editor editor, C item)
+        public static void doSingle<C>(Editor editor, C item)//ref => BigForms
             where C : IPadocEntity, new() {
 
 
         }
 
-        public static void doArray<T, C>(Editor editor, T array) 
+        public static void doArray<T, C>(Editor editor, T array) //ref => BigForms
             where T: List<C>
             where C: IPadocEntity, new()
         {

@@ -1,6 +1,4 @@
-﻿using PadocEF;
-using PadocEF.Models;
-using PadocQuantum2.BigControls;
+﻿using PadocEF.Models;
 using PadocQuantum2.Interfaces;
 using PadocQuantum2.Logging;
 using System.Reflection;
@@ -64,13 +62,13 @@ namespace PadocQuantum2 {
 
 
 
-        public static Packet Create<C, P>(Type type, IQueryable query, ViewerUserControl viewerUserControl)
+        public static Packet Create<C, P>(Type type, IQueryable query, IPacketSender packetSender)
         where C : IController, new()
         where P : Packet, new() {
             Logger.debug($"Made new Packet: {typeof(C).Name} {typeof(P).Name} {type.Name}");
 
             Packet packet = new P() {
-                sender = viewerUserControl,
+                sender = packetSender,
                 handler = new C(),
                 query = query,
                 packetType = type

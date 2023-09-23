@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocAI", "PadocAI\PadocAI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocQuantum2", "PadocQuantum2\PadocQuantum2.csproj", "{23407850-427C-40D5-A17B-660BC22E684F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadocQuantum2Logging", "PadocQuantum2Logging\PadocQuantum2Logging.csproj", "{83DE8138-8032-4D5F-BBBD-03495AFF00F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocQuantum2Logging", "PadocQuantum2Logging\PadocQuantum2Logging.csproj", "{83DE8138-8032-4D5F-BBBD-03495AFF00F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padoc.Web", "Padoc.Web\Padoc.Web.csproj", "{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{83DE8138-8032-4D5F-BBBD-03495AFF00F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83DE8138-8032-4D5F-BBBD-03495AFF00F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83DE8138-8032-4D5F-BBBD-03495AFF00F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

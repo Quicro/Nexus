@@ -11,8 +11,8 @@ using static System.Windows.Forms.ListViewItem;
 
 namespace PadocQuantum2.Controllers {
     public class ViewerController : IController {
-        public Viewer viewerForm;
-        public ViewerUserControl viewerUserControl;
+        public Viewer viewerForm; //ref => BigForms
+        public ViewerUserControl viewerUserControl; //ref => BigControls
         public ListView listView;
         protected List<PropertyInfo> columns;
 
@@ -27,7 +27,7 @@ namespace PadocQuantum2.Controllers {
 
 
         public ViewerController() {
-            viewerForm = new Viewer();
+            viewerForm = new Viewer(); //ref => BigForms
             viewerForm.MdiParent = PadocMDIForm.singleton;
             viewerUserControl = viewerForm.viewerUserControl;
             listView = viewerUserControl.listView;
