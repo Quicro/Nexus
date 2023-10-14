@@ -16,7 +16,7 @@ namespace PadocEF.Extentions {
             mappingMoreMoreRelations.Add(new(typeof(User), typeof(UserRole)), typeof(Role));
             mappingMoreMoreRelations.Add(new(typeof(Role), typeof(UserRole)), typeof(User));
             mappingMoreMoreRelations.Add(new(typeof(Role), typeof(RolePermission)), typeof(Permission));
-            mappingMoreMoreRelations.Add(new(typeof(Permission), typeof(RolePermission)), typeof(User));
+            mappingMoreMoreRelations.Add(new(typeof(Permission), typeof(RolePermission)), typeof(Role));
         }
 
         public static Type getPossibleMoreMoreRelationType(Type entityType, Type referenceType) { 
@@ -167,7 +167,7 @@ namespace PadocEF.Extentions {
     }
 
     public sealed class ClaimExtention : Extentions<Claim> {
-        public static IQueryable<Policy> getPolicy(Claim claim) {
+        public static IQueryable<Policy> getPolicyQueryable(Claim claim) {
             IQueryable<Policy> queryable = DatabaseManager.context.Claim
                 .Where(c => c == claim)
                 .Include(c => c.Policy)
@@ -176,7 +176,7 @@ namespace PadocEF.Extentions {
             return queryable;
         }
 
-        public static IQueryable<Policy> getPolicy(int claimID) {
+        public static IQueryable<Policy> getPolicyQueryable(int claimID) {
             IQueryable<Policy> queryable = DatabaseManager.context.Claim
                 .Where(c => c.Id == claimID)
                 .Include(c => c.Policy)
@@ -187,20 +187,9 @@ namespace PadocEF.Extentions {
     }
 
     public sealed class ClientExtention : Extentions<Client> {
-        public static IQueryable<Policy> getPolicy(Client client) {
+        public static IQueryable<Policy> getPolicyQueryable(Client client) {
             IQueryable<Policy> queryable = DatabaseManager.context.Policy
                 .Where(p => p.Client == client);
-            return queryable;
-        }
-
-        public static IQueryable<Permission> getPermissions(User user) {
-            IQueryable<Permission> queryable = DatabaseManager.context.UserRole
-                .Include(ur => ur.User)
-                .Include(ur => ur.Role)
-                .ThenInclude(r => r.RolePermission)
-                .ThenInclude(rp => rp.Permission)
-                .Where(ur => ur.User == user)
-                .SelectMany(ur => ur.Role.RolePermission.Select(rp => rp.Permission));
             return queryable;
         }
 
@@ -208,7 +197,7 @@ namespace PadocEF.Extentions {
     }
 
     public sealed class PermissionExtention : Extentions<Permission> {
-        public static IQueryable<Role> getRoles(Permission permission) {
+        public static IQueryable<Role> getRolesQueryable(Permission permission) {
             IQueryable<Role> queryable = DatabaseManager.context.Role
                 .Include(r => r.RolePermission)
                 .ThenInclude(rp => rp.Permission)
@@ -217,7 +206,7 @@ namespace PadocEF.Extentions {
             return queryable;
         }
 
-        public static IQueryable<User> getUsers(Permission permission) {
+        public static IQueryable<User> getUsersQueryable(Permission permission) {
             IQueryable<User> queryable = DatabaseManager.context.RolePermission
                 .Include(rp => rp.Permission)
                 .Include(rp => rp.Role)
@@ -230,7 +219,7 @@ namespace PadocEF.Extentions {
     }
 
     public sealed class RoleExtention : Extentions<Role> {
-        public static IQueryable<User> getUsers(Role role) {
+        public static IQueryable<User> getUsersQueryable(Role role) {
             IQueryable<User> queryable = DatabaseManager.context.User
                 .Include(u => u.UserRole)
                 .Where(rp => rp.UserRole.Any(ur => ur.Role == role));
@@ -238,7 +227,7 @@ namespace PadocEF.Extentions {
             return queryable;
         }
 
-        public static IQueryable<Permission> getPermissions(Role role) {
+        public static IQueryable<Permission> getPermissionsQueryable(Role role) {
             IQueryable<Permission> queryable = DatabaseManager.context.Permission
                 .Include(r => r.RolePermission)
                 .Where(rp => rp.RolePermission.Any(ur => ur.Role == role));
@@ -248,7 +237,7 @@ namespace PadocEF.Extentions {
     }
 
     public sealed class UserExtention : Extentions<User> {
-        public static IQueryable<Permission> getPermissions(User user) {
+        public static IQueryable<Permission> getPermissionsQueryable(User user) {
             IQueryable<Permission> queryable = DatabaseManager.context.UserRole
                 .Include(ur => ur.User)
                 .Include(ur => ur.Role)
@@ -259,7 +248,16 @@ namespace PadocEF.Extentions {
             return queryable;
         }
 
-        public static IQueryable<Role> getRoles(User user) {
+        public static List<Permission>? getPermissions(User user) {
+            List<Permission>? permissions = user?.UserRole
+                ?.SelectMany(ur => ur.Role.RolePermission.Select(rp => rp.Permission))
+                ?.ToList();
+
+            return permissions;
+        }
+
+
+        public static IQueryable<Role> getRolesQueryable(User user) {
             IQueryable<Role> queryable = DatabaseManager.context.Role
                 .Include(r => r.UserRole)
                 .ThenInclude(ur => ur.User)
@@ -271,7 +269,7 @@ namespace PadocEF.Extentions {
 
 
         public static bool hasPermissions(User user, params string[] permissionNames) {
-            var permissionsQueryable = getPermissions(user);
+            var permissionsQueryable = getPermissionsQueryable(user);
 
             var foundPermissions = permissionsQueryable
                 .Where(rp => permissionNames.Contains(rp.Name));
@@ -288,7 +286,7 @@ namespace PadocEF.Extentions {
     }
 
     public sealed class PolicyExtention : Extentions<Policy> {
-        public static IQueryable<Client> getClient(Policy policy) {
+        public static IQueryable<Client> getClientQueryable(Policy policy) {
             IQueryable<Client> queryable = DatabaseManager.context.Policy
                 .Include(policy => policy.Client)
                 .Where(p => p == policy)
@@ -297,7 +295,7 @@ namespace PadocEF.Extentions {
             return queryable;
         }
 
-        public static IQueryable<Claim> getClaims(Policy policy) {
+        public static IQueryable<Claim> getClaimsQueryable(Policy policy) {
             IQueryable<Claim> queryable = DatabaseManager.context.Claim
                 .Where(c => c.Policy == policy);
 

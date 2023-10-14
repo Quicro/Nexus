@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocQuantum", "PadocQuantu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocEF", "PadocEF\PadocEF.csproj", "{AD24872C-8B4A-4D3C-ABED-E4CD8C09C8C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadocQuantumTests", "PadocQuantumTests\PadocQuantumTests.csproj", "{65495A41-581F-41A1-A493-A587D76C4B8F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocLogging", "PadocLogging\PadocLogging.csproj", "{B4711014-7D44-4A54-85D5-205CC11F2739}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocQuantumTests", "PadocQuantumTests\PadocQuantumTests.csproj", "{65495A41-581F-41A1-A493-A587D76C4B8F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocAI", "PadocAI\PadocAI.csproj", "{2025C8BB-D887-4D1F-AEAA-B6D2B0FDA65D}"
 EndProject
@@ -17,7 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocQuantum2", "PadocQuant
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PadocQuantum2Logging", "PadocQuantum2Logging\PadocQuantum2Logging.csproj", "{83DE8138-8032-4D5F-BBBD-03495AFF00F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Padoc.Web", "Padoc.Web\Padoc.Web.csproj", "{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Padoc.Web", "Padoc.Web\Padoc.Web.csproj", "{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Padoc.WindowsForms", "Padoc.WindowsForms\Padoc.WindowsForms.csproj", "{F16E9E99-EDF6-4074-A0E0-4552242EE242}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C31800BD-EF50-48F3-B19C-9E0267B653BD}"
+	ProjectSection(SolutionItems) = preProject
+		Padoc.WindowsForms\MainForm.cs = Padoc.WindowsForms\MainForm.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +42,6 @@ Global
 		{65495A41-581F-41A1-A493-A587D76C4B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65495A41-581F-41A1-A493-A587D76C4B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65495A41-581F-41A1-A493-A587D76C4B8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B4711014-7D44-4A54-85D5-205CC11F2739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4711014-7D44-4A54-85D5-205CC11F2739}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4711014-7D44-4A54-85D5-205CC11F2739}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B4711014-7D44-4A54-85D5-205CC11F2739}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2025C8BB-D887-4D1F-AEAA-B6D2B0FDA65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2025C8BB-D887-4D1F-AEAA-B6D2B0FDA65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2025C8BB-D887-4D1F-AEAA-B6D2B0FDA65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +58,10 @@ Global
 		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F16E9E99-EDF6-4074-A0E0-4552242EE242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F16E9E99-EDF6-4074-A0E0-4552242EE242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F16E9E99-EDF6-4074-A0E0-4552242EE242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F16E9E99-EDF6-4074-A0E0-4552242EE242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

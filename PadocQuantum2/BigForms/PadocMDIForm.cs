@@ -18,7 +18,7 @@ namespace PadocQuantum2 {
             if (singleton is null)
                 singleton = new();
 
-            StartUp.doMyFirstPacket();
+            PadocBuilder.doMyFirstPacket();
         }
 
         private static void PadocMDIForm_sent(object? sender, Packet packet) {

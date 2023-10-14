@@ -1,17 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using PadocQuantum2.Interfaces;
 
 namespace PadocQuantum2.BigForms {
-    public partial class Viewer : Form {
+    public partial class Viewer : Form, IViewerForm {
         public Viewer() {
             InitializeComponent();
+        }
+
+        public event EventHandler OnDataLoading;
+        public event EventHandler OnDataLoaded;
+        public event EventHandler OnDataLoadCancelled;
+        public event EventHandler OnOpen;
+        public event EventHandler OnClose;
+
+        public void End() {
+            throw new NotImplementedException();
+        }
+
+        public void LoadData() {
+            throw new NotImplementedException();
+        }
+
+        public void Open() {
+            throw new NotImplementedException();
+        }
+
+
+        public void Start(List<MenuItem> menu) {
+            throw new NotImplementedException();
         }
     }
 }

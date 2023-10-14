@@ -9,9 +9,10 @@ using System.Reflection;
 using static PadocQuantum2.Helper;
 using static System.Windows.Forms.ListViewItem;
 
-namespace PadocQuantum2.Controllers {
+namespace PadocQuantum2.Controllers
+{
     public class ViewerController : IController {
-        public Viewer viewerForm; //ref => BigForms
+        public IViewerForm viewerForm; //ref => BigForms
         public ViewerUserControl viewerUserControl; //ref => BigControls
         public ListView listView;
         protected List<PropertyInfo> columns;
@@ -28,21 +29,23 @@ namespace PadocQuantum2.Controllers {
 
         public ViewerController() {
             viewerForm = new Viewer(); //ref => BigForms
-            viewerForm.MdiParent = PadocMDIForm.singleton;
-            viewerUserControl = viewerForm.viewerUserControl;
+            //viewerForm.MdiParent = PadocMDIForm.singleton;
+            //viewerUserControl = viewerForm.viewerUserControl;
             listView = viewerUserControl.listView;
 
             listView.Parent = viewerUserControl;
-            viewerUserControl.Parent = viewerForm;
+            //viewerUserControl.Parent = viewerForm;
 
             viewerUserControl.controller = this;
 
+            /*
             viewerForm.FormClosing += (sender, e) => {
                 if (e.CloseReason == CloseReason.UserClosing) {
                     e.Cancel = true; // Cancel the close operation
                     viewerForm.Hide();     // Hide the form
                 }
             };
+            */
         }
 
         public void handle(Packet packet) {
@@ -70,7 +73,7 @@ namespace PadocQuantum2.Controllers {
             listView.EndUpdate();
 
 
-            viewerForm.Show();
+            viewerForm.Open();
         }
 
         internal void updateColumns(Type type) {
@@ -112,7 +115,8 @@ namespace PadocQuantum2.Controllers {
                         textItem = "NULL";
                         fontItem = fontNull;
                         foreColor = Color.Gray;
-                    } else {
+                    }
+                    else {
                         bool list = isList(value);
                         bool subTypeOfEntity = isSubTypeOfEntity(columnType);
                         bool listOf = isListOf<IPadocEntity>(value);
@@ -141,7 +145,8 @@ namespace PadocQuantum2.Controllers {
                                 textItem = referenceType.Name;
                                 fontItem = fontReference;
                                 foreColor = Color.Blue;
-                            } else
+                            }
+                            else
                                 //ik wil graag weten waarom ik dit hierin had gezet, het vangt niks
                                 ;
                         }
