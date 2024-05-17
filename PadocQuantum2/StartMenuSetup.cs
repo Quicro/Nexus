@@ -9,6 +9,10 @@ namespace PadocQuantum2 {
         public List<MenuItem> Childs { get; set; } = new List<MenuItem>();
         public bool Authorized { get; private set; }
         public bool Show { get; internal set; }
+        public void Click()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Determines whether the menu item should be displayed on the main menu of a form

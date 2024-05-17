@@ -41,6 +41,14 @@ namespace Padoc.WindowsForms {
             public void Open() {
             }
 
+            private void click(object? sender, EventArgs e)
+            {
+                ToolStripMenuItem toolStripMenuItem = sender as ToolStripMenuItem;
+                MenuItem menuItem = toolStripMenuItem.Tag as MenuItem;
+
+                menuItem?.Click();
+            }
+
             public void SetUpStartMenuItem(MenuItem menuItem, ToolStripMenuItem toolStripMenuItem) {
                 foreach (MenuItem item in menuItem.Childs) {
                     if (!item.Show)
@@ -51,6 +59,10 @@ namespace Padoc.WindowsForms {
                     toolStripMenuItem.DropDownItems.Add(toolStripMenuSuubItem);
                     toolStripMenuSuubItem.Text = item.Text;
                     toolStripMenuSuubItem.Enabled = item.Authorized;
+                    toolStripMenuSuubItem.Tag = item;
+                    toolStripMenuSuubItem.Click += click;
+
+
 
                     SetUpStartMenuItem(item, toolStripMenuSuubItem);
                 }
