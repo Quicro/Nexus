@@ -10,7 +10,7 @@ using PadocQuantum2.Logging;
 namespace PadocQuantum2 {
     public class PadocBuilder {
         IMainForm mainform;
-        List<MenuItem> menuItems;
+        public List<MenuItem> menuItems;
         public User currentUser;
         public List<Permission>? currentPermissions;
         private IQueryable<User> userQuery;

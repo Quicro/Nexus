@@ -1,13 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
 <ul style="list-style-type: none;">
-    @foreach (var menuItem in menuItems) {
+    @foreach (var menuItem in MainForm.Instance.menusetup) {
         if (menuItem.Show)
         {
             <li>
                 <b>@menuItem.Text</b></li>
 
-            @foreach (var child in menuItem   .Childs)
+            @foreach (var child in menuItem.Childs)
             {
                 if (child.Show) {
                     <li style="display: inline-block; margin-right: 100px;"> 
@@ -16,8 +16,7 @@
                 }
 
             }
-
-    }
+        }
     }
 </ul>
 

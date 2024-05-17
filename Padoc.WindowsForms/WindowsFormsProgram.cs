@@ -15,7 +15,7 @@ namespace Padoc.WindowsForms {
             var builder = new PadocBuilder()
                 .setMainForm(mainForm)
                 .setMenuConfig(menuItem)
-                .setUser("S", "S")
+                .setUser("Q", "")
             ;
 
             PadocApp app = builder.Build();

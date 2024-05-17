@@ -15,7 +15,7 @@ namespace PadocEF {
 
     public class GenericDatabaseManager<T> where T : PadocQuantumContext, new() {
 #if DEBUG
-        public static PadocQuantumContext context = new();
+        public static PadocQuantumContextInMemory context = new();
 #endif
 #if !DEBUG
         public static PadocQuantumContext context = new();
@@ -31,7 +31,7 @@ namespace PadocEF {
         private static void setupInMemeryDatabase() {
             context.Permission.Add(new Permission() { Name = "ALL" });
             context.Role.Add(new Role() { Name = "TESTROLE" });
-            context.User.Add(new User() { Name = "TEST", Adname = "", Email = "test@ic-verzekeringen.be", Password = "", Phone = "+32 0471 12 34 56" });
+            context.User.Add(new User() { Name = "Q", Adname = "q.croes", Email = "q.croes@test.be", Password = "", Phone = "+32 0471 12 34 56" });
 
             context.UserRole.Add(new UserRole() { Role = context.Role.Find(1), User = context.User.Find(1) });
             context.RolePermission.Add(new RolePermission() { Role = context.Role.Find(1), Permission = context.Permission.Find(1) });

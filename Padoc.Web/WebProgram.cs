@@ -10,7 +10,7 @@ MainForm mainForm = new MainForm();
 var padocBuilder = new PadocBuilder()
     .setMainForm(mainForm)
     .setMenuConfig(menuItem)
-    .setUser("S", "S")
+    .setUser("Q", "")
 ;
 
 padocBuilder.Build();
