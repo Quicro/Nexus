@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using NexusCore.Controllers;
-using NexusCore.Interfaces;
-using NexusLogging;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusEF;
 using NexusEF.Extentions;
 using NexusEF.Models;
+using NexusLogging;
 
 namespace NexusCore
 {
@@ -123,7 +122,7 @@ namespace NexusCore
             throw exception;
         }
 
-        public static void doMyFirstPacket()
+        /*public static void doMyFirstPacket()
         {
             var sender = new PacketSender();
             IPacketReceiver viewerController = (IPacketReceiver)Activator.CreateInstance(typeof(ViewerController));
@@ -143,7 +142,7 @@ namespace NexusCore
 
 
             sender.send(editorController, packet);
-        }
+        }*/
 
         public NexusBuilder setMainForm(IMainForm mainForm)
         {

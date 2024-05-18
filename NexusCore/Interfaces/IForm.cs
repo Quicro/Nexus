@@ -1,8 +1,6 @@
 namespace NexusCore.Interfaces {
     public interface IForm
     {
-        public IController controller { get; set; }
-        public List<IWidget> widgets { get; set; }
 
 
         /// <summary>

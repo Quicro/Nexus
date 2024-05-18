@@ -1,21 +1,22 @@
-﻿using NexusCore.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NexusCore.Interfaces;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
-namespace NexusCore.Forms
+namespace NexusCore.Components.AggregrateInterfaces.Forms
 {
-    public class EditorForm : IForm
+    public class EditorForm : IEditorForm
     {
-        public IController controller { get; set ; }
+        public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public event EventHandler OnOpen;
-        public event EventHandler OnClose;
         public event EventHandler OnDataLoading;
         public event EventHandler OnDataLoaded;
         public event EventHandler OnDataLoadCancelled;
+        public event EventHandler OnOpen;
+        public event EventHandler OnClose;
 
         public void Close()
         {

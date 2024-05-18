@@ -1,8 +1,12 @@
 using NexusCore;
+using NexusCore.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
 public class MainForm : IMainForm {
     public static MainForm Instance { get; private set; }
+    public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     WebApplication app;
     public List<MenuItem> menusetup;
 

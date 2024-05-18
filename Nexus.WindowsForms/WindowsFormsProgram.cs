@@ -1,7 +1,9 @@
 using NexusCore;
-using NexusCore.Interfaces;
+using NexusCore.AggregrateInterfaces.Forms;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
-namespace Nexus.WindowsForms {
+namespace Nexus.WindowsForms
+{
     internal static class WindowsFormsProgram {
         /// <summary>
         ///  The main entry point for the application.

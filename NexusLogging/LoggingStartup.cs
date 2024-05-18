@@ -27,6 +27,7 @@ namespace NexusLogging
         public static void FormControllerClosed(Type formController ,int ID) => LogInfo(10, $"{formController.Name} closed with ID: {ID}");
         public static void DatabaseManagerError(string msg) => LogError(-11, $"Loading data caused an error: \n{msg}");
         public static void OpenForbiddenTypeError(string typeName) => LogError(-12, $"User tried to open the type {typeName} in typeViewer");
+        public static void ViewerPacketHasNoEntitiesError() => LogError(-13, $"Viewer Packet Has No Entities");
         public static void TEMPLATE() => LogInfo(0, $"");
 
         public static void logHeader(string text) { LogDebug(text); }

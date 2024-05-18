@@ -1,6 +1,9 @@
-namespace NexusCore.Interfaces
+using NexusCore.Interfaces;
+
+namespace NexusCore.AggregrateInterfaces.Forms
 {
-    public interface IMainForm : IForm {
+    public interface MainForm : IForm
+    {
 
 
         /// <summary>

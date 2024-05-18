@@ -1,28 +1,33 @@
 using Microsoft.EntityFrameworkCore;
-using NexusCore.BigControls;
-using NexusCore.BigForms;
-using NexusCore.Interfaces;
+using NexusCore.Components.AggregrateInterfaces.Forms;
+using NexusCore.Components.Widgets;
+using NexusCore.Interfaces.AggregrateInterfaces.Controller;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+using NexusCore.Interfaces.Widgets;
+using NexusEF.Extentions;
 using NexusEF.Models;
+using NexusLogging;
 using System.Reflection;
 using static NexusCore.Helper;
 
-namespace NexusCore.Controllers
+namespace NexusCore.Components.AggregrateInterfaces.Controller
 {
     /// <summary>
     /// Controller for viewing entities and handling packets in the viewer.
     /// </summary>
-    public class ViewerController : IController
+    public class ViewerController : IViewerController
     {
         /// <summary>
         /// Reference to the viewer form.
         /// </summary>
-        public IForm viewerForm; //ref => BigForms
+        public ViewerForm viewerForm; //ref => BigForms
 
 
         /// <summary>
         /// Reference to the list view control.
         /// </summary>
-        public ListView listView;
+        public ListViewWidget listView;
+
 
         protected List<PropertyInfo> columns;
 
@@ -36,17 +41,16 @@ namespace NexusCore.Controllers
         public static Font fontNull = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
 
         public List<IWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        List<IElementWidget> IForegroundController.widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ViewerForm ViewerForm { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewerController"/> class.
         /// </summary>
         public ViewerController()
         {
-            viewerForm = new Viewer(); //ref => BigForms
-            listView = viewerUserControl.listView;
-
-            listView.Parent = viewerUserControl;
-            viewerUserControl.controller = this;
+            viewerForm = new ViewerForm(); //ref => BigForms
+            listView = new ListViewWidget(new ListView());
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace NexusCore.Controllers
 
             packet.entities = packet.getEntities();
 
-            listView.BeginUpdate();
+            listView.control.BeginUpdate();
 
             Type type = packet.packetType;
 
@@ -79,30 +83,30 @@ namespace NexusCore.Controllers
                 updateItems(type, packet.entities.ToList());
             }
 
-            listView.EndUpdate();
+            listView.control.EndUpdate();
             viewerForm.Open();
         }
 
         internal void updateColumns(Type type)
         {
-            listView.Columns.Clear();
+            listView.control.Columns.Clear();
 
             var fields = type.GetProperties();
             columns = fields
                 .Where(field => !fields.Select(f => f.Name).Contains(field.Name + "Id"))
                 .ToList();
 
-            listView.Columns.Add("");
+            listView.control.Columns.Add("");
 
             foreach (var column in columns)
             {
-                listView.Columns.Add(column.Name);
+                listView.control.Columns.Add(column.Name);
             }
         }
 
         internal void updateItems(Type type, List<INexusEntity> entities)
         {
-            listView.Items.Clear();
+            listView.control.Items.Clear();
 
             foreach (var entity in entities)
             {
@@ -113,7 +117,7 @@ namespace NexusCore.Controllers
                     object value = column.GetValue(entity);
                     Type columnType = column.PropertyType;
                     IQueryable<INexusEntity> query = getQuery(type).Where(e => e.Id == entity.Id);
-                    Packet packet = Packet.Create<EditorController, PacketSingleEditor>(type, query, viewerUserControl);
+                    Packet packet = Packet.Create<EditorController, PacketSingleEditor>(type, query, listView);
                     string textItem = "error";
                     Font fontItem = fontDefault;
                     Color foreColor = Color.Black;
@@ -146,14 +150,14 @@ namespace NexusCore.Controllers
                                 int refID = (int)value;
 
                                 IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)callStaticGenericMethod(
-                                    typeof(Extensions),
-                                    nameof(Extensions.getQueryableByID),
+                                    typeof(Extentions),
+                                    nameof(Extentions.getQueryableByID),
                                     new Type[] { referenceType, type },
                                     new object[] { entity, refID }
                                 );
                                 var __sql__ = queryOfRelatedEntities.ToQueryString();
 
-                                packet = Packet.Create<ViewerController, PacketSingle>(referenceType, queryOfRelatedEntities, viewerUserControl);
+                                packet = Packet.Create<ViewerController, PacketSingle>(referenceType, queryOfRelatedEntities, listView);
                                 textItem = referenceType.Name;
                                 fontItem = fontReference;
                                 foreColor = Color.Blue;
@@ -164,32 +168,32 @@ namespace NexusCore.Controllers
                         {
                             var referenceType = getListType(value);
 
-                            referenceType = Extensions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
+                            referenceType = Extentions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
 
                             IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)callStaticGenericMethod(
-                                typeof(Extensions),
-                                nameof(Extensions.getRelatedQueryableByID),
+                                typeof(Extentions),
+                                nameof(Extentions.getRelatedQueryableByID),
                                 new Type[] { type, referenceType },
                                 new object[] { entity }
                             );
                             var __sql__ = queryOfRelatedEntities.ToQueryString();
 
-                            packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, viewerUserControl);
+                            packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, listView);
                             fontItem = fontReference;
                             foreColor = Color.Blue;
                             textItem = getListType(value).Name + "[]";
                         }
                     }
 
-                    listViewItem.SubItems.Add(new ListViewSubItem()
+                    /*listViewItem.SubItems.Add(new ListViewSubItem()
                     {
                         Tag = packet,
                         Text = textItem,
                         Font = fontItem,
                         ForeColor = foreColor
-                    });
+                    });*/
                 }
-                listView.Items.Add(listViewItem);
+                listView.control.Items.Add(listViewItem);
             }
         }
     }

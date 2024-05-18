@@ -1,10 +1,11 @@
 using NexusEF.Models;
-using NexusCore.Controllers;
 using System.Diagnostics;
 
-namespace NexusCore {
+namespace NexusCore
+{
     [DebuggerDisplay("{Text} [{Childs.Count}] [{Authorized? \"Authorized\" : \"Unuthorized\"}] [{Show? \"Shown\" : \"Hidden\"}]")]
-    public class MenuItem {
+    public class MenuItem
+    {
 
         public string Text { get; set; } = string.Empty;
         public List<string> Permissions { get; set; } = new List<string>();
@@ -19,7 +20,7 @@ namespace NexusCore {
 
             if (packetType is not null)
             {
-                packetType.handler = new ViewerController(); //I'm stuck here and devloping this stuff
+                //packetType.handler = new ViewerController(); //I'm stuck here and devloping this stuff
                 //packetType.handler = new ViewerController(packetType).ViewerForeignController.ViewerGenericController;
             }
         }
@@ -39,7 +40,8 @@ namespace NexusCore {
         /// At least one of these conditions being true will result in the menu item being displayed.
         /// </remarks>
         /// <param name="currentPermissions">The list of permissions associated with the current user.</param>
-        internal void setAuthorized(IEnumerable<string>? currentPermissions) {
+        internal void setAuthorized(IEnumerable<string>? currentPermissions)
+        {
             var count = Permissions.Count();
             var intersectedCount = Permissions.Intersect(currentPermissions).Count();
 
@@ -49,7 +51,8 @@ namespace NexusCore {
             Authorized = count == 0 || intersectedCount > 0 || isAdmin;
         }
 
-        public MenuItem() {
+        public MenuItem()
+        {
             Authorized = false;
             Show = false;
         }
@@ -63,9 +66,9 @@ namespace NexusCore {
         public MenuItem(string text, params string[] permissions)
         {
             Authorized = false;
-                Show = false;
-                Text = text;
-                Permissions = permissions.ToList();
+            Show = false;
+            Text = text;
+            Permissions = permissions.ToList();
         }
 
         public static MenuItem newMenuItem<T>(string text, params string[] permissions) where T : INexusEntity, new()
@@ -82,7 +85,8 @@ namespace NexusCore {
             return menuItem;
         }
 
-        public static List<MenuItem> getDefaultMenuStructure() {
+        public static List<MenuItem> getDefaultMenuStructure()
+        {
             return new List<MenuItem>() {
                 new MenuItem("Beheer") {
                     Childs = new List<MenuItem> {

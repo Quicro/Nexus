@@ -2,6 +2,7 @@ namespace NexusCore.Interfaces {
     public interface IControlledForm : IForm
     {
 
+        public IController controller { get; set; }
         /// <summary>
         /// After checking for an connection to database
         /// </summary>

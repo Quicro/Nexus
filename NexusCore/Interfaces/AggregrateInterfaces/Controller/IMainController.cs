@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NexusCore.Interfaces
+namespace NexusCore.Interfaces.AggregrateInterfaces.Forms
 {
-    public interface IWidget
+    internal interface IMainController : IForegroundController
     {
     }
 }

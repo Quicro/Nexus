@@ -1,43 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace NexusAI {
-    public partial class AIForm : Form {
-        public AIForm() {
+namespace NexusAI
+{
+    public partial class AIForm : Form
+    {
+        public AIForm()
+        {
             InitializeComponent();
         }
 
-        private void btnSend_Click(object sender, EventArgs e) {
+        private void btnSend_Click(object sender, EventArgs e)
+        {
             string question = listBox.Text;
 
             CacheItem cacheItem = Cache.items[question];
             txtSQL.Text = cacheItem.sql;
-            txtResponse.Text = cacheItem.answer;
+            txtResponse.Text = cacheItem.answer;   
         }
 
-        private void AIForm_Load(object sender, EventArgs e) {
+        private void AIForm_Load(object sender, EventArgs e)
+        {
             listBox.Items.AddRange(Cache.items.Keys.ToArray());
 
-            foreach (string question in listBox.Items.Cast<string>()) {
-                try {
+            foreach (string question in listBox.Items.Cast<string>())
+            {
+                try
+                {
                     CacheItem cacheItem = Cache.items[question];
                     txtSQL.Text = cacheItem.sql;
                     txtResponse.Text = cacheItem.answer;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     throw;
                 }
             }
         }
 
-        private void listBox_Click(object sender, EventArgs e) {
-            btnSend_Click(null,null);
+        private void listBox_Click(object sender, EventArgs e)
+        {
+            btnSend_Click(null, null);
         }
     }
 }

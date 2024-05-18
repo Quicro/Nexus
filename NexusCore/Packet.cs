@@ -97,7 +97,7 @@ namespace NexusCore {
         public static Packet Create<C, P>(Type type, IQueryable query, IPacketSender packetSender)
             where C : IController, new()
             where P : Packet, new() {
-            Logger.debug($"Made new Packet: {typeof(C).Name} {typeof(P).Name} {type.Name}");
+            Logger.LogDebug($"Made new Packet: {typeof(C).Name} {typeof(P).Name} {type.Name}");
 
             Packet packet = new P() {
                 sender = packetSender,

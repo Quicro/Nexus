@@ -1,39 +1,46 @@
-using NexusCore.Forms;
-using NexusCore.Widgets;
+using NexusCore.Components.AggregrateInterfaces.Forms;
+using NexusCore.Components.AggregrateInterfaces.Widgets;
+using NexusCore.Components.Widgets;
 using NexusCore.Interfaces;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+using NexusCore.Interfaces.Widgets;
 using NexusEF.Models;
+using NexusLogging;
 using System.Reflection;
 using static NexusCore.Helper;
 
-namespace NexusCore.Controllers
+namespace NexusCore.Components.AggregrateInterfaces.Controller
 {
     /// <summary>
     /// Controller for handling packets in the editor.
     /// </summary>
-    public class EditorController : IController
+    public class EditorController : IEditorController
     {
         /// <summary>
         /// Reference to the editor form.
         /// </summary>
-        public EditorForm editor; //ref => BigForms
+        public EditorForm editorForm; //ref => BigForms
 
         /// <summary>
         /// Reference to the editor user control.
         /// </summary>
-        public EditorWidget editorUserControl; //ref => BigControls
+        public EditorWidget editorWidget; //ref => BigControls
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorController"/> class.
         /// </summary>
         public EditorController()
         {
-            editor = new EditorForm();//ref => BigForms
-            editor.MdiParent = NexusMDIForm.singleton;
+            editorForm = new EditorForm();//ref => BigForms
 
-            editorUserControl = editor.editorUserControl;
+            //editorWidget = editorForm.widgets.First();
 
-            editor.controller = this;
+            editorForm.controller = this;
         }
+
+        public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public EditorForm EditorForm { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        List<IElementWidget> IForegroundController.widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Handles the specified packet.
@@ -72,7 +79,7 @@ namespace NexusCore.Controllers
             PacketSingleEditor packetSingleEditor = (PacketSingleEditor)packet;
             INexusEntity entity = packetSingleEditor.getEntities().Single();
 
-            editorUserControl.Controls.Add(new Label() { Text = "ID: " + entity.Id });
+            editorWidget.widgets.Add(new LabelWidget(new() { Text = "ID: " + entity.Id }));
 
             PropertyInfo[] fields = typeof(T).GetProperties();
             int i = 1;
@@ -91,42 +98,42 @@ namespace NexusCore.Controllers
                 var subTypeOfEntity = isSubTypeOfEntity(columnType);
                 var listOf = isListOf<INexusEntity>(value);
 
-                Logger.debug($"Editor Field Name: {typeof(T).Name}.{fieldname} = {value} islist={isList(value)} isSub={isSubTypeOfEntity(columnType)} isListOf={isListOf<INexusEntity>(value)}");
+                Logger.LogDebug($"Editor Field Name: {typeof(T).Name}.{fieldname} = {value} islist={isList(value)} isSub={isSubTypeOfEntity(columnType)} isListOf={isListOf<INexusEntity>(value)}");
 
                 if (value is null)
                 {
-                    editorUserControl.Controls.Add(new Label() { Text = "NULL", Location = new Point(200, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Label() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Label() { Text = "NULL", Location = new Point(150, i * 40 + 10) });
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = "NULL", Location = new Point(200, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = "NULL", Location = new Point(150, i * 40 + 10) }));
                 }
 
                 // O- (Dummy)
                 else if (isList(value) == false && isSubTypeOfEntity(columnType) == false)
                 {
-                    editorUserControl.Controls.Add(new Label() { Text = "Dummy", Location = new Point(200, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Label() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new TextBox() { Text = value, Location = new Point(150, i * 40 + 10) });
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = "Dummy", Location = new Point(200, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new TextBoxWidget(new() { Text = value, Location = new Point(150, i * 40 + 10) }));
                 }
 
                 // E- (Single)
                 else if (isList(value) == false && isSubTypeOfEntity(columnType) == true)
                 {
-                    editorUserControl.Controls.Add(new Label() { Text = "Single", Location = new Point(200, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Label() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Button() { Text = value, Location = new Point(150, i * 40 + 10) });
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = "Single", Location = new Point(200, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new ButtonWidget(new() { Text = value, Location = new Point(150, i * 40 + 10) }));
                 }
 
                 // E+ (Array)
                 else if (isList(value) == true && isListOf<INexusEntity>(value) == true)
                 {
-                    editorUserControl.Controls.Add(new Label() { Text = "Array", Location = new Point(200, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Label() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) });
-                    editorUserControl.Controls.Add(new Button() { Text = columnType.Name + "[]", Location = new Point(150, i * 40 + 10) });
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = "Array", Location = new Point(200, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new LabelWidget(new() { Text = fieldname + ": ", Location = new Point(10, i * 40 + 10) }));
+                    editorWidget.widgets.Add(new ButtonWidget(new() { Text = columnType.Name + "[]", Location = new Point(150, i * 40 + 10) }));
                 }
                 i++;
             }
 
-            editor.Show();
+            editorForm.Open();
         }
 
         /// <summary>
