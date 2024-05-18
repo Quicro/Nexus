@@ -1,20 +1,20 @@
-namespace NexusCore.Logging
+namespace NexusLogging
 {
     public class LoggingStartup {
         static void Main(string[] args) {
-            LoggerBla.LogDebug("hi");
-            LoggerBla.LogInfo("hi");
-            LoggerBla.LogError("hi");
+            Logger.LogDebug("hi");
+            Logger.LogInfo("hi");
+            Logger.LogError("hi");
 
-            LoggerBla.ApplicationStarted();
-            LoggerBla.ApplicationEnded();
-            LoggerBla.ApplicationCrashed();
+            Logger.ApplicationStarted();
+            Logger.ApplicationEnded();
+            Logger.ApplicationCrashed();
         }
 
         
     }
 
-    public static class LoggerBla {
+    public static class Logger {
         public static void ApplicationStarted() => LogInfo(1, "Application started");
         public static void ApplicationEnded() => LogDebug(2, "Application ended");
         public static void ApplicationCrashed() => LogError(-3, "Application crashed");

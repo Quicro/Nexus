@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NexusCore.BigForms;
 using NexusCore.Controllers;
 using NexusCore.Interfaces;
+using NexusLogging;
 using NexusEF;
 using NexusEF.Extentions;
 using NexusEF.Models;
