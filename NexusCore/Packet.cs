@@ -183,7 +183,7 @@ namespace NexusCore {
             handlerEnum = HandlerEnum.Single;
         }
 
-        public override string ToString() => $"Single<{type.Name}>({getEntity().id})";
+       // public override string ToString() => $"Single<{type.Name}>({getEntity().id})";
     }
 
     /// <summary>
@@ -194,7 +194,7 @@ namespace NexusCore {
             handlerEnum = HandlerEnum.Array;
         }
 
-        public override string ToString() => $"Array<{type.Name}>[{entities.Count}]";
+        //public override string ToString() => $"Array<{type.Name}>[{entities.Count}]";
     }
 
     /// <summary>
@@ -248,8 +248,7 @@ namespace NexusCore {
             handlerEnum = HandlerEnum.Edit;
         }
 
-        public override string ToString() =>
-            $"Edit<{packet.type?.Name}>[{packet..Count}] from {packet}";
+        //public override string ToString() => $"Edit<{packet.type?.Name}>[{packet..Count}] from {packet}";
     }
 
     /// <summary>
