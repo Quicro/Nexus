@@ -136,6 +136,20 @@ namespace PadocQuantum2 {
             return this;
         }
 
+        public PadocBuilder setViewerController(object viewerController) {  //WIP
+
+            //this.viewerController = viewerController;
+
+            return this;
+        }
+
+        public PadocBuilder setEditorController(object editorController) {  //WIP
+
+            //this.editorController = editorController;
+
+            return this;
+        }
+
         public PadocBuilder setMenuConfig(List<MenuItem> menuItem) {
 
             this.menuItems = menuItem;

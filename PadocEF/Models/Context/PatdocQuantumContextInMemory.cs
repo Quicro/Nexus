@@ -27,7 +27,7 @@ public partial class PadocQuantumContextInMemory : PadocQuantumContext {
     public virtual DbSet<UserRole> UserRole { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseInMemoryDatabase("Data Source=icv-sqltest;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False");
+        => optionsBuilder.UseInMemoryDatabase("Data Source=;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Claim>(entity => {

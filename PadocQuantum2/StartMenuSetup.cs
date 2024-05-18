@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using PadocEF.Models;
+using PadocQuantum2.Controllers;
+using System.Diagnostics;
 
 namespace PadocQuantum2 {
     [DebuggerDisplay("{Text} [{Childs.Count}] [{Authorized? \"Authorized\" : \"Unuthorized\"}] [{Show? \"Shown\" : \"Hidden\"}]")]
@@ -9,9 +11,17 @@ namespace PadocQuantum2 {
         public List<MenuItem> Childs { get; set; } = new List<MenuItem>();
         public bool Authorized { get; private set; }
         public bool Show { get; internal set; }
+        public PacketType PacketType { get; private set; }
+
         public void Click()
         {
-            throw new NotImplementedException();
+            PacketType? packetType = PacketType;
+
+            if (packetType is not null)
+            {
+                packetType.handler = new ViewerController(); //I'm stuck here and devloping this stuff
+                //packetType.handler = new ViewerController(packetType).ViewerForeignController.ViewerGenericController;
+            }
         }
 
         /// <summary>
@@ -44,34 +54,49 @@ namespace PadocQuantum2 {
             Show = false;
         }
 
-        public MenuItem(string text) {
+        public MenuItem(string text)
+        {
             Authorized = false;
             Show = false;
             Text = text;
         }
-
-        public MenuItem(string text, params string[] permissions) {
+        public MenuItem(string text, params string[] permissions)
+        {
             Authorized = false;
-            Show = false;
-            Text = text;
-            Permissions = permissions.ToList();
+                Show = false;
+                Text = text;
+                Permissions = permissions.ToList();
+        }
+
+        public static MenuItem newMenuItem<T>(string text, params string[] permissions) where T : IPadocEntity, new()
+        {
+            MenuItem menuItem = new MenuItem()
+            {
+                Authorized = false,
+                Show = false,
+                Text = text,
+                PacketType = new PacketType(typeof(T)),
+                Permissions = permissions.ToList()
+            };
+
+            return menuItem;
         }
 
         public static List<MenuItem> getDefaultMenuStructure() {
             return new List<MenuItem>() {
                 new MenuItem("Beheer") {
                     Childs = new List<MenuItem> {
-                        new MenuItem("Polissen", "StartMenu.Dossier.Polis"),
-                        new MenuItem("Schadegevallen", "StartMenu.Dossier.Schade"),
-                        new MenuItem("Klanten", "StartMenu.Dossier.Schade", "StartMenu.Dossier.Polis")
+                        newMenuItem<Policy>("Polissen", "StartMenu.Dossier.Polis"),
+                        newMenuItem<Claim>("Schadegevallen", "StartMenu.Dossier.Schade"),
+                        newMenuItem<Client>("Klanten", "StartMenu.Dossier.Schade", "StartMenu.Dossier.Polis")
                     }
                 },
                 new MenuItem("Administrator", "StartMenu.Admin") {
                     Childs = new List<MenuItem> {
                         new MenuItem("Database", "StartMenu.Database"),
-                        new MenuItem("Gebruikers"),
-                        new MenuItem("Rollen"),
-                        new MenuItem("Permissies")
+                        newMenuItem<User>("Gebruikers"),
+                        newMenuItem<Role>("Rollen"),
+                        newMenuItem<Permission>("Permissies")
                     }
                 }
             };

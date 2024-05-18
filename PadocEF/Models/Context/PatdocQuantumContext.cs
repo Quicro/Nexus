@@ -27,7 +27,7 @@ public partial class PadocQuantumContext : DbContext {
     public virtual DbSet<UserRole> UserRole { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { 
-        optionsBuilder.UseSqlServer("Data Source=icv-sqltest;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False", options => {
+        optionsBuilder.UseSqlServer("Data Source=;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False", options => {
             options.CommandTimeout(1); 
             optionsBuilder.EnableSensitiveDataLogging();
         });
