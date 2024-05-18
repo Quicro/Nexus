@@ -1,19 +1,19 @@
-using NexusEF;
-using NexusEF.Models;
-using NexusCore.BigControls;
+/*using NexusCore.Controllers; //UITZETTEN VAN WINDOWS FORMS REFERENCES
 using NexusCore.BigForms;
 using NexusCore.Interfaces;
-using NexusCore.Logging;
 
-namespace NexusCore {
+namespace NexusCore
+{
 
-    public partial class NexusMDIForm : Form {
+    public partial class NexusMDIForm : Form
+    {
         public static NexusMDIForm singleton;
         public static List<IPacketHandler> packetHandlers = new();
 
         public static event EventHandler<Packet> sent;
 
-        static NexusMDIForm() {
+        static NexusMDIForm()
+        {
             sent += NexusMDIForm_sent;
             if (singleton is null)
                 singleton = new();
@@ -21,21 +21,26 @@ namespace NexusCore {
             NexusBuilder.doMyFirstPacket();
         }
 
-        private static void NexusMDIForm_sent(object? sender, Packet packet) {
+        private static void NexusMDIForm_sent(object? sender, Packet packet)
+        {
             sent?.Invoke(singleton, packet);
         }
 
-        public void handle(object sender, Packet packet) {
+        public void handle(object sender, Packet packet)
+        {
             packet.sender = (IPacketSender)sender;
             packet.handler.handle(packet);
         }
 
-        public NexusMDIForm() {
+        public NexusMDIForm()
+        {
             InitializeComponent();
         }
 
-        private void typesToolStripMenuItem_Click(object sender, EventArgs e) {
-            new TypeViewer() {
+        private void typesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new TypeViewer()
+            {
                 MdiParent = this
             }.Show();
         }
@@ -44,3 +49,4 @@ namespace NexusCore {
 
 
 }
+*/

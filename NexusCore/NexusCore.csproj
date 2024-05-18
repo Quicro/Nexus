@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NexusEF\NexusEF.csproj" />
-    <ProjectReference Include="..\NexusCoreLogging\NexusCoreLogging.csproj" />
+    <ProjectReference Include="..\NexusLogging\NexusLogging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,3 +1,4 @@
+/*UITZETTEN VAN WINDOWS FORMS REFERENCES
 namespace NexusCore.BigForms {
     partial class Editor {
         /// <summary>
@@ -116,3 +117,4 @@ namespace NexusCore.BigForms {
         public DataGridView dataGridView1;
     }
 }
+*/

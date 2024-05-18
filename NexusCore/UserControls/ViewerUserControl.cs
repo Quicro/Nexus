@@ -1,29 +1,30 @@
-using Microsoft.EntityFrameworkCore;
-using NexusEF;
-using NexusEF.Models;
 using NexusCore.Controllers;
 using NexusCore.Interfaces;
-using System.Reflection;
 
-namespace NexusCore.BigControls {
-    public partial class ViewerUserControl : UserControl, IPacketSender {
+namespace NexusCore.BigControls
+{
+    public partial class ViewerUserControl : UserControl, IPacketSender
+    {
         public ViewerController controller;
         public event EventHandler<Packet> sent;
 
-        public ViewerUserControl() {
+        public ViewerUserControl()
+        {
             InitializeComponent();
 
             sent += NexusMDIForm.singleton.handle;
         }
 
-        
 
 
-        public void view_Click(object sender, MouseEventArgs e) {
+
+        public void view_Click(object sender, MouseEventArgs e)
+        {
             var mousePositionInListView = listView.PointToClient(MousePosition);
             var hitTest = listView.HitTest(mousePositionInListView);
 
-            if (hitTest.Item != null) {
+            if (hitTest.Item != null)
+            {
                 var listItem = hitTest.Item;
                 var rowIndex = listItem.Index;
                 var subItem = hitTest.SubItem;

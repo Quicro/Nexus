@@ -1,23 +1,27 @@
 using Microsoft.EntityFrameworkCore;
-using NexusEF;
-using NexusEF.Extentions;
-using NexusEF.Models;
 using NexusCore.BigForms;
 using NexusCore.Controllers;
 using NexusCore.Interfaces;
-using NexusCore.Logging;
+using NexusEF;
+using NexusEF.Extentions;
+using NexusEF.Models;
 
-namespace NexusCore {
-    public class NexusBuilder {
+namespace NexusCore
+{
+    public class NexusBuilder
+    {
         IMainForm mainform;
         public List<MenuItem> menuItems;
         public User currentUser;
         public List<Permission>? currentPermissions;
         private IQueryable<User> userQuery;
 
-        public NexusApp Build() {
-            try {
-                if (userQuery == null) {
+        public NexusApp Build()
+        {
+            try
+            {
+                if (userQuery == null)
+                {
                     currentUser = DatabaseManager.context.User
                          .Where(u => u.Name == "Q")
                          .Include(u => u.UserRole)
@@ -25,13 +29,15 @@ namespace NexusCore {
                          .ThenInclude(r => r.RolePermission)
                          .ThenInclude(rp => rp.Permission)
                          .Single();
-                } else {
+                }
+                else
+                {
                     currentUser = userQuery.Single();
                 }
 
                 currentPermissions = UserExtention.getPermissions(currentUser);
 
-                menuItems = RemoveUnauthorizedMenuItems(currentPermissions.Select(p=> p.Name), menuItems);
+                menuItems = RemoveUnauthorizedMenuItems(currentPermissions.Select(p => p.Name), menuItems);
 
                 string dateTime = $"{DateTime.Now:HH:mm:ss dd/MM/yy}";
 
@@ -47,7 +53,8 @@ namespace NexusCore {
 
 
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Logger.error(e.Message);
                 Logger.ApplicationCrashed();
                 throw e;
@@ -74,13 +81,16 @@ namespace NexusCore {
         /// <param name="menuItems">The list of menu items to filter based on permissions.</param>
         /// <param name="IncludeUnauthorizedToo">Indicates whether to include unauthorized menu items in the result.</param>
         /// <returns>A filtered list of menu items that the user is authorized to see.</returns>
-        private List<MenuItem> RemoveUnauthorizedMenuItems(IEnumerable<string>? currentPermissions, List<MenuItem> menuItems, bool IncludeUnauthorizedToo=false) {
+        private List<MenuItem> RemoveUnauthorizedMenuItems(IEnumerable<string>? currentPermissions, List<MenuItem> menuItems, bool IncludeUnauthorizedToo = false)
+        {
             List<MenuItem> returnList = new List<MenuItem>();
 
-            foreach (MenuItem menuItem in menuItems) {
+            foreach (MenuItem menuItem in menuItems)
+            {
                 menuItem.setAuthorized(currentPermissions);
 
-                if (menuItem.Authorized || IncludeUnauthorizedToo) {
+                if (menuItem.Authorized || IncludeUnauthorizedToo)
+                {
                     RemoveUnauthorizedMenuItems(currentPermissions, menuItem.Childs);
                     menuItem.Show = menuItem.Childs.Any(mi => mi.Authorized) || menuItem.Authorized;
                 }
@@ -91,25 +101,30 @@ namespace NexusCore {
             return returnList;
         }
 
-        public void EndApp() {
-            try {
+        public void EndApp()
+        {
+            try
+            {
                 mainform.End();
                 mainform.Close();
 
                 Logger.ApplicationEnded();
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Logger.error(e.Message);
                 Logger.ApplicationCrashed();
                 throw e;
             }
         }
 
-        public static void Crash(Exception exception) {
+        public static void Crash(Exception exception)
+        {
             throw exception;
         }
 
-        public static void doMyFirstPacket() {
+        public static void doMyFirstPacket()
+        {
             var sender = new PacketSender();
             IPacketReceiver viewerController = (IPacketReceiver)Activator.CreateInstance(typeof(ViewerController));
             PacketType packet = new PacketType(typeof(Policy));
@@ -118,7 +133,8 @@ namespace NexusCore {
             sender.send(viewerController, packet);
         }
 
-        public static void doMySecondPacket(int policyID) {
+        public static void doMySecondPacket(int policyID)
+        {
             var sender = new PacketSender();
             IPacketReceiver editorController = (IPacketReceiver)Activator.CreateInstance(typeof(EditorController));
             Packet packet = (Packet)Activator.CreateInstance(typeof(PacketSingle));
@@ -129,35 +145,40 @@ namespace NexusCore {
             sender.send(editorController, packet);
         }
 
-        public NexusBuilder setMainForm(IMainForm mainForm) {
+        public NexusBuilder setMainForm(IMainForm mainForm)
+        {
 
             this.mainform = mainForm;
 
             return this;
         }
 
-        public NexusBuilder setViewerController(object viewerController) {  //WIP
+        public NexusBuilder setViewerController(object viewerController)
+        {  //WIP
 
             //this.viewerController = viewerController;
 
             return this;
         }
 
-        public NexusBuilder setEditorController(object editorController) {  //WIP
+        public NexusBuilder setEditorController(object editorController)
+        {  //WIP
 
             //this.editorController = editorController;
 
             return this;
         }
 
-        public NexusBuilder setMenuConfig(List<MenuItem> menuItem) {
+        public NexusBuilder setMenuConfig(List<MenuItem> menuItem)
+        {
 
             this.menuItems = menuItem;
 
             return this;
         }
 
-        public NexusBuilder setUser(string username, string password) {
+        public NexusBuilder setUser(string username, string password)
+        {
 
             this.userQuery = DatabaseManager.context.User
                          .Where(user => user.Name == username && user.Password == password)

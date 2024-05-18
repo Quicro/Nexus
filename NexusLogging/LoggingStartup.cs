@@ -1,4 +1,5 @@
-namespace NexusOld.Logging {
+namespace NexusCore.Logging
+{
     public class LoggingStartup {
         static void Main(string[] args) {
             LoggerBla.LogDebug("hi");

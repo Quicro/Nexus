@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusAI", "NexusAI\NexusAI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusCore", "NexusCore\NexusCore.csproj", "{23407850-427C-40D5-A17B-660BC22E684F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusCoreLogging", "NexusCoreLogging\NexusCoreLogging.csproj", "{83DE8138-8032-4D5F-BBBD-03495AFF00F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NexusLogging", "NexusLogging\NexusLogging.csproj", "{83DE8138-8032-4D5F-BBBD-03495AFF00F6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nexus.Web", "Nexus.Web\Nexus.Web.csproj", "{8EFEFDB6-62D1-4E7E-8D95-D9ABDAE24C27}"
 EndProject

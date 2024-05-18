@@ -1,20 +1,33 @@
 using Microsoft.EntityFrameworkCore;
-using NexusEF.Extentions;
-using NexusEF.Models;
 using NexusCore.BigControls;
 using NexusCore.BigForms;
 using NexusCore.Interfaces;
-using NexusCore.Logging;
+using NexusEF.Models;
 using System.Reflection;
 using static NexusCore.Helper;
-using static System.Windows.Forms.ListViewItem;
 
 namespace NexusCore.Controllers
 {
-    public class ViewerController : IController {
+    /// <summary>
+    /// Controller for viewing entities and handling packets in the viewer.
+    /// </summary>
+    public class ViewerController : IController
+    {
+        /// <summary>
+        /// Reference to the viewer form.
+        /// </summary>
         public IViewerForm viewerForm; //ref => BigForms
+
+        /// <summary>
+        /// Reference to the viewer user control.
+        /// </summary>
         public ViewerUserControl viewerUserControl; //ref => BigControls
+
+        /// <summary>
+        /// Reference to the list view control.
+        /// </summary>
         public ListView listView;
+
         protected List<PropertyInfo> columns;
 
         /// <summary> Underlined text </summary>
@@ -26,30 +39,26 @@ namespace NexusCore.Controllers
         /// <summary> Italic text </summary>
         public static Font fontNull = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
 
-
-        public ViewerController() {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewerController"/> class.
+        /// </summary>
+        public ViewerController()
+        {
             viewerForm = new Viewer(); //ref => BigForms
-            //viewerForm.MdiParent = NexusMDIForm.singleton;
-            //viewerUserControl = viewerForm.viewerUserControl;
             listView = viewerUserControl.listView;
 
             listView.Parent = viewerUserControl;
-            //viewerUserControl.Parent = viewerForm;
-
             viewerUserControl.controller = this;
-
-            /*
-            viewerForm.FormClosing += (sender, e) => {
-                if (e.CloseReason == CloseReason.UserClosing) {
-                    e.Cancel = true; // Cancel the close operation
-                    viewerForm.Hide();     // Hide the form
-                }
-            };
-            */
         }
 
-        public void handle(Packet packet) {
-            if (!packet.hasNexusEntities) {
+        /// <summary>
+        /// Handles the specified packet.
+        /// </summary>
+        /// <param name="packet">The packet to handle.</param>
+        public void handle(Packet packet)
+        {
+            if (!packet.hasNexusEntities)
+            {
                 Logger.ViewerPacketHasNoEntitiesError();
                 throw new Exception();
             }
@@ -60,23 +69,24 @@ namespace NexusCore.Controllers
 
             Type type = packet.packetType;
 
-            if (isCollection(packet.packetType) == true && isListOf<INexusEntity>(packet.packetType) == true) {
+            if (isCollection(packet.packetType) == true && isListOf<INexusEntity>(packet.packetType) == true)
+            {
                 type = getListType(packet.packetType);
             }
 
             updateColumns(type);
 
-            if (packet.entities.Count != 0) {
+            if (packet.entities.Count != 0)
+            {
                 updateItems(type, packet.entities.ToList());
             }
 
             listView.EndUpdate();
-
-
             viewerForm.Open();
         }
 
-        internal void updateColumns(Type type) {
+        internal void updateColumns(Type type)
+        {
             listView.Columns.Clear();
 
             var fields = type.GetProperties();
@@ -84,25 +94,24 @@ namespace NexusCore.Controllers
                 .Where(field => !fields.Select(f => f.Name).Contains(field.Name + "Id"))
                 .ToList();
 
+            listView.Columns.Add("");
 
-            listView.Columns.Add(
-                  ""
-            );
-
-            foreach (var column in columns) {
-                listView.Columns.Add(
-                   column.Name
-                );
+            foreach (var column in columns)
+            {
+                listView.Columns.Add(column.Name);
             }
         }
 
-        internal void updateItems(Type type, List<INexusEntity> entities) {
+        internal void updateItems(Type type, List<INexusEntity> entities)
+        {
             listView.Items.Clear();
 
-            foreach (var entity in entities) {
+            foreach (var entity in entities)
+            {
                 var listViewItem = new ListViewItem() { UseItemStyleForSubItems = false };
 
-                foreach (PropertyInfo column in columns) {
+                foreach (PropertyInfo column in columns)
+                {
                     object value = column.GetValue(entity);
                     Type columnType = column.PropertyType;
                     IQueryable<INexusEntity> query = getQuery(type).Where(e => e.Id == entity.Id);
@@ -111,31 +120,36 @@ namespace NexusCore.Controllers
                     Font fontItem = fontDefault;
                     Color foreColor = Color.Black;
 
-                    if (value is null) {
+                    if (value is null)
+                    {
                         textItem = "NULL";
                         fontItem = fontNull;
                         foreColor = Color.Gray;
                     }
-                    else {
+                    else
+                    {
                         bool list = isList(value);
                         bool subTypeOfEntity = isSubTypeOfEntity(columnType);
                         bool listOf = isListOf<INexusEntity>(value);
 
                         PacketRelationshipType packetRelationshipType = getPacketRelationshipType(list, subTypeOfEntity, listOf);
 
-                        if (packetRelationshipType == PacketRelationshipType.Dummy) {
+                        if (packetRelationshipType == PacketRelationshipType.Dummy)
+                        {
                             textItem = value.ToString();
                         }
 
-                        if (packetRelationshipType == PacketRelationshipType.Single) {
-                            if (column.Name.EndsWith("Id") && column.Name != "Id") {
+                        if (packetRelationshipType == PacketRelationshipType.Single)
+                        {
+                            if (column.Name.EndsWith("Id") && column.Name != "Id")
+                            {
                                 PropertyInfo reference = type.GetProperties().Where(c => c.Name == column.Name.Replace("Id", "")).Single();
                                 Type referenceType = reference.PropertyType;
                                 int refID = (int)value;
 
                                 IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)callStaticGenericMethod(
-                                    typeof(Extentions),
-                                    nameof(Extentions.getQueryableByID),
+                                    typeof(Extensions),
+                                    nameof(Extensions.getQueryableByID),
                                     new Type[] { referenceType, type },
                                     new object[] { entity, refID }
                                 );
@@ -146,19 +160,17 @@ namespace NexusCore.Controllers
                                 fontItem = fontReference;
                                 foreColor = Color.Blue;
                             }
-                            else
-                                //ik wil graag weten waarom ik dit hierin had gezet, het vangt niks
-                                ;
                         }
 
-                        if (packetRelationshipType == PacketRelationshipType.Array) {
+                        if (packetRelationshipType == PacketRelationshipType.Array)
+                        {
                             var referenceType = getListType(value);
 
-                            referenceType = Extentions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
+                            referenceType = Extensions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
 
                             IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)callStaticGenericMethod(
-                                typeof(Extentions),
-                                nameof(Extentions.getRelatedQueryableByID),
+                                typeof(Extensions),
+                                nameof(Extensions.getRelatedQueryableByID),
                                 new Type[] { type, referenceType },
                                 new object[] { entity }
                             );
@@ -171,9 +183,8 @@ namespace NexusCore.Controllers
                         }
                     }
 
-
-
-                    listViewItem.SubItems.Add(new ListViewSubItem() {
+                    listViewItem.SubItems.Add(new ListViewSubItem()
+                    {
                         Tag = packet,
                         Text = textItem,
                         Font = fontItem,
@@ -182,8 +193,6 @@ namespace NexusCore.Controllers
                 }
                 listView.Items.Add(listViewItem);
             }
-
-
         }
     }
 }
