@@ -1,4 +1,5 @@
-using NexusCore.BigControls;
+using NexusCore.Forms;
+using NexusCore.Widgets;
 using NexusCore.Interfaces;
 using NexusEF.Models;
 using System.Reflection;
@@ -14,19 +15,19 @@ namespace NexusCore.Controllers
         /// <summary>
         /// Reference to the editor form.
         /// </summary>
-        public Editor editor; //ref => BigForms
+        public EditorForm editor; //ref => BigForms
 
         /// <summary>
         /// Reference to the editor user control.
         /// </summary>
-        public EditorUserControl editorUserControl; //ref => BigControls
+        public EditorWidget editorUserControl; //ref => BigControls
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorController"/> class.
         /// </summary>
         public EditorController()
         {
-            editor = new Editor();//ref => BigForms
+            editor = new EditorForm();//ref => BigForms
             editor.MdiParent = NexusMDIForm.singleton;
 
             editorUserControl = editor.editorUserControl;
@@ -134,7 +135,7 @@ namespace NexusCore.Controllers
         /// <typeparam name="C">The type of the item.</typeparam>
         /// <param name="editor">The editor form.</param>
         /// <param name="item">The item to handle.</param>
-        public static void doDummy<C>(Editor editor, C item)
+        public static void doDummy<C>(EditorForm editor, C item)
         {//ref => BigForms
 
         }
@@ -145,7 +146,7 @@ namespace NexusCore.Controllers
         /// <typeparam name="C">The type of the item.</typeparam>
         /// <param name="editor">The editor form.</param>
         /// <param name="item">The item to handle.</param>
-        public static void doSingle<C>(Editor editor, C item)//ref => BigForms
+        public static void doSingle<C>(EditorForm editor, C item)//ref => BigForms
             where C : INexusEntity, new()
         {
 
@@ -158,7 +159,7 @@ namespace NexusCore.Controllers
         /// <typeparam name="C">The type of the item in the array.</typeparam>
         /// <param name="editor">The editor form.</param>
         /// <param name="array">The array to handle.</param>
-        public static void doArray<T, C>(Editor editor, T array) //ref => BigForms
+        public static void doArray<T, C>(EditorForm editor, T array) //ref => BigForms
             where T : List<C>
             where C : INexusEntity, new()
         {

@@ -1,5 +1,10 @@
 namespace NexusCore.Interfaces {
-    public interface IForm {
+    public interface IForm
+    {
+        public IController controller { get; set; }
+        public List<IWidget> widgets { get; set; }
+
+
         /// <summary>
         /// Called when the form is constructed, used after the ctor is finishes as last step of the ctor
         /// </summary>

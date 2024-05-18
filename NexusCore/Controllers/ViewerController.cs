@@ -16,12 +16,8 @@ namespace NexusCore.Controllers
         /// <summary>
         /// Reference to the viewer form.
         /// </summary>
-        public IViewerForm viewerForm; //ref => BigForms
+        public IForm viewerForm; //ref => BigForms
 
-        /// <summary>
-        /// Reference to the viewer user control.
-        /// </summary>
-        public ViewerUserControl viewerUserControl; //ref => BigControls
 
         /// <summary>
         /// Reference to the list view control.
@@ -38,6 +34,8 @@ namespace NexusCore.Controllers
         public static Font fontSelected = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Bold);
         /// <summary> Italic text </summary>
         public static Font fontNull = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
+
+        public List<IWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewerController"/> class.

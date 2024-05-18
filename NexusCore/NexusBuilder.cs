@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using NexusCore.BigForms;
 using NexusCore.Controllers;
 using NexusCore.Interfaces;
 using NexusLogging;
@@ -56,9 +55,9 @@ namespace NexusCore
             }
             catch (Exception e)
             {
-                Logger.error(e.Message);
+                Logger.LogError(e.Message);
                 Logger.ApplicationCrashed();
-                throw e;
+                throw;
             }
 
             return new NexusApp();
@@ -113,7 +112,7 @@ namespace NexusCore
             }
             catch (Exception e)
             {
-                Logger.error(e.Message);
+                Logger.LogError(e.Message);
                 Logger.ApplicationCrashed();
                 throw e;
             }

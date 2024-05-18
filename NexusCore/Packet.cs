@@ -1,6 +1,6 @@
 using NexusEF.Models;
 using NexusCore.Interfaces;
-using NexusCore.Logging;
+using NexusLogging;
 using System.Reflection;
 
 namespace NexusCore {

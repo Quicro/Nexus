@@ -29,6 +29,8 @@ namespace NexusLogging
         public static void OpenForbiddenTypeError(string typeName) => LogError(-12, $"User tried to open the type {typeName} in typeViewer");
         public static void TEMPLATE() => LogInfo(0, $"");
 
+        public static void logHeader(string text) { LogDebug(text); }
+
         const ConsoleColor debug = ConsoleColor.Green;
         const ConsoleColor info = ConsoleColor.Blue;
         const ConsoleColor error = ConsoleColor.Red;
