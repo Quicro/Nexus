@@ -10,7 +10,7 @@ namespace NexusCore.Components.AggregrateInterfaces.Forms
 {
     public class EditorForm : IEditorForm
     {
-        public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IController controller { get; set; }
 
         public event EventHandler OnDataLoading;
         public event EventHandler OnDataLoaded;

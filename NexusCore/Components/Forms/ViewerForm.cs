@@ -35,6 +35,8 @@ namespace NexusCore.Components.AggregrateInterfaces.Forms
         public void Open()
         {
             throw new NotImplementedException();
+
+
         }
 
         public void Start(List<MenuItem> menu)

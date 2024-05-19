@@ -1,3 +1,4 @@
+using NexusCore.Components.AggregrateInterfaces.Controller;
 using NexusEF.Models;
 using System.Diagnostics;
 
@@ -20,6 +21,9 @@ namespace NexusCore
 
             if (packetType is not null)
             {
+
+                packetType.handler = new ViewerController();
+                packetType.handler.handle(packetType);
                 //packetType.handler = new ViewerController(); //I'm stuck here and devloping this stuff
                 //packetType.handler = new ViewerController(packetType).ViewerForeignController.ViewerGenericController;
             }

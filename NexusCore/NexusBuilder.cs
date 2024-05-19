@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NexusCore.Components.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusEF;
 using NexusEF.Extentions;
@@ -14,9 +15,13 @@ namespace NexusCore
         public User currentUser;
         public List<Permission>? currentPermissions;
         private IQueryable<User> userQuery;
+        public IViewerForm viewerForm;
+        public IEditorForm editorForm;
 
         public NexusApp Build()
         {
+            mainform.builder = this;
+
             try
             {
                 if (userQuery == null)
@@ -33,6 +38,8 @@ namespace NexusCore
                 {
                     currentUser = userQuery.Single();
                 }
+
+
 
                 currentPermissions = UserExtention.getPermissions(currentUser);
 
@@ -152,18 +159,16 @@ namespace NexusCore
             return this;
         }
 
-        public NexusBuilder setViewerController(object viewerController)
-        {  //WIP
-
-            //this.viewerController = viewerController;
+        public NexusBuilder setViewerForm(IViewerForm viewerForm)
+        {  
+            this.viewerForm = viewerForm;
 
             return this;
         }
 
-        public NexusBuilder setEditorController(object editorController)
-        {  //WIP
-
-            //this.editorController = editorController;
+        public NexusBuilder setEditorForm(IEditorForm editorForm)
+        {
+            this.editorForm = editorForm;
 
             return this;
         }

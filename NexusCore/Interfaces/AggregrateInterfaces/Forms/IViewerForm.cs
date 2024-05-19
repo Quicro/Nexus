@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NexusCore.Interfaces.AggregrateInterfaces.Forms
 {
-    internal interface IViewerForm : IControlledForm
+    public interface IViewerForm : IControlledForm
     {
     }
 }
