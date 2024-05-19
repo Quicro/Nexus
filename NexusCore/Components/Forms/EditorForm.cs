@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NexusCore.Interfaces;
+﻿using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
 namespace NexusCore.Components.AggregrateInterfaces.Forms
@@ -38,7 +33,7 @@ namespace NexusCore.Components.AggregrateInterfaces.Forms
             throw new NotImplementedException();
         }
 
-        public void Start(List<MenuItem> menu)
+        public void Start()
         {
             throw new NotImplementedException();
         }

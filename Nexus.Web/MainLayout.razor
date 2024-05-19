@@ -1,7 +1,7 @@
 @inherits LayoutComponentBase
 
 <ul style="list-style-type: none;">
-    @foreach (var menuItem in MainForm.Instance.menusetup) {
+    @foreach (var menuItem in MyMainForm.singleton.app.menuItems) { //Dit zou direct van de eigen form moeten gebeuren, maar die worden nog niet correct opgevuld, WIP
         if (menuItem.Show)
         {
             <li>

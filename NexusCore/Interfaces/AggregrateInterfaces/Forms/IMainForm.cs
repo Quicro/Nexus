@@ -3,7 +3,7 @@ namespace NexusCore.Interfaces.AggregrateInterfaces.Forms
     public interface IMainForm : IForm
     {
 
-        public NexusBuilder builder { get; set; }
+        public NexusApp app { get; set; }
 
         /// <summary>
         /// Form was closed

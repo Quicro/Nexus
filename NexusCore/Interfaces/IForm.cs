@@ -15,7 +15,7 @@ namespace NexusCore.Interfaces {
 
 
         public void Open();
-        public void Start(List<MenuItem> menu);
+        public void Start();
         public void End();
         public void Close();
     }

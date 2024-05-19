@@ -24,8 +24,6 @@ namespace NexusCore
 
                 packetType.handler = new ViewerController();
                 packetType.handler.handle(packetType);
-                //packetType.handler = new ViewerController(); //I'm stuck here and devloping this stuff
-                //packetType.handler = new ViewerController(packetType).ViewerForeignController.ViewerGenericController;
             }
         }
 
