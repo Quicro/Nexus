@@ -63,6 +63,7 @@ public class MyMainForm : IMainForm
 
     public bool SetUpStartMenu(List<MenuItem> setup)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        return false;
     }
 }
