@@ -1,17 +1,17 @@
-
-
 using NexusCore;
 
-
-
 List<MenuItem> menuItem = MenuItem.getDefaultMenuStructure();
-MainForm mainForm = new MainForm();
 
-var NexusBuilder = new NexusBuilder()
-    .setMainForm(mainForm)
+var builder = new NexusBuilder()
+    .setMainForm<MyMainForm>()
+    //.setViewerForm<MyViewerForm>() // This is not implemented yet
+    //.setEditorForm<MyEditorForm>() // This is not implemented yet
     .setMenuConfig(menuItem)
     .setUser("Q", "")
 ;
 
-NexusBuilder.Build();
+NexusApp app = builder.Build();
 
+app.Run();
+
+app.CleanUp();

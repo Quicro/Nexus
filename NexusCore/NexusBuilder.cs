@@ -10,18 +10,18 @@ namespace NexusCore
 {
     public class NexusBuilder
     {
-        IMainForm mainform;
         public List<MenuItem> menuItems;
         public User currentUser;
         public List<Permission>? currentPermissions;
-        private IQueryable<User> userQuery;
-        public IViewerForm viewerForm;
-        public IEditorForm editorForm;
+        public IQueryable<User> userQuery;
+        public Type viewerFormType;
+        public Type editorFormType;
+        public Type mainFormType;
+
+        public NexusApp app;
 
         public NexusApp Build()
         {
-            mainform.builder = this;
-
             try
             {
                 if (userQuery == null)
@@ -38,25 +38,20 @@ namespace NexusCore
                 {
                     currentUser = userQuery.Single();
                 }
-
-
-
                 currentPermissions = UserExtention.getPermissions(currentUser);
-
                 menuItems = RemoveUnauthorizedMenuItems(currentPermissions.Select(p => p.Name), menuItems);
 
+                app = new NexusApp()
+                {
+                    mainFormType = mainFormType,
+                    viewerFormType = viewerFormType,
+                    editorFormType = editorFormType,
+                    menuItems = menuItems,
+                    currentUser = currentUser
+                };
+
                 string dateTime = $"{DateTime.Now:HH:mm:ss dd/MM/yy}";
-
-                //Logger.logTitle("Nexus");
                 Logger.logHeader($"Started at {dateTime}    \n");
-
-                mainform.Open();
-                Logger.ApplicationStarted();
-
-                mainform.SetUpStartMenu(menuItems);
-
-                mainform.Start(menuItems);
-
 
             }
             catch (Exception e)
@@ -66,7 +61,7 @@ namespace NexusCore
                 throw;
             }
 
-            return new NexusApp();
+            return app;
         }
 
         /// <summary>
@@ -109,19 +104,6 @@ namespace NexusCore
 
         public void EndApp()
         {
-            try
-            {
-                mainform.End();
-                mainform.Close();
-
-                Logger.ApplicationEnded();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-                Logger.ApplicationCrashed();
-                throw e;
-            }
         }
 
         public static void Crash(Exception exception)
@@ -151,25 +133,19 @@ namespace NexusCore
             sender.send(editorController, packet);
         }*/
 
-        public NexusBuilder setMainForm(IMainForm mainForm)
+        public NexusBuilder setMainForm<T>() where T : IMainForm
         {
-
-            this.mainform = mainForm;
-
+            this.mainFormType = typeof(T);
             return this;
         }
-
-        public NexusBuilder setViewerForm(IViewerForm viewerForm)
-        {  
-            this.viewerForm = viewerForm;
-
+        public NexusBuilder setViewerForm<T>() where T : IViewerForm
+        {
+            this.viewerFormType = typeof(T);
             return this;
         }
-
-        public NexusBuilder setEditorForm(IEditorForm editorForm)
+        public NexusBuilder setEditorForm<T>() where T : IEditorForm
         {
-            this.editorForm = editorForm;
-
+            this.editorFormType = typeof(T);
             return this;
         }
 

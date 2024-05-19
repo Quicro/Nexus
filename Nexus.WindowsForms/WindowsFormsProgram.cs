@@ -1,5 +1,4 @@
 using NexusCore;
-using NexusCore.Components.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
@@ -14,22 +13,22 @@ namespace Nexus.WindowsForms
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            MyMainForm mainForm = new MyMainForm();
-            MyViewerForm viewerForm = new MyViewerForm();
-            MyEditorForm editorForm = new MyEditorForm();
+
             List<MenuItem> menuItem = MenuItem.getDefaultMenuStructure();
 
             var builder = new NexusBuilder()
-                .setMainForm(mainForm)
-                .setViewerForm(viewerForm) //WIP
-                .setEditorForm(editorForm) //WIP
+                .setMainForm<MyMainForm>()
+                .setViewerForm<MyViewerForm>()
+                .setEditorForm<MyEditorForm>()
                 .setMenuConfig(menuItem)
                 .setUser("Q", "")
             ;
 
             NexusApp app = builder.Build();
 
-            app.Destruct();
+            app.Run();
+
+            app.CleanUp();
 
         }
         class MyViewerForm : Form, IViewerForm
@@ -57,7 +56,7 @@ namespace Nexus.WindowsForms
                 throw new NotImplementedException();
             }
 
-            public void Start(List<MenuItem> menu)
+            public void Start()
             {
                 throw new NotImplementedException();
             }
@@ -88,7 +87,8 @@ namespace Nexus.WindowsForms
                 throw new NotImplementedException();
             }
 
-            public void Start(List<MenuItem> menu)
+
+            public void Start()
             {
                 throw new NotImplementedException();
             }
@@ -98,6 +98,8 @@ namespace Nexus.WindowsForms
         {
             private MenuStrip menuStrip1;
             private ToolStripMenuItem adresToolStripMenuItem;
+
+            public NexusApp app { get; set; }
 
             public event EventHandler<Packet> OnPacket;
             public event EventHandler OnOpen;
@@ -166,10 +168,9 @@ namespace Nexus.WindowsForms
 
                 return true;
             }
-
-            public void Start(List<MenuItem> menu)
+            public void Start()
             {
-
+                SetUpStartMenu(app.menuItems);
                 Application.Run(this);
             }
         }

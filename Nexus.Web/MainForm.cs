@@ -1,62 +1,68 @@
 using NexusCore;
-using NexusCore.AggregrateInterfaces.Forms;
-using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
-public class MainForm : IMainForm {
-    public static MainForm Instance { get; private set; }
-    public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+public class MyMainForm : IMainForm
+{
+    public static MyMainForm singleton { get; private set; }
+    public NexusApp app { get; set; }
 
-    WebApplication app;
-    public List<MenuItem> menusetup;
+    WebApplication webapp;
 
     public event EventHandler<Packet> OnPacket;
     public event EventHandler OnOpen;
     public event EventHandler OnClose;
 
-    public void Close() {
-        Instance = null;
+    public void Close()
+    {
+        singleton = null;
     }
 
-    public void End() {
+    public void End()
+    {
 
     }
 
-    public void Open() {
-        if (Instance is not null) {
+    public void Open()
+    {
+        if (singleton is not null)
+        {
             throw new Exception("Cannot open a new MainForm, because there is already one open");
-        } else {
-            Instance = this;
+        }
+        else
+        {
+            singleton = this;
         }
 
         var builder = WebApplication.CreateBuilder();
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
 
-        app = builder.Build();
+        webapp = builder.Build();
 
-        if (!app.Environment.IsDevelopment()) {
+        if (!webapp.Environment.IsDevelopment())
+        {
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
+            webapp.UseHsts();
         }
 
-        app.UseHttpsRedirection();
+        webapp.UseHttpsRedirection();
 
-        app.UseStaticFiles();
+        webapp.UseStaticFiles();
 
-        app.UseRouting();
+        webapp.UseRouting();
 
-        app.MapBlazorHub();
-        app.MapFallbackToPage("/_Host");
+        webapp.MapBlazorHub();
+        webapp.MapFallbackToPage("/_Host");
     }
 
-    public bool SetUpStartMenu(List<MenuItem> setup) {
-        this.menusetup = setup;
-
-        return false;
+    public void Start()
+    {
+        SetUpStartMenu(app.menuItems);
+        webapp.Run();
     }
 
-    public void Start(List<MenuItem> menu) {
-        app.Run();
+    public bool SetUpStartMenu(List<MenuItem> setup)
+    {
+        throw new NotImplementedException();
     }
 }
