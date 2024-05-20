@@ -1,0 +1,18 @@
+﻿@page "/view/{type}"
+
+@code {
+    [Parameter]
+    public string Type { get; set; }
+
+    private string Description { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Description =  Type;
+    }
+}
+
+<li><a href="edit/@Type/1">Edit @Type 1</a></li>
+<li><a href="edit/@Type/2">Edit @Type 2</a></li>
+<li><a href="edit/@Type/3">Edit @Type 3</a></li>
+

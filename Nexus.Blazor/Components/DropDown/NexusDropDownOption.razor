@@ -1,0 +1,6 @@
+﻿<a class="dropdown-item" href="@Href">@ChildContent</a>
+
+@code {
+    [Parameter] public string Href { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

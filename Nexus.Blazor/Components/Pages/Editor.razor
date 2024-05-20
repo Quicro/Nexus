@@ -1,0 +1,18 @@
+﻿@page "/edit/{type}/{id}"
+
+@code {
+    [Parameter]
+    public string Type { get; set; }
+    [Parameter]
+    public string id { get; set; }
+
+    private string Description { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Description =  Type;
+    }
+}
+
+
+<h3>@Description @id </h3>
