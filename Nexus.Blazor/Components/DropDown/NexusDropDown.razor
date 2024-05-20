@@ -1,0 +1,18 @@
+<div class="dropdown">
+    <button class="dropdown-toggle" @onclick="ToggleDropdown">@Text</button>
+    <div class="dropdown-menu" style="display:@(isOpen ? "block" : "none")">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Text { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private bool isOpen = false;
+
+    private void ToggleDropdown()
+    {
+        isOpen = !isOpen;
+    }
+}

@@ -99,7 +99,7 @@ namespace Nexus.WindowsForms
             private MenuStrip menuStrip1;
             private ToolStripMenuItem adresToolStripMenuItem;
 
-            public NexusApp app { get; set; }
+            public NexusApp nexusApp { get; set; }
 
             public event EventHandler<Packet> OnPacket;
             public event EventHandler OnOpen;
@@ -170,7 +170,7 @@ namespace Nexus.WindowsForms
             }
             public void Start()
             {
-                SetUpStartMenu(app.menuItems);
+                SetUpStartMenu(nexusApp.menuItems);
                 Application.Run(this);
             }
         }

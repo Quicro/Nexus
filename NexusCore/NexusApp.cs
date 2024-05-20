@@ -35,7 +35,7 @@ namespace NexusCore {
         public void Run()
         {
             mainForm = (IMainForm)Activator.CreateInstance(mainFormType);
-            mainForm.app = this;
+            mainForm.nexusApp = this;
 
             mainForm.Open();
             mainForm.Start();

@@ -6,6 +6,7 @@ public class MyMainForm : IMainForm
 {
     public static MyMainForm singleton { get; private set; }
     public NexusApp app { get; set; }
+    public NexusApp nexusApp { get; set; }
 
     WebApplication webapp;
 
