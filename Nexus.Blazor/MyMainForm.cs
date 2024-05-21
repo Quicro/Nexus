@@ -5,7 +5,6 @@ using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 public class MyMainForm : IMainForm
 {
     public static MyMainForm singleton { get; private set; }
-    public NexusApp app { get; set; }
     public NexusApp nexusApp { get; set; }
 
     WebApplication webapp;
@@ -40,8 +39,9 @@ public class MyMainForm : IMainForm
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
+        builder.Services.AddSingleton(nexusApp);
 
-        var webapp = builder.Build();
+        webapp = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!webapp.Environment.IsDevelopment())
@@ -54,13 +54,11 @@ public class MyMainForm : IMainForm
 
         webapp.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
-
-        webapp.Run();
     }
 
     public void Start()
     {
-        SetUpStartMenu(app.menuItems);
+        SetUpStartMenu(nexusApp.menuItems);
         webapp.Run();
     }
 
