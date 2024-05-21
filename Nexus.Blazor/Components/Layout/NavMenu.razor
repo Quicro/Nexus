@@ -1,8 +1,11 @@
 ﻿@using Nexus.Blazor.Components.DropDown
+@using NexusCore
+
+@inject NexusApp nexusApp
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Nexus.Blazor</a>
+        <a class="navbar-brand" href="">Welkom @nexusApp.currentUser.Name</a>
     </div>
 </div>
 
@@ -10,16 +13,43 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-        <NexusDropDown Text="Beheer">
-            <NexusDropDownOption Href="view/Politieagenten">Politieagenten</NexusDropDownOption>
-            <NexusDropDownOption>
-                <NexusDropDown Text="Studie">
-                    <NexusDropDownOption Href="view/Leerkrachten">Leerkrachten</NexusDropDownOption>
-                    <NexusDropDownOption Href="view/Leerlingen">Leerlingen</NexusDropDownOption>
-                    <NexusDropDownOption Href="view/Lokalen">Lokalen</NexusDropDownOption>
-                </NexusDropDown>
-            </NexusDropDownOption>
-        </NexusDropDown>
+
+        @foreach (var menuItem in nexusApp.menuItems)
+        {
+            <NexusDropDown Text="@menuItem.Text">
+                @foreach (var subItem in menuItem.Childs)
+                {
+                    if (subItem.Childs != null && subItem.Childs.Count > 0)
+                    {
+                        <NexusDropDownOption>
+                            <NexusDropDown Text="@subItem.Text">
+                                @foreach (var subSubItem in subItem.Childs)
+                                {
+                                    <NexusDropDownOption Href="@GetHref(subSubItem)">
+                                        @subSubItem.Text
+                                    </NexusDropDownOption>
+                                }
+                            </NexusDropDown>
+                        </NexusDropDownOption>
+                    }
+                    else
+                    {
+                        <NexusDropDownOption Href="@GetHref(subItem)">
+                            @subItem.Text
+                        </NexusDropDownOption>
+                    }
+                }
+            </NexusDropDown>
+        }
     </nav>
 </div>
 
+@code {
+    private string GetHref(MenuItem menuItem)
+    {
+        if (menuItem.packet is null)
+            return "";
+
+        return $"view/{menuItem.packet.packetType}";
+    }
+}

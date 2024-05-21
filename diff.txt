@@ -1,0 +1,180 @@
+diff --git a/Nexus.Blazor/Components/DropDown/NexusDropDownOption.razor b/Nexus.Blazor/Components/DropDown/NexusDropDownOption.razor
+index 307a9bb..d822383 100644
+--- a/Nexus.Blazor/Components/DropDown/NexusDropDownOption.razor
++++ b/Nexus.Blazor/Components/DropDown/NexusDropDownOption.razor
+@@ -1,6 +1,18 @@
+-﻿<a class="dropdown-item" href="@Href">@ChildContent</a>
++﻿<a class="dropdown-item" @attributes="GetAttributes()">@ChildContent</a>
+ 
+ @code {
+     [Parameter] public string Href { get; set; }
+     [Parameter] public RenderFragment ChildContent { get; set; }
++
++    private Dictionary<string, object> GetAttributes()
++    {
++        var attributes = new Dictionary<string, object>();
++
++        if (!string.IsNullOrEmpty(Href))
++        {
++            attributes.Add("href", Href);
++        }
++
++        return attributes;
++    }
+ }
+diff --git a/Nexus.Blazor/Components/Layout/NavMenu.razor b/Nexus.Blazor/Components/Layout/NavMenu.razor
+index 6756042..f0e5785 100644
+--- a/Nexus.Blazor/Components/Layout/NavMenu.razor
++++ b/Nexus.Blazor/Components/Layout/NavMenu.razor
+@@ -1,8 +1,11 @@
+ ﻿@using Nexus.Blazor.Components.DropDown
++@using NexusCore
++
++@inject NexusApp nexusApp
+ 
+ <div class="top-row ps-3 navbar navbar-dark">
+     <div class="container-fluid">
+-        <a class="navbar-brand" href="">Nexus.Blazor</a>
++        <a class="navbar-brand" href="">Welkom @nexusApp.currentUser.Name</a>
+     </div>
+ </div>
+ 
+@@ -10,16 +13,43 @@
+ 
+ <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+     <nav class="flex-column">
+-        <NexusDropDown Text="Beheer">
+-            <NexusDropDownOption Href="view/Politieagenten">Politieagenten</NexusDropDownOption>
+-            <NexusDropDownOption>
+-                <NexusDropDown Text="Studie">
+-                    <NexusDropDownOption Href="view/Leerkrachten">Leerkrachten</NexusDropDownOption>
+-                    <NexusDropDownOption Href="view/Leerlingen">Leerlingen</NexusDropDownOption>
+-                    <NexusDropDownOption Href="view/Lokalen">Lokalen</NexusDropDownOption>
+-                </NexusDropDown>
+-            </NexusDropDownOption>
+-        </NexusDropDown>
++
++        @foreach (var menuItem in nexusApp.menuItems)
++        {
++            <NexusDropDown Text="@menuItem.Text">
++                @foreach (var subItem in menuItem.Childs)
++                {
++                    if (subItem.Childs != null && subItem.Childs.Count > 0)
++                    {
++                        <NexusDropDownOption>
++                            <NexusDropDown Text="@subItem.Text">
++                                @foreach (var subSubItem in subItem.Childs)
++                                {
++                                    <NexusDropDownOption Href="@GetHref(subSubItem)">
++                                        @subSubItem.Text
++                                    </NexusDropDownOption>
++                                }
++                            </NexusDropDown>
++                        </NexusDropDownOption>
++                    }
++                    else
++                    {
++                        <NexusDropDownOption Href="@GetHref(subItem)">
++                            @subItem.Text
++                        </NexusDropDownOption>
++                    }
++                }
++            </NexusDropDown>
++        }
+     </nav>
+ </div>
+ 
++@code {
++    private string GetHref(MenuItem menuItem)
++    {
++        if (menuItem.packet is null)
++            return "";
++
++        return $"view/{menuItem.packet.packetType}";
++    }
++}
+diff --git a/Nexus.Blazor/MyMainForm.cs b/Nexus.Blazor/MyMainForm.cs
+index d3b1dc0..61b5566 100644
+--- a/Nexus.Blazor/MyMainForm.cs
++++ b/Nexus.Blazor/MyMainForm.cs
+@@ -5,7 +5,6 @@ using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+ public class MyMainForm : IMainForm
+ {
+     public static MyMainForm singleton { get; private set; }
+-    public NexusApp app { get; set; }
+     public NexusApp nexusApp { get; set; }
+ 
+     WebApplication webapp;
+@@ -40,8 +39,9 @@ public class MyMainForm : IMainForm
+         // Add services to the container.
+         builder.Services.AddRazorComponents()
+             .AddInteractiveServerComponents();
++        builder.Services.AddSingleton(nexusApp);
+ 
+-        var webapp = builder.Build();
++        webapp = builder.Build();
+ 
+         // Configure the HTTP request pipeline.
+         if (!webapp.Environment.IsDevelopment())
+@@ -54,13 +54,11 @@ public class MyMainForm : IMainForm
+ 
+         webapp.MapRazorComponents<App>()
+             .AddInteractiveServerRenderMode();
+-
+-        webapp.Run();
+     }
+ 
+     public void Start()
+     {
+-        SetUpStartMenu(app.menuItems);
++        SetUpStartMenu(nexusApp.menuItems);
+         webapp.Run();
+     }
+ 
+diff --git a/NexusCore/StartMenuSetup.cs b/NexusCore/StartMenuSetup.cs
+index e935b0e..845fe11 100644
+--- a/NexusCore/StartMenuSetup.cs
++++ b/NexusCore/StartMenuSetup.cs
+@@ -13,11 +13,11 @@ namespace NexusCore
+         public List<MenuItem> Childs { get; set; } = new List<MenuItem>();
+         public bool Authorized { get; private set; }
+         public bool Show { get; internal set; }
+-        public PacketType PacketType { get; private set; }
++        public Packet packet { get; private set; }
+ 
+         public void Click()
+         {
+-            PacketType? packetType = PacketType;
++            Packet? packetType = packet;
+ 
+             if (packetType is not null)
+             {
+@@ -80,7 +80,7 @@ namespace NexusCore
+                 Authorized = false,
+                 Show = false,
+                 Text = text,
+-                PacketType = new PacketType(typeof(T)),
++                packet = new PacketType(typeof(T)),
+                 Permissions = permissions.ToList()
+             };
+ 
+@@ -104,7 +104,18 @@ namespace NexusCore
+                         newMenuItem<Role>("Rollen"),
+                         newMenuItem<Permission>("Permissies")
+                     }
+-                }
++                },
++                //new MenuItem("Test (niet auth)", "Unknown.Permission"),
++                //new MenuItem("Test (leeg)"),
++                //new MenuItem("Test (3 lagen)")  {
++                //    Childs = new List<MenuItem> {
++                //        new MenuItem("SubTest (3 lagen)")  {
++                //            Childs = new List<MenuItem> {
++                //                new MenuItem("SubSubTest")
++                //            }
++                //        }
++                //    }
++                //}
+             };
+         }
+     }
