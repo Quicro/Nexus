@@ -19,7 +19,7 @@ namespace NexusCore {
 
         public static object? callMethod(object obj, string methodName, params object[] parameters) {
             MethodInfo method = obj.GetType().GetMethod(methodName);
-            Type type = method.GetType();
+            method.GetType();
             object? result = method.Invoke(obj, parameters);
             return result;
         }
@@ -33,8 +33,8 @@ namespace NexusCore {
         public static object callStaticGenericMethod(Type callType, string methodName, Type[] types, params object[] parameters) {
             MethodInfo v = callType.GetMethod(methodName);
             MethodInfo genericMethod = v.MakeGenericMethod(types);
-            var aa = genericMethod.Invoke(null, parameters);
-            Type type = aa.GetType();
+            object? aa = genericMethod.Invoke(null, parameters);
+            aa.GetType();
             return aa;
         }
 
@@ -45,7 +45,7 @@ namespace NexusCore {
                                             .Where(m => m.Name == "Set" && m.GetParameters().Length == 0)
                                             .First()
                                             .MakeGenericMethod(type);
-            var query = methodInfo.Invoke(DatabaseManager.context, null) as IQueryable<INexusEntity>;
+            IQueryable<INexusEntity>? query = methodInfo.Invoke(DatabaseManager.context, null) as IQueryable<INexusEntity>;
             return query;
         }
 
@@ -73,7 +73,7 @@ namespace NexusCore {
             bool assignableFromINexusEntity = typeof(INexusEntity).IsAssignableFrom(obj);
             bool isNullable = obj.IsGenericType &&
                                 obj.GetGenericTypeDefinition() == typeof(Nullable<>);
-            bool isGenericStringOrInt = isNullable && new[] { typeof(string), typeof(int) }.Contains(obj.GetGenericArguments()[0]);
+            bool isGenericStringOrInt = isNullable && new[] { typeof(string), typeof(int) }.Contains(obj.GetGenericArguments()[ 0 ]);
 
             return assignableFromINexusEntity || isGenericStringOrInt;
         }
@@ -82,65 +82,75 @@ namespace NexusCore {
         public static Type getListType(object obj) {
             Type returnValue = null;
 
-            if (isList(obj))
-                returnValue = obj.GetType().GetGenericArguments()[0];
+            if (isList(obj)) {
+                returnValue = obj.GetType().GetGenericArguments()[ 0 ];
+            }
 
             return returnValue;
         }
 
         /// <summary> isSubTypeOfType<T>(getListType(obj)); </summary>
         public static bool isListOf<T>(object obj) {
-            var returnValue = isSubTypeOfType<T>(getListType(obj));
+            bool returnValue = isSubTypeOfType<T>(getListType(obj));
             return returnValue;
         }
 
         /// <summary> ((IList)obj).Cast<T>().ToList(); </summary>
         public static List<T> asListOf<T>(object obj) {
-            var returnValue = ((IList)obj).Cast<T>().ToList();
+            List<T> returnValue = ( (IList)obj ).Cast<T>().ToList();
             return returnValue;
         }
 
         /// <summary> ((IList)obj).Cast<T>().ToArray(); </summary>
         public static T[] asArrayOf<T>(object obj) {
-            var returnValue = ((IList)obj).Cast<T>().ToArray();
+            T[] returnValue = ( (IList)obj ).Cast<T>().ToArray();
             return returnValue;
         }
 
-        public static void outputList<T>(List<T> list, bool newLine = false, Func<T, object> function = null) {
+        public static void outputList<T>(List<T> list, bool newLine = false, Func<T, object>? function = null) {
             outputList(list.ToArray(), newLine, function);
         }
 
-        public static void outputList<T>(T[] array, bool newLine = false, Func<T, object> function = null) {
-            if (function == null)
-                function = x => x.ToString();
+        public static void outputList<T>(T[] array, bool newLine = false, Func<T, object>? function = null) {
+            function ??= x => x.ToString();
 
             string text = "[";
-            if (newLine)
+            if (newLine) {
                 text = "\n[";
-            if (newLine)
+            }
+
+            if (newLine) {
                 text += "\n";
+            }
+
             for (int i = 0; i < array.Length; i++) {
-                if (array[i].GetType() == typeof(string))
+                if (array[ i ].GetType() == typeof(string)) {
                     text += "\"";
+                }
 
-                text += $"{function(array[i])}";
+                text += $"{function(array[ i ])}";
 
-                if (array[i].GetType() == typeof(string))
+                if (array[ i ].GetType() == typeof(string)) {
                     text += "\"";
-                if (i < array.Length - 1)
+                }
+
+                if (i < array.Length - 1) {
                     text += ", ";
-                if (newLine)
+                }
+
+                if (newLine) {
                     text += "\n";
+                }
             }
             text += "]";
         }
 
         public static IList makeListOfVariableType(IEnumerable values, Type type) {
-            var bbb = values.Cast<object>().Select(entity => Convert.ChangeType(entity, type));
+            IEnumerable<object> bbb = values.Cast<object>().Select(entity => Convert.ChangeType(entity, type));
             Type listType = typeof(List<>).MakeGenericType(type);
             IList list = (IList)Activator.CreateInstance(listType);
 
-            foreach (var item in bbb) {
+            foreach (object? item in bbb) {
                 list.Add(item);
             }
 
@@ -160,11 +170,7 @@ namespace NexusCore {
                     throw new NotImplementedException("not possible in EF");
                 }
             } else {
-                if (subTypeOfEntity) {
-                    return PacketRelationshipType.Single;
-                } else {
-                    return PacketRelationshipType.Dummy;
-                }
+                return subTypeOfEntity ? PacketRelationshipType.Single : PacketRelationshipType.Dummy;
             }
         }
     }

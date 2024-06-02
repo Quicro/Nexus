@@ -26,8 +26,9 @@ public partial class NexusOldContextInMemory : NexusOldContext {
 
     public virtual DbSet<UserRole> UserRole { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseInMemoryDatabase("Data Source=;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        optionsBuilder.UseInMemoryDatabase("Data Source=;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Claim>(entity => {

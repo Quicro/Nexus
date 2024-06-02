@@ -3,14 +3,14 @@ using Microsoft.IdentityModel.Tokens;
 using NexusEF.Models;
 using System.Reflection;
 
-namespace NexusEF.Extentions {
+namespace NexusEF {
 
     /// <summary>
     /// The Extentions class provides a set of static methods for querying entities in the database.
     /// These methods are used to retrieve related entities based on the type of the entity and the method name.
     /// </summary>
     public class Extentions {
-        static Dictionary<Tuple<Type, Type>, Type> mappingMoreMoreRelations = new Dictionary<Tuple<Type, Type>, Type>();
+        private static readonly Dictionary<Tuple<Type, Type>, Type> mappingMoreMoreRelations = new();
 
         static Extentions() {
             mappingMoreMoreRelations.Add(new(typeof(User), typeof(UserRole)), typeof(Role));
@@ -19,14 +19,14 @@ namespace NexusEF.Extentions {
             mappingMoreMoreRelations.Add(new(typeof(Permission), typeof(RolePermission)), typeof(Role));
         }
 
-        public static Type getPossibleMoreMoreRelationType(Type entityType, Type referenceType) { 
+        public static Type getPossibleMoreMoreRelationType(Type entityType, Type referenceType) {
             return mappingMoreMoreRelations
                 .Where(tuple => tuple.Key.Item1 == entityType && tuple.Key.Item2 == referenceType)
                 .Select(tuple => tuple.Value)
                 .FirstOrDefault();
         }
 
-        static IQueryable<INexusEntity> ConstructAndInvokeGenericQueryable(INexusEntity entity, Type referenceType, string methodName = null) {
+        private static IQueryable<INexusEntity> ConstructAndInvokeGenericQueryable(INexusEntity entity, Type referenceType, string? methodName = null) {
             Type entityType = entity.GetType();
 
             // Construct the generic getQueryable<T, R> method based on the entity and reference types
@@ -39,8 +39,7 @@ namespace NexusEF.Extentions {
             return result;
         }
 
-
-        static IQueryable<INexusEntity> ConstructAndInvokeRelatedGenericQueryable(INexusEntity entity, Type referenceType, string methodName = null) {
+        private static IQueryable<INexusEntity> ConstructAndInvokeRelatedGenericQueryable(INexusEntity entity, Type referenceType, string? methodName = null) {
             Type entityType = entity.GetType();
 
             // Construct the generic getQueryable<T, R> method based on the entity and reference types
@@ -58,7 +57,7 @@ namespace NexusEF.Extentions {
             where R : class, INexusEntity
             where T : class, INexusEntity {
 
-            var set = DatabaseManager.context.Set<T>();
+            DbSet<T> set = DatabaseManager.context.Set<T>();
             IQueryable<R> a = ConstructAndInvokeGenericQueryable(entity, typeof(R)).Where(e => e.Id == ID).Cast<R>();
             return a;
 
@@ -69,16 +68,15 @@ namespace NexusEF.Extentions {
 
             where R : class, INexusEntity
             where T : class, INexusEntity {
-
-            var set = DatabaseManager.context.Set<T>();
+            DatabaseManager.context.Set<T>();
             IQueryable<T> a = ConstructAndInvokeRelatedGenericQueryable(entity, typeof(T)).Cast<T>();
-            var __sql = a.ToQueryString();
+            a.ToQueryString();
             return a;
 
 
         }
 
-        public static IQueryable<R> getQueryable<T, R>(T entity, string methodName = null)
+        public static IQueryable<R> getQueryable<T, R>(T entity, string? methodName = null)
             where T : class, INexusEntity
             where R : class, INexusEntity {
             Type entityType = typeof(T);
@@ -91,15 +89,13 @@ namespace NexusEF.Extentions {
 
             // Find the method in the extension class
             MethodInfo method = null;
-            var methods = extensionType.GetMethods();
+            MethodInfo[] methods = extensionType.GetMethods();
 
-            if (methodName.IsNullOrEmpty()) {
-                method = methods
-                    .FirstOrDefault(m => m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
-            } else {
-                method = methods
-                    .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
-            }
+            method = methodName.IsNullOrEmpty()
+                ? methods
+                    .FirstOrDefault(m => m.GetParameters().Length == 1 && m.GetParameters()[ 0 ].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>))
+                : methods
+                    .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length == 1 && m.GetParameters()[ 0 ].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
 
             if (method == null) {
                 throw new InvalidOperationException($"No matching method found in the extension class '{extensionType.Name}' for method name '{methodName}' and parameter type '{entityType.Name}'.");
@@ -107,14 +103,14 @@ namespace NexusEF.Extentions {
 
             // Invoke the method if found, otherwise return null
             if (method != null) {
-                var queryable = (IQueryable<R>)method.Invoke(null, new object[] { entity });
+                IQueryable<R>? queryable = (IQueryable<R>)method.Invoke(null, new object[] { entity });
                 return queryable;
             }
 
             return null;
         }
 
-        public static IQueryable<R> getRelatedQueryable<T, R>(T entity, string methodName = null)
+        public static IQueryable<R> getRelatedQueryable<T, R>(T entity, string? methodName = null)
             where T : class, INexusEntity
             where R : class, INexusEntity {
             Type entityType = typeof(T);
@@ -127,19 +123,17 @@ namespace NexusEF.Extentions {
 
             // Find the method in the extension class
             MethodInfo method = null;
-            var methods = extensionType.GetMethods().Where(m => !(m.Name.Contains("ToString") | m.Name.Contains("ToString") || m.Name.Contains("Equals") || m.Name.Contains("GetHashCode") || m.Name.Contains("GetType")));
+            IEnumerable<MethodInfo> methods = extensionType.GetMethods().Where(m => !( m.Name.Contains("ToString") | m.Name.Contains("ToString") || m.Name.Contains("Equals") || m.Name.Contains("GetHashCode") || m.Name.Contains("GetType") ));
 
-            if (methodName.IsNullOrEmpty()) {
-                method = methods
-                    .FirstOrDefault(m => m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
-            } else {
-                method = methods
-                    .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
-            }
+            method = methodName.IsNullOrEmpty()
+                ? methods
+                    .FirstOrDefault(m => m.GetParameters().Length == 1 && m.GetParameters()[ 0 ].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>))
+                : methods
+                    .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length == 1 && m.GetParameters()[ 0 ].ParameterType == typeof(T) && m.ReturnType == typeof(IQueryable<R>));
 
             // Invoke the method if found, otherwise return null
             if (method != null) {
-                var queryable = (IQueryable<R>)method.Invoke(null, new object[] { entity });
+                IQueryable<R>? queryable = (IQueryable<R>)method.Invoke(null, new object[] { entity });
                 return queryable;
             }
 
@@ -162,8 +156,13 @@ namespace NexusEF.Extentions {
     public class Extentions<T> where T : class, INexusEntity {
         protected Extentions<T> extentions = new();
 
-        public static IQueryable<T> getQueryable(int ID) => DatabaseManager.context.Set<T>().Where(x => x.Id == ID);
-        public static T get(int ID) => DatabaseManager.context.Set<T>().Single(x => x.Id == ID);
+        public static IQueryable<T> getQueryable(int ID) {
+            return DatabaseManager.context.Set<T>().Where(x => x.Id == ID);
+        }
+
+        public static T get(int ID) {
+            return DatabaseManager.context.Set<T>().Single(x => x.Id == ID);
+        }
     }
 
     public sealed class ClaimExtention : Extentions<Claim> {
@@ -269,9 +268,9 @@ namespace NexusEF.Extentions {
 
 
         public static bool hasPermissions(User user, params string[] permissionNames) {
-            var permissionsQueryable = getPermissionsQueryable(user);
+            IQueryable<Permission> permissionsQueryable = getPermissionsQueryable(user);
 
-            var foundPermissions = permissionsQueryable
+            IQueryable<Permission> foundPermissions = permissionsQueryable
                 .Where(rp => permissionNames.Contains(rp.Name));
             return foundPermissions.Any();
         }

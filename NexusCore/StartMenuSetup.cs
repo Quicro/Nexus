@@ -1,26 +1,22 @@
-using NexusCore.Components.AggregrateInterfaces.Controller;
+using NexusCore.Components.Controller;
 using NexusEF.Models;
 using System.Diagnostics;
 
-namespace NexusCore
-{
+namespace NexusCore {
     [DebuggerDisplay("{Text} [{Childs.Count}] [{Authorized? \"Authorized\" : \"Unuthorized\"}] [{Show? \"Shown\" : \"Hidden\"}]")]
-    public class MenuItem
-    {
+    public class MenuItem {
 
         public string Text { get; set; } = string.Empty;
-        public List<string> Permissions { get; set; } = new List<string>();
-        public List<MenuItem> Childs { get; set; } = new List<MenuItem>();
+        public List<string> Permissions { get; set; } = [];
+        public List<MenuItem> Childs { get; set; } = [];
         public bool Authorized { get; private set; }
         public bool Show { get; internal set; }
-        public Packet packet { get; private set; }
+        public PacketType PacketType { get; private set; }
 
-        public void Click()
-        {
-            Packet? packetType = packet;
+        public void Click() {
+            PacketType? packetType = PacketType;
 
-            if (packetType is not null)
-            {
+            if (packetType is not null) {
 
                 packetType.handler = new ViewerController();
                 packetType.handler.handle(packetType);
@@ -42,81 +38,63 @@ namespace NexusCore
         /// At least one of these conditions being true will result in the menu item being displayed.
         /// </remarks>
         /// <param name="currentPermissions">The list of permissions associated with the current user.</param>
-        internal void setAuthorized(IEnumerable<string>? currentPermissions)
-        {
-            var count = Permissions.Count();
-            var intersectedCount = Permissions.Intersect(currentPermissions).Count();
+        internal void setAuthorized(IEnumerable<string>? currentPermissions) {
+            int count = Permissions.Count();
+            int intersectedCount = Permissions.Intersect(currentPermissions).Count();
 
-            var isAdmin = currentPermissions.Any(p => p == "ALL");
+            bool isAdmin = currentPermissions.Any(p => p == "ALL");
 
 
             Authorized = count == 0 || intersectedCount > 0 || isAdmin;
         }
 
-        public MenuItem()
-        {
+        public MenuItem() {
             Authorized = false;
             Show = false;
         }
 
-        public MenuItem(string text)
-        {
+        public MenuItem(string text) {
             Authorized = false;
             Show = false;
             Text = text;
         }
-        public MenuItem(string text, params string[] permissions)
-        {
+        public MenuItem(string text, params string[] permissions) {
             Authorized = false;
             Show = false;
             Text = text;
             Permissions = permissions.ToList();
         }
 
-        public static MenuItem newMenuItem<T>(string text, params string[] permissions) where T : INexusEntity, new()
-        {
-            MenuItem menuItem = new MenuItem()
-            {
+        public static MenuItem newMenuItem<T>(string text, params string[] permissions) where T : INexusEntity, new() {
+            MenuItem menuItem = new() {
                 Authorized = false,
                 Show = false,
                 Text = text,
-                packet = new PacketType(typeof(T)),
+                PacketType = new PacketType(typeof(T)),
                 Permissions = permissions.ToList()
             };
 
             return menuItem;
         }
 
-        public static List<MenuItem> getDefaultMenuStructure()
-        {
-            return new List<MenuItem>() {
+        public static List<MenuItem> getDefaultMenuStructure() {
+            return [
                 new MenuItem("Beheer") {
-                    Childs = new List<MenuItem> {
+                    Childs = [
                         newMenuItem<Policy>("Polissen", "StartMenu.Dossier.Polis"),
                         newMenuItem<Claim>("Schadegevallen", "StartMenu.Dossier.Schade"),
                         newMenuItem<Client>("Klanten", "StartMenu.Dossier.Schade", "StartMenu.Dossier.Polis")
-                    }
+                    ]
                 },
                 new MenuItem("Administrator", "StartMenu.Admin") {
-                    Childs = new List<MenuItem> {
+                    Childs = [
                         new MenuItem("Database", "StartMenu.Database"),
                         newMenuItem<User>("Gebruikers"),
                         newMenuItem<Role>("Rollen"),
                         newMenuItem<Permission>("Permissies")
-                    }
-                },
-                //new MenuItem("Test (niet auth)", "Unknown.Permission"),
-                //new MenuItem("Test (leeg)"),
-                //new MenuItem("Test (3 lagen)")  {
-                //    Childs = new List<MenuItem> {
-                //        new MenuItem("SubTest (3 lagen)")  {
-                //            Childs = new List<MenuItem> {
-                //                new MenuItem("SubSubTest")
-                //            }
-                //        }
-                //    }
-                //}
-            };
+                    ]
+                }
+            ];
         }
     }
 }

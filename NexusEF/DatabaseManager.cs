@@ -5,7 +5,7 @@ using NexusEF.Models.Context;
 namespace NexusEF {
 #if DEBUG
     public class DatabaseManager : GenericDatabaseManager<NexusOldContextInMemory> {
-        static GenericDatabaseManager<NexusOldContext> databaseManager;
+        private static readonly GenericDatabaseManager<NexusOldContext>? databaseManager;
 #endif
 #if !DEBUG
     public class DatabaseManager : GenericDatabaseManager<NexusOldContext> {
@@ -23,7 +23,7 @@ namespace NexusEF {
         public static List<NexusTask> tasks = new();
 
         static GenericDatabaseManager() {
-            if (context is NexusOldContextInMemory) {
+            if (context is not null) {
                 setupInMemeryDatabase();
             }
         }
@@ -43,16 +43,16 @@ namespace NexusEF {
         }
 
         public static Task Load<T>(IQueryable<T> queryable, Action<List<T>?> actionWhenDone) {
-            List<T> list = null;
+            List<T>? list = null;
             CancellationTokenSource source = new();
 
             Task task = new TaskFactory().StartNew(() => {
-                var task = queryable.ToListAsync(source.Token);
+                Task<List<T>> task = queryable.ToListAsync(source.Token);
 
                 try {
                     task.Wait();
                     list = task.Result;
-                } catch (AggregateException aggexp) {
+                } catch (AggregateException) {
                     //LoggerBla.DatabaseManagerError(aggexp.Message);
                 }
             }, source.Token);

@@ -1,24 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using NexusCore.Components.AggregrateInterfaces.Forms;
-using NexusCore.Components.Widgets;
+using NexusCore.Components.Forms;
+using NexusCore.Components.Widget;
 using NexusCore.Forms;
 using NexusCore.Interfaces.AggregrateInterfaces.Controller;
-using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.Widgets;
-using NexusEF.Extentions;
+using NexusEF;
 using NexusEF.Models;
 using NexusLogging;
 using System.Drawing;
 using System.Reflection;
 using static NexusCore.Helper;
 
-namespace NexusCore.Components.AggregrateInterfaces.Controller
-{
+namespace NexusCore.Components.Controller {
     /// <summary>
     /// Controller for viewing entities and handling packets in the viewer.
     /// </summary>
-    public class ViewerController : IViewerController
-    {
+    public class ViewerController : IViewerController {
         /// <summary>
         /// Reference to the viewer form.
         /// </summary>
@@ -34,13 +31,13 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
         protected List<PropertyInfo> columns;
 
         /// <summary> Underlined text </summary>
-        public static Font fontReference = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Underline);
+        public static Font fontReference = new("Microsoft Sans Serif", 8.5f, FontStyle.Underline);
         /// <summary> Regular text </summary>
-        public static Font fontDefault = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Regular);
+        public static Font fontDefault = new("Microsoft Sans Serif", 8.5f, FontStyle.Regular);
         /// <summary> Bold text </summary>
-        public static Font fontSelected = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Bold);
+        public static Font fontSelected = new("Microsoft Sans Serif", 8.5f, FontStyle.Bold);
         /// <summary> Italic text </summary>
-        public static Font fontNull = new Font("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
+        public static Font fontNull = new("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
 
         public List<IWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         List<IElementWidget> IForegroundController.widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -49,8 +46,7 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewerController"/> class.
         /// </summary>
-        public ViewerController()
-        {
+        public ViewerController() {
             viewerForm = new ViewerForm(); //ref => BigForms
             listView = new ListViewWidget(new ListView());
         }
@@ -59,10 +55,8 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
         /// Handles the specified packet.
         /// </summary>
         /// <param name="packet">The packet to handle.</param>
-        public void handle(Packet packet)
-        {
-            if (!packet.hasNexusEntities)
-            {
+        public void handle(Packet packet) {
+            if (!packet.hasNexusEntities) {
                 Logger.ViewerPacketHasNoEntitiesError();
                 throw new Exception();
             }
@@ -73,15 +67,13 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
 
             Type type = packet.packetType;
 
-            if (isCollection(packet.packetType) == true && isListOf<INexusEntity>(packet.packetType) == true)
-            {
+            if (isCollection(packet.packetType) == true && isListOf<INexusEntity>(packet.packetType) == true) {
                 type = getListType(packet.packetType);
             }
 
             updateColumns(type);
 
-            if (packet.entities.Count != 0)
-            {
+            if (packet.entities.Count != 0) {
                 updateItems(type, packet.entities.ToList());
             }
 
@@ -89,33 +81,28 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
             viewerForm.Open();
         }
 
-        internal void updateColumns(Type type)
-        {
+        internal void updateColumns(Type type) {
             listView.control.Columns.Clear();
 
-            var fields = type.GetProperties();
+            PropertyInfo[] fields = type.GetProperties();
             columns = fields
                 .Where(field => !fields.Select(f => f.Name).Contains(field.Name + "Id"))
                 .ToList();
 
             listView.control.Columns.Add("");
 
-            foreach (var column in columns)
-            {
+            foreach (PropertyInfo column in columns) {
                 listView.control.Columns.Add(column.Name);
             }
         }
 
-        internal void updateItems(Type type, List<INexusEntity> entities)
-        {
+        internal void updateItems(Type type, List<INexusEntity> entities) {
             listView.control.Items.Clear();
 
-            foreach (var entity in entities)
-            {
-                var listViewItem = new ListViewItem() { UseItemStyleForSubItems = false };
+            foreach (INexusEntity entity in entities) {
+                ListViewItem listViewItem = new() { UseItemStyleForSubItems = false };
 
-                foreach (PropertyInfo column in columns)
-                {
+                foreach (PropertyInfo column in columns) {
                     object value = column.GetValue(entity);
                     Type columnType = column.PropertyType;
                     IQueryable<INexusEntity> query = getQuery(type).Where(e => e.Id == entity.Id);
@@ -124,29 +111,23 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
                     Font fontItem = fontDefault;
                     Color foreColor = Color.Black;
 
-                    if (value is null)
-                    {
+                    if (value is null) {
                         textItem = "NULL";
                         fontItem = fontNull;
                         foreColor = Color.Gray;
-                    }
-                    else
-                    {
+                    } else {
                         bool list = isList(value);
                         bool subTypeOfEntity = isSubTypeOfEntity(columnType);
                         bool listOf = isListOf<INexusEntity>(value);
 
                         PacketRelationshipType packetRelationshipType = getPacketRelationshipType(list, subTypeOfEntity, listOf);
 
-                        if (packetRelationshipType == PacketRelationshipType.Dummy)
-                        {
+                        if (packetRelationshipType == PacketRelationshipType.Dummy) {
                             textItem = value.ToString();
                         }
 
-                        if (packetRelationshipType == PacketRelationshipType.Single)
-                        {
-                            if (column.Name.EndsWith("Id") && column.Name != "Id")
-                            {
+                        if (packetRelationshipType == PacketRelationshipType.Single) {
+                            if (column.Name.EndsWith("Id") && column.Name != "Id") {
                                 PropertyInfo reference = type.GetProperties().Where(c => c.Name == column.Name.Replace("Id", "")).Single();
                                 Type referenceType = reference.PropertyType;
                                 int refID = (int)value;
@@ -157,7 +138,7 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
                                     new Type[] { referenceType, type },
                                     new object[] { entity, refID }
                                 );
-                                var __sql__ = queryOfRelatedEntities.ToQueryString();
+                                string __sql_queryOfRelatedEntities.ToQueryString();
 
                                 packet = Packet.Create<ViewerController, PacketSingle>(referenceType, queryOfRelatedEntities, listView);
                                 textItem = referenceType.Name;
@@ -166,9 +147,8 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
                             }
                         }
 
-                        if (packetRelationshipType == PacketRelationshipType.Array)
-                        {
-                            var referenceType = getListType(value);
+                        if (packetRelationshipType == PacketRelationshipType.Array) {
+                            Type referenceType = getListType(value);
 
                             referenceType = Extentions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
 
@@ -178,7 +158,7 @@ namespace NexusCore.Components.AggregrateInterfaces.Controller
                                 new Type[] { type, referenceType },
                                 new object[] { entity }
                             );
-                            var __sql__ = queryOfRelatedEntities.ToQueryString();
+                            string __sql_queryOfRelatedEntities.ToQueryString();
 
                             packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, listView);
                             fontItem = fontReference;

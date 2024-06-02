@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace NexusEF.Models;
 
-public partial class Claim
-{
+public partial class Claim {
     public int Id { get; set; }
 
     public string? Name { get; set; }

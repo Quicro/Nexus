@@ -1,7 +1,5 @@
-namespace NexusCore.Interfaces.AggregrateInterfaces.Forms
-{
-    public interface IMainForm : IForm
-    {
+namespace NexusCore.Interfaces.AggregrateInterfaces.Forms {
+    public interface IMainForm : IForm {
 
         public NexusApp nexusApp { get; set; }
 

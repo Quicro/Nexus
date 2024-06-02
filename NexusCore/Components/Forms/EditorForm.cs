@@ -1,10 +1,8 @@
 ﻿using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
-namespace NexusCore.Components.AggregrateInterfaces.Forms
-{
-    public class EditorForm : IEditorForm
-    {
+namespace NexusCore.Components.Forms {
+    public class EditorForm : IEditorForm {
         public IController controller { get; set; }
 
         public event EventHandler OnDataLoading;
@@ -13,28 +11,23 @@ namespace NexusCore.Components.AggregrateInterfaces.Forms
         public event EventHandler OnOpen;
         public event EventHandler OnClose;
 
-        public void Close()
-        {
+        public void Close() {
             throw new NotImplementedException();
         }
 
-        public void End()
-        {
+        public void End() {
             throw new NotImplementedException();
         }
 
-        public void LoadData()
-        {
+        public void LoadData() {
             throw new NotImplementedException();
         }
 
-        public void Open()
-        {
+        public void Open() {
             throw new NotImplementedException();
         }
 
-        public void Start()
-        {
+        public void Start() {
             throw new NotImplementedException();
         }
     }
