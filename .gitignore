@@ -3,10 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Ignore diff.txt file
-diff.txt
-
-
 # User-specific files
 *.rsuser
 *.suo
@@ -365,4 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore diff.txt file
 /diff.txt
+
+
