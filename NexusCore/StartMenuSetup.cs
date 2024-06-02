@@ -92,9 +92,20 @@ namespace NexusCore {
                         newMenuItem<User>("Gebruikers"),
                         newMenuItem<Role>("Rollen"),
                         newMenuItem<Permission>("Permissies")
-                    ]
-                }
-            ];
+                    }
+                },
+                //new MenuItem("Test (niet auth)", "Unknown.Permission"),
+                //new MenuItem("Test (leeg)"),
+                //new MenuItem("Test (3 lagen)")  {
+                //    Childs = new List<MenuItem> {
+                //        new MenuItem("SubTest (3 lagen)")  {
+                //            Childs = new List<MenuItem> {
+                //                new MenuItem("SubSubTest")
+                //            }
+                //        }
+                //    }
+                //}
+            };
         }
     }
 }

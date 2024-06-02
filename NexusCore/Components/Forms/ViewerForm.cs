@@ -24,8 +24,6 @@ namespace NexusCore.Components.Forms {
 
         public void Open() {
             throw new NotImplementedException();
-
-
         }
 
         public void Start() {
