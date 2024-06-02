@@ -138,7 +138,6 @@ namespace NexusCore.Components.Controller {
                                     new Type[] { referenceType, type },
                                     new object[] { entity, refID }
                                 );
-                                string __sql_queryOfRelatedEntities.ToQueryString();
 
                                 packet = Packet.Create<ViewerController, PacketSingle>(referenceType, queryOfRelatedEntities, listView);
                                 textItem = referenceType.Name;
@@ -158,7 +157,6 @@ namespace NexusCore.Components.Controller {
                                 new Type[] { type, referenceType },
                                 new object[] { entity }
                             );
-                            string __sql_queryOfRelatedEntities.ToQueryString();
 
                             packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, listView);
                             fontItem = fontReference;
