@@ -18,8 +18,7 @@ namespace Nexus.WindowsForms {
                 .setViewerForm<MyViewerForm>()
                 .setEditorForm<MyEditorForm>()
                 .setMenuConfig(menuItem)
-                .setUser("Q", "")
-            ;
+                .setUser("Q", "");
 
             NexusApp app = builder.Build();
 
