@@ -3,7 +3,7 @@ using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
 namespace NexusCore.Components.Forms {
     public class EditorForm : IEditorForm {
-        public required IController controller { get; set; }
+        public IController controller { get; set; }
 
         public event EventHandler OnDataLoading;
         public event EventHandler OnDataLoaded;

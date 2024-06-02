@@ -113,17 +113,17 @@ namespace Nexus.WindowsForms {
                         continue;
                     }
 
-                    ToolStripMenuItem toolStripMenuSuubItem = new();
+                    ToolStripMenuItem toolStripMenuSubItem = new();
 
-                    toolStripMenuItem.DropDownItems.Add(toolStripMenuSuubItem);
-                    toolStripMenuSuubItem.Text = item.Text;
-                    toolStripMenuSuubItem.Enabled = item.Authorized;
-                    toolStripMenuSuubItem.Tag = item;
-                    toolStripMenuSuubItem.Click += click;
+                    toolStripMenuItem.DropDownItems.Add(toolStripMenuSubItem);
+                    toolStripMenuSubItem.Text = item.Text;
+                    toolStripMenuSubItem.Enabled = item.Authorized;
+                    toolStripMenuSubItem.Tag = item;
+                    toolStripMenuSubItem.Click += click;
 
 
 
-                    SetUpStartMenuItem(item, toolStripMenuSuubItem);
+                    SetUpStartMenuItem(item, toolStripMenuSubItem);
                 }
             }
 

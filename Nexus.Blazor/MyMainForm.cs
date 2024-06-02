@@ -4,9 +4,9 @@ using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
 public class MyMainForm : IMainForm {
     public static MyMainForm? singleton { get; private set; }
-    public  NexusApp nexusApp { get; set; }
+    public NexusApp nexusApp { get; set; }
 
-    private  WebApplication webapp;
+    public WebApplication webapp;
 
     public event EventHandler<Packet> OnPacket;
     public event EventHandler OnOpen;

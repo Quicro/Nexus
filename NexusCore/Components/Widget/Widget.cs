@@ -1,5 +1,5 @@
-﻿using NexusCore.Forms;
-using NexusCore.Interfaces.Widgets;
+﻿using NexusCore.Interfaces.Widgets;
+using NexusCore.Forms;
 
 namespace NexusCore.Components.Widget {
     public class Widget : IWidget {
