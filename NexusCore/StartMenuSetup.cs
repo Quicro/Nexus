@@ -11,10 +11,10 @@ namespace NexusCore {
         public List<MenuItem> Childs { get; set; } = [];
         public bool Authorized { get; private set; }
         public bool Show { get; internal set; }
-        public PacketType PacketType { get; private set; }
+        public Packet packet { get; private set; }
 
         public void Click() {
-            PacketType? packetType = PacketType;
+            Packet? packetType = packet;
 
             if (packetType is not null) {
 
@@ -70,7 +70,7 @@ namespace NexusCore {
                 Authorized = false,
                 Show = false,
                 Text = text,
-                PacketType = new PacketType(typeof(T)),
+                packet = new PacketType(typeof(T)),
                 Permissions = permissions.ToList()
             };
 
@@ -92,7 +92,7 @@ namespace NexusCore {
                         newMenuItem<User>("Gebruikers"),
                         newMenuItem<Role>("Rollen"),
                         newMenuItem<Permission>("Permissies")
-                    }
+                    ]
                 },
                 //new MenuItem("Test (niet auth)", "Unknown.Permission"),
                 //new MenuItem("Test (leeg)"),
@@ -105,7 +105,7 @@ namespace NexusCore {
                 //        }
                 //    }
                 //}
-            };
+            ];
         }
     }
 }
