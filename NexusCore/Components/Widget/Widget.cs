@@ -1,4 +1,5 @@
-﻿using NexusCore.Interfaces.Widgets;
+﻿using NexusCore.Forms;
+using NexusCore.Interfaces.Widgets;
 
 namespace NexusCore.Components.Widgets
 {
@@ -13,7 +14,7 @@ namespace NexusCore.Components.Widgets
 
         public event EventHandler<Packet> sent;
     }
-    public class ElementWidget<T> : ElementWidget where T : Control
+    public class ElementWidget<T> : ElementWidget where T : IControl
     {
         public ElementWidget(T control) : base(true)
         {

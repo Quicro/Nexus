@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using NexusCore.Components.AggregrateInterfaces.Forms;
 using NexusCore.Components.Widgets;
+using NexusCore.Forms;
 using NexusCore.Interfaces.AggregrateInterfaces.Controller;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.Widgets;
 using NexusEF.Extentions;
 using NexusEF.Models;
 using NexusLogging;
+using System.Drawing;
 using System.Reflection;
 using static NexusCore.Helper;
 
