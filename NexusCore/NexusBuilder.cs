@@ -1,15 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using NexusCore.Components.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusEF;
-using NexusEF.Extentions;
 using NexusEF.Models;
 using NexusLogging;
 
-namespace NexusCore
-{
-    public class NexusBuilder
-    {
+namespace NexusCore {
+    public class NexusBuilder {
         public List<MenuItem> menuItems;
         public User currentUser;
         public List<Permission>? currentPermissions;
@@ -20,29 +16,21 @@ namespace NexusCore
 
         public NexusApp app;
 
-        public NexusApp Build()
-        {
-            try
-            {
-                if (userQuery == null)
-                {
-                    currentUser = DatabaseManager.context.User
+        public NexusApp Build() {
+            try {
+                currentUser = userQuery == null
+                    ? DatabaseManager.context.User
                          .Where(u => u.Name == "Q")
                          .Include(u => u.UserRole)
                          .ThenInclude(ur => ur.Role)
                          .ThenInclude(r => r.RolePermission)
                          .ThenInclude(rp => rp.Permission)
-                         .Single();
-                }
-                else
-                {
-                    currentUser = userQuery.Single();
-                }
+                         .Single()
+                    : userQuery.Single();
                 currentPermissions = UserExtention.getPermissions(currentUser);
                 menuItems = RemoveUnauthorizedMenuItems(currentPermissions.Select(p => p.Name), menuItems);
 
-                app = new NexusApp()
-                {
+                app = new NexusApp() {
                     mainFormType = mainFormType,
                     viewerFormType = viewerFormType,
                     editorFormType = editorFormType,
@@ -53,9 +41,7 @@ namespace NexusCore
                 string dateTime = $"{DateTime.Now:HH:mm:ss dd/MM/yy}";
                 Logger.logHeader($"Started at {dateTime}    \n");
 
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Logger.LogError(e.Message);
                 Logger.ApplicationCrashed();
                 throw;
@@ -82,16 +68,13 @@ namespace NexusCore
         /// <param name="menuItems">The list of menu items to filter based on permissions.</param>
         /// <param name="IncludeUnauthorizedToo">Indicates whether to include unauthorized menu items in the result.</param>
         /// <returns>A filtered list of menu items that the user is authorized to see.</returns>
-        private List<MenuItem> RemoveUnauthorizedMenuItems(IEnumerable<string>? currentPermissions, List<MenuItem> menuItems, bool IncludeUnauthorizedToo = false)
-        {
-            List<MenuItem> returnList = new List<MenuItem>();
+        private List<MenuItem> RemoveUnauthorizedMenuItems(IEnumerable<string>? currentPermissions, List<MenuItem> menuItems, bool IncludeUnauthorizedToo = false) {
+            List<MenuItem> returnList = [];
 
-            foreach (MenuItem menuItem in menuItems)
-            {
+            foreach (MenuItem menuItem in menuItems) {
                 menuItem.setAuthorized(currentPermissions);
 
-                if (menuItem.Authorized || IncludeUnauthorizedToo)
-                {
+                if (menuItem.Authorized || IncludeUnauthorizedToo) {
                     RemoveUnauthorizedMenuItems(currentPermissions, menuItem.Childs);
                     menuItem.Show = menuItem.Childs.Any(mi => mi.Authorized) || menuItem.Authorized;
                 }
@@ -102,12 +85,10 @@ namespace NexusCore
             return returnList;
         }
 
-        public void EndApp()
-        {
+        public void EndApp() {
         }
 
-        public static void Crash(Exception exception)
-        {
+        public static void Crash(Exception exception) {
             throw exception;
         }
 
@@ -133,34 +114,29 @@ namespace NexusCore
             sender.send(editorController, packet);
         }*/
 
-        public NexusBuilder setMainForm<T>() where T : IMainForm
-        {
-            this.mainFormType = typeof(T);
+        public NexusBuilder setMainForm<T>() where T : IMainForm {
+            mainFormType = typeof(T);
             return this;
         }
-        public NexusBuilder setViewerForm<T>() where T : IViewerForm
-        {
-            this.viewerFormType = typeof(T);
+        public NexusBuilder setViewerForm<T>() where T : IViewerForm {
+            viewerFormType = typeof(T);
             return this;
         }
-        public NexusBuilder setEditorForm<T>() where T : IEditorForm
-        {
-            this.editorFormType = typeof(T);
+        public NexusBuilder setEditorForm<T>() where T : IEditorForm {
+            editorFormType = typeof(T);
             return this;
         }
 
-        public NexusBuilder setMenuConfig(List<MenuItem> menuItem)
-        {
+        public NexusBuilder setMenuConfig(List<MenuItem> menuItem) {
 
-            this.menuItems = menuItem;
+            menuItems = menuItem;
 
             return this;
         }
 
-        public NexusBuilder setUser(string username, string password)
-        {
+        public NexusBuilder setUser(string username, string password) {
 
-            this.userQuery = DatabaseManager.context.User
+            userQuery = DatabaseManager.context.User
                          .Where(user => user.Name == username && user.Password == password)
                          .Include(u => u.UserRole)
                          .ThenInclude(ur => ur.Role)

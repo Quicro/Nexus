@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NexusCore.Interfaces.AggregrateInterfaces.Forms
-{
-    internal interface IMainController : IForegroundController
-    {
+﻿namespace NexusCore.Interfaces.AggregrateInterfaces.Controller {
+    internal interface IMainController : IForegroundController {
     }
 }

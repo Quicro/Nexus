@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace NexusEF.Models;
 
-public partial class Policy
-{
+public partial class Policy {
     public int Id { get; set; }
 
     public string? Name { get; set; }

@@ -1,9 +1,7 @@
-﻿using NexusCore.Interfaces.AggregrateInterfaces.Controller;
+﻿using NexusCore.Interfaces.AggregrateInterfaces.Widget;
 
-namespace NexusCore.Components.AggregrateInterfaces.Widget
-{
-    internal class ViewerWidget : IViewerWidget
-    {
+namespace NexusCore.Components.Widget {
+    internal class ViewerWidget : IViewerWidget {
         public event EventHandler<Packet> sent;
     }
 }

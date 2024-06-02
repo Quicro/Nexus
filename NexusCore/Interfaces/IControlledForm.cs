@@ -1,6 +1,5 @@
 namespace NexusCore.Interfaces {
-    public interface IControlledForm : IForm
-    {
+    public interface IControlledForm : IForm {
 
         public IController controller { get; set; }
         /// <summary>
@@ -19,7 +18,7 @@ namespace NexusCore.Interfaces {
         event EventHandler OnDataLoadCancelled;
 
 
-        public void Open();
+        public new void Open();
         public void LoadData();
     }
 }
