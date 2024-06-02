@@ -1,16 +1,8 @@
 ﻿using NexusCore.Interfaces.Widgets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NexusCore.Components.Widgets
-{
-    public class ElementWidget : IElementWidget
-    {
-        public ElementWidget(bool isElemental)
-        {
+namespace NexusCore.Components.Widget {
+    public class ElementWidget : IElementWidget {
+        public ElementWidget(bool isElemental) {
             this.isElemental = isElemental;
         }
 

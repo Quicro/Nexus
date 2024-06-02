@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace NexusEF.Models;
 
-public partial class Client
-{
+public partial class Client {
     public int Id { get; set; }
 
     public string? Number { get; set; }

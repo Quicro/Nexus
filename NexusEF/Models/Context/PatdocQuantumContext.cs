@@ -26,9 +26,9 @@ public partial class NexusOldContext : DbContext {
 
     public virtual DbSet<UserRole> UserRole { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         optionsBuilder.UseSqlServer("Data Source=;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False", options => {
-            options.CommandTimeout(1); 
+            options.CommandTimeout(1);
             optionsBuilder.EnableSensitiveDataLogging();
         });
     }

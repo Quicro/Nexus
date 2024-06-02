@@ -1,5 +1,5 @@
-using NexusEF.Models;
 using NexusCore.Interfaces;
+using NexusEF.Models;
 using NexusLogging;
 using System.Reflection;
 
@@ -113,7 +113,9 @@ namespace NexusCore {
         /// Returns a string representation of the packet.
         /// </summary>
         /// <returns>A string representing the packet.</returns>
-        public override string ToString() => throw new NotImplementedException();
+        public override string ToString() {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Gets the entities associated with the packet.
@@ -121,15 +123,11 @@ namespace NexusCore {
         /// <returns>A list of Nexus entities.</returns>
         /// <exception cref="InvalidOperationException">Thrown when the packet cannot handle lists.</exception>
         public List<INexusEntity> getEntities() {
-            if (entities == null) {
-                entities = query.Cast<INexusEntity>().ToList();
-            }
+            entities ??= query.Cast<INexusEntity>().ToList();
 
-            if (!handlerEnum.HasFlag(HandlerEnum.flagList) && entities.Count > 1) {
-                throw new InvalidOperationException("Packet cannot handle lists");
-            }
-
-            return entities;
+            return !handlerEnum.HasFlag(HandlerEnum.flagList) && entities.Count > 1
+                ? throw new InvalidOperationException("Packet cannot handle lists")
+                : entities;
         }
 
         /// <summary>
@@ -139,8 +137,13 @@ namespace NexusCore {
         /// <exception cref="InvalidDataException">Thrown when entities are already loaded.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the packet cannot handle lists.</exception>
         public void setEntities(List<INexusEntity> entities) {
-            if (this.entities != null) throw new InvalidDataException("Entities are already loaded");
-            if (!handlerEnum.HasFlag(HandlerEnum.flagList)) throw new InvalidOperationException("Packet cannot handle lists");
+            if (this.entities != null) {
+                throw new InvalidDataException("Entities are already loaded");
+            }
+
+            if (!handlerEnum.HasFlag(HandlerEnum.flagList)) {
+                throw new InvalidOperationException("Packet cannot handle lists");
+            }
 
             this.entities = entities;
         }
@@ -152,10 +155,15 @@ namespace NexusCore {
         /// <exception cref="InvalidDataException">Thrown when entities are already loaded.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the packet cannot handle single entities.</exception>
         public void setEntity(INexusEntity entity) {
-            if (this.entities != null) throw new InvalidDataException("Entities are already loaded");
-            if (handlerEnum.HasFlag(HandlerEnum.flagList)) throw new InvalidOperationException("Packet cannot handle singles");
+            if (entities != null) {
+                throw new InvalidDataException("Entities are already loaded");
+            }
 
-            this.entities.Add(entity);
+            if (handlerEnum.HasFlag(HandlerEnum.flagList)) {
+                throw new InvalidOperationException("Packet cannot handle singles");
+            }
+
+            entities.Add(entity);
         }
 
         /// <summary> Creates a packet (Array) for the given entities </summary>
@@ -178,12 +186,12 @@ namespace NexusCore {
     /// <summary>
     /// Represents a packet for a single entity.
     /// </summary>
-    public sealed class PacketSingle : Packet  {
+    public sealed class PacketSingle : Packet {
         public PacketSingle() {
             handlerEnum = HandlerEnum.Single;
         }
 
-       // public override string ToString() => $"Single<{type.Name}>({getEntity().id})";
+        // public override string ToString() => $"Single<{type.Name}>({getEntity().id})";
     }
 
     /// <summary>
@@ -211,18 +219,22 @@ namespace NexusCore {
             query = Helper.getQuery(packetType);
         }
 
-        public override string ToString() => $"Type<{packetType.Name}>";
+        public override string ToString() {
+            return $"Type<{packetType.Name}>";
+        }
     }
 
     /// <summary>
     /// Represents a packet for updating controls.
     /// </summary>
-    public sealed class PacketUpdate: Packet  {
+    public sealed class PacketUpdate : Packet {
         public PacketUpdate() {
             handlerEnum = HandlerEnum.Update;
         }
 
-        public override string ToString() => $"Update";
+        public override string ToString() {
+            return $"Update";
+        }
     }
 
     /// <summary>
@@ -243,7 +255,7 @@ namespace NexusCore {
         public PacketEdit(Packet packet, IQueryable<INexusEntity> query, FieldInfo field) {
             this.packet = packet;
             this.field = field;
-            this.entity = entity;
+            entity = entity;
 
             handlerEnum = HandlerEnum.Edit;
         }
@@ -259,6 +271,8 @@ namespace NexusCore {
             handlerEnum = HandlerEnum.SingleEditor;
         }
 
-        public override string ToString() => $"SingleEditor<{packetType.Name}>({entities.First().Id})";
+        public override string ToString() {
+            return $"SingleEditor<{packetType.Name}>({entities.First().Id})";
+        }
     }
 }

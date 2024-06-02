@@ -1,9 +1,6 @@
-namespace NexusCore.Forms
-{
-    internal static class Program
-    {
-        static void Main()
-        {
+namespace NexusCore.Forms {
+    internal static class Program {
+        private static void Main() {
 
         }
     }

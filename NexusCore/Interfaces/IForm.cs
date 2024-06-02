@@ -1,6 +1,5 @@
 namespace NexusCore.Interfaces {
-    public interface IForm
-    {
+    public interface IForm {
 
 
         /// <summary>

@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace NexusEF.Models;
 
-public partial class RolePermission
-{
+public partial class RolePermission {
     public int Id { get; set; }
 
     public int RoleId { get; set; }

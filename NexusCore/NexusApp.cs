@@ -9,31 +9,25 @@ namespace NexusCore {
         public Type editorFormType;
         public List<MenuItem> menuItems;
         public User currentUser;
-
-        IMainForm mainForm;
+        private IMainForm mainForm;
 
         public NexusApp() {
         }
 
-        public void CleanUp()
-        {
-            try
-            {
+        public void CleanUp() {
+            try {
                 mainForm.End();
                 mainForm.Close();
 
                 Logger.ApplicationEnded();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Logger.LogError(e.Message);
                 Logger.ApplicationCrashed();
-                throw e;
+                throw;
             }
         }
 
-        public void Run()
-        {
+        public void Run() {
             mainForm = (IMainForm)Activator.CreateInstance(mainFormType);
             mainForm.nexusApp = this;
 

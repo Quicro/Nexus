@@ -2,27 +2,23 @@ using NexusCore;
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
-namespace Nexus.WindowsForms
-{
-    internal static class WindowsFormsProgram
-    {
+namespace Nexus.WindowsForms {
+    internal static class WindowsFormsProgram {
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
-        {
+        private static void Main() {
             ApplicationConfiguration.Initialize();
 
             List<MenuItem> menuItem = MenuItem.getDefaultMenuStructure();
 
-            var builder = new NexusBuilder()
+            NexusBuilder builder = new NexusBuilder()
                 .setMainForm<MyMainForm>()
                 .setViewerForm<MyViewerForm>()
                 .setEditorForm<MyEditorForm>()
                 .setMenuConfig(menuItem)
-                .setUser("Q", "")
-            ;
+                .setUser("Q", "");
 
             NexusApp app = builder.Build();
 
@@ -31,8 +27,8 @@ namespace Nexus.WindowsForms
             app.CleanUp();
 
         }
-        class MyViewerForm : Form, IViewerForm
-        {
+
+        private class MyViewerForm : Form, IViewerForm {
             public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public event EventHandler OnDataLoading;
@@ -41,29 +37,24 @@ namespace Nexus.WindowsForms
             public event EventHandler OnOpen;
             public event EventHandler OnClose;
 
-            public void End()
-            {
+            public void End() {
                 throw new NotImplementedException();
             }
 
-            public void LoadData()
-            {
+            public void LoadData() {
                 throw new NotImplementedException();
             }
 
-            public void Open()
-            {
+            public void Open() {
                 throw new NotImplementedException();
             }
 
-            public void Start()
-            {
+            public void Start() {
                 throw new NotImplementedException();
             }
         }
 
-        class MyEditorForm : Form, IEditorForm
-        {
+        private class MyEditorForm : Form, IEditorForm {
             public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public event EventHandler OnDataLoading;
@@ -72,32 +63,27 @@ namespace Nexus.WindowsForms
             public event EventHandler OnOpen;
             public event EventHandler OnClose;
 
-            public void End()
-            {
+            public void End() {
                 throw new NotImplementedException();
             }
 
-            public void LoadData()
-            {
+            public void LoadData() {
                 throw new NotImplementedException();
             }
 
-            public void Open()
-            {
+            public void Open() {
                 throw new NotImplementedException();
             }
 
 
-            public void Start()
-            {
+            public void Start() {
                 throw new NotImplementedException();
             }
         }
 
-        class MyMainForm : Form, IMainForm
-        {
+        private class MyMainForm : Form, IMainForm {
             private MenuStrip menuStrip1;
-            private ToolStripMenuItem adresToolStripMenuItem;
+            private readonly ToolStripMenuItem adresToolStripMenuItem;
 
             public NexusApp nexusApp { get; set; }
 
@@ -105,34 +91,29 @@ namespace Nexus.WindowsForms
             public event EventHandler OnOpen;
             public event EventHandler OnClose;
 
-            public void Close()
-            {
+            public new void Close() {
             }
 
-            public void End()
-            {
+            public void End() {
             }
 
-            public void Open()
-            {
+            public void Open() {
             }
 
-            private void click(object? sender, EventArgs e)
-            {
-                ToolStripMenuItem toolStripMenuItem = sender as ToolStripMenuItem;
-                MenuItem menuItem = toolStripMenuItem.Tag as MenuItem;
+            private void click(object? sender, EventArgs e) {
+                ToolStripMenuItem? toolStripMenuItem = sender as ToolStripMenuItem;
+                MenuItem? menuItem = toolStripMenuItem.Tag as MenuItem;
 
                 menuItem?.Click();
             }
 
-            public void SetUpStartMenuItem(MenuItem menuItem, ToolStripMenuItem toolStripMenuItem)
-            {
-                foreach (MenuItem item in menuItem.Childs)
-                {
-                    if (!item.Show)
+            public void SetUpStartMenuItem(MenuItem menuItem, ToolStripMenuItem toolStripMenuItem) {
+                foreach (MenuItem item in menuItem.Childs) {
+                    if (!item.Show) {
                         continue;
+                    }
 
-                    var toolStripMenuSuubItem = new ToolStripMenuItem();
+                    ToolStripMenuItem toolStripMenuSuubItem = new();
 
                     toolStripMenuItem.DropDownItems.Add(toolStripMenuSuubItem);
                     toolStripMenuSuubItem.Text = item.Text;
@@ -146,18 +127,17 @@ namespace Nexus.WindowsForms
                 }
             }
 
-            public bool SetUpStartMenu(List<MenuItem> setup)
-            {
+            public bool SetUpStartMenu(List<MenuItem> setup) {
                 menuStrip1 = new MenuStrip();
                 Controls.Add(menuStrip1);
                 MainMenuStrip = menuStrip1;
 
-                foreach (MenuItem menuItem in setup)
-                {
-                    if (!menuItem.Show)
+                foreach (MenuItem menuItem in setup) {
+                    if (!menuItem.Show) {
                         continue;
+                    }
 
-                    var toolStripMenuItem = new ToolStripMenuItem();
+                    ToolStripMenuItem toolStripMenuItem = new();
                     menuStrip1.Items.Add(toolStripMenuItem);
                     toolStripMenuItem.Text = menuItem.Text;
                     toolStripMenuItem.Enabled = menuItem.Authorized;
@@ -168,8 +148,7 @@ namespace Nexus.WindowsForms
 
                 return true;
             }
-            public void Start()
-            {
+            public void Start() {
                 SetUpStartMenu(nexusApp.menuItems);
                 Application.Run(this);
             }

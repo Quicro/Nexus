@@ -1,9 +1,7 @@
 using NexusCore.Interfaces;
 
-namespace NexusCore.AggregrateInterfaces.Forms
-{
-    public interface MainForm : IForm
-    {
+namespace NexusCore.Components.Forms {
+    public interface MainForm : IForm {
 
 
         /// <summary>
