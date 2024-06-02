@@ -6,6 +6,7 @@ using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.Widgets;
 using NexusEF.Models;
 using NexusLogging;
+using System.Drawing;
 using System.Reflection;
 using static NexusCore.Helper;
 

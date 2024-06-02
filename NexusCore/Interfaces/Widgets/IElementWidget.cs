@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NexusCore.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace NexusCore.Interfaces.Widgets
     public interface IElementWidget : IWidget
     {
     }
-    public interface IElementWidget<T> : IElementWidget where T : Control
+    public interface IElementWidget<T> : IElementWidget where T : IControl
     {
     }
 }
