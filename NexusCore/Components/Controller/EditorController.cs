@@ -31,13 +31,12 @@ namespace NexusCore.Components.Controller {
             editorForm = new EditorForm {
                 //editorWidget = editorForm.widgets.First();
 
-                controller = this
+                editorController = this
             };//ref => BigForms
         }
 
         public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public EditorForm EditorForm { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        List<IElementWidget> IForegroundController.widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Handles the specified packet.
@@ -56,6 +55,14 @@ namespace NexusCore.Components.Controller {
         /// <param name="packet">The packet to handle.</param>
         public void handleGeneric<T>(PacketSingleEditor packet) where T : class, INexusEntity {
             new EditorController<T>().handle(packet);
+        }
+
+        public void Start() {
+            throw new NotImplementedException();
+        }
+
+        public void Stop() {
+            throw new NotImplementedException();
         }
     }
 

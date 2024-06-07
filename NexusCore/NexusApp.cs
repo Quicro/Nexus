@@ -16,7 +16,6 @@ namespace NexusCore {
 
         public void CleanUp() {
             try {
-                mainForm.End();
                 mainForm.Close();
 
                 Logger.ApplicationEnded();
@@ -32,7 +31,6 @@ namespace NexusCore {
             mainForm.nexusApp = this;
 
             mainForm.Open();
-            mainForm.Start();
 
             Logger.ApplicationStarted();
 

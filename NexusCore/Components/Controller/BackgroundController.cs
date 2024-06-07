@@ -8,5 +8,13 @@ namespace NexusCore.Components.Controller {
         public void handle(Packet packet) {
             throw new NotImplementedException();
         }
+
+        public void Start() {
+            throw new NotImplementedException();
+        }
+
+        public void Stop() {
+            throw new NotImplementedException();
+        }
     }
 }

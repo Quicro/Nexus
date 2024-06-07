@@ -1,33 +1,26 @@
-﻿using NexusCore.Interfaces;
+﻿using NexusCore.Components.Controller;
+using NexusCore.Interfaces;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+using NexusCore.Interfaces.Widgets;
 
 namespace NexusCore.Components.Forms {
-    public class ViewerForm : IControlledForm {
-        public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public class ViewerForm : IViewerForm {
+        IController IControlledForm.controller {
+            get => viewerController;
+            set => viewerController = (ViewerController)value;
+        }
+        public ViewerController viewerController { get; set; }
+        public List<IElementWidget> widgets { get; set; } = new();
 
-        public event EventHandler OnDataLoading;
-        public event EventHandler OnDataLoaded;
-        public event EventHandler OnDataLoadCancelled;
         public event EventHandler OnOpen;
         public event EventHandler OnClose;
 
-        public void Close() {
-            throw new NotImplementedException();
-        }
-
-        public void End() {
-            throw new NotImplementedException();
-        }
-
-        public void LoadData() {
-            throw new NotImplementedException();
-        }
-
         public void Open() {
-            throw new NotImplementedException();
+            OnOpen?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Start() {
-            throw new NotImplementedException();
+        public void Close() {
+            OnClose?.Invoke(this, EventArgs.Empty);
         }
     }
 }

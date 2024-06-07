@@ -1,4 +1,12 @@
 ﻿@page "/edit/{type}/{id}"
+@using Nexus.Blazor.Wrappers
+
+@inject NexusCore.Components.Controller.EditorController controller
+
+@inject NexusLogging.Logger logger
+
+@implements IDisposable
+
 
 @code {
     [Parameter]
@@ -6,13 +14,21 @@
     [Parameter]
     public string id { get; set; }
 
-    private string Description { get; set; }
+    public EditorWrapper editorWrapper { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        Description =  Type;
+    protected override void OnInitialized() {
+        editorWrapper = new(controller);
+        editorWrapper.OnInitialized();
+    }
+
+    protected override void OnParametersSet() {
+        editorWrapper.OnParametersSet(Type, id);
+    }
+
+    public void Dispose() {
+        editorWrapper.Dispose();
     }
 }
 
+<h1>@Type @id</h1>
 
-<h3>@Description @id </h3>

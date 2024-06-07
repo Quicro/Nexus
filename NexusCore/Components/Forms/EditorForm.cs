@@ -1,9 +1,16 @@
-﻿using NexusCore.Interfaces;
+﻿using NexusCore.Components.Controller;
+using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+using NexusCore.Interfaces.Widgets;
 
 namespace NexusCore.Components.Forms {
     public class EditorForm : IEditorForm {
-        public IController controller { get; set; }
+        IController IControlledForm.controller {
+            get => editorController;
+            set => editorController = (EditorController)value;
+        }
+        public EditorController editorController { get; set; }
+        public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event EventHandler OnDataLoading;
         public event EventHandler OnDataLoaded;
@@ -11,24 +18,26 @@ namespace NexusCore.Components.Forms {
         public event EventHandler OnOpen;
         public event EventHandler OnClose;
 
-        public void Close() {
-            throw new NotImplementedException();
-        }
 
-        public void End() {
-            throw new NotImplementedException();
-        }
+        public void Start() {
 
-        public void LoadData() {
-            throw new NotImplementedException();
         }
 
         public void Open() {
-            throw new NotImplementedException();
+
         }
 
-        public void Start() {
-            throw new NotImplementedException();
+        public void Close() {
+
+
         }
+        public void Stop() {
+
+        }
+
+        public void LoadData() {
+
+        }
+
     }
 }

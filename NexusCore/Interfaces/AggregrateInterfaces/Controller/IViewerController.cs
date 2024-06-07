@@ -2,6 +2,6 @@
 
 namespace NexusCore.Interfaces.AggregrateInterfaces.Controller {
     internal interface IViewerController : IForegroundController {
-        ViewerForm ViewerForm { get; set; }
+        ViewerForm viewerForm { get; set; }
     }
 }

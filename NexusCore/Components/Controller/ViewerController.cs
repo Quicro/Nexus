@@ -1,54 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using NexusCore.Components.Forms;
-using NexusCore.Components.Widget;
-using NexusCore.Forms;
 using NexusCore.Interfaces.AggregrateInterfaces.Controller;
 using NexusCore.Interfaces.Widgets;
-using NexusEF;
-using NexusEF.Models;
+using NexusCore.Widgets;
 using NexusLogging;
-using System.Drawing;
 using System.Reflection;
-using static NexusCore.Helper;
 
 namespace NexusCore.Components.Controller {
     /// <summary>
     /// Controller for viewing entities and handling packets in the viewer.
     /// </summary>
     public class ViewerController : IViewerController {
-        /// <summary>
-        /// Reference to the viewer form.
-        /// </summary>
-        public ViewerForm viewerForm; //ref => BigForms
-
-
-        /// <summary>
-        /// Reference to the list view control.
-        /// </summary>
-        public ListViewWidget listView;
-
+        private const int PageSize = 50;
 
         protected List<PropertyInfo> columns;
-
-        /// <summary> Underlined text </summary>
-        public static Font fontReference = new("Microsoft Sans Serif", 8.5f, FontStyle.Underline);
-        /// <summary> Regular text </summary>
-        public static Font fontDefault = new("Microsoft Sans Serif", 8.5f, FontStyle.Regular);
-        /// <summary> Bold text </summary>
-        public static Font fontSelected = new("Microsoft Sans Serif", 8.5f, FontStyle.Bold);
-        /// <summary> Italic text </summary>
-        public static Font fontNull = new("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
-
-        public List<IWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        List<IElementWidget> IForegroundController.widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ViewerForm ViewerForm { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ViewerForm viewerForm { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewerController"/> class.
         /// </summary>
         public ViewerController() {
-            viewerForm = new ViewerForm(); //ref => BigForms
-            listView = new ListViewWidget(new ListView());
+            viewerForm = new ViewerForm() { viewerController = this };
+            
         }
 
         /// <summary>
@@ -63,7 +36,21 @@ namespace NexusCore.Components.Controller {
 
             packet.entities = packet.getEntities();
 
-            listView.control.BeginUpdate();
+            PropertyInfo[] fields = packet.packetType.GetProperties();
+            columns = fields
+                .Where(field => !fields.Select(f => f.Name).Contains(field.Name + "Id"))
+                .ToList();
+
+            MenuTable table = new(columns.Count, PageSize);
+            table.BeginUpdate();
+
+            table.FillIn(columns, packet.entities, packet.packetType);
+            this.viewerForm.widgets.Add(table);
+
+
+            table.EndUpdate();
+
+            /*listView.control.BeginUpdate();
 
             Type type = packet.packetType;
 
@@ -71,17 +58,27 @@ namespace NexusCore.Components.Controller {
                 type = getListType(packet.packetType);
             }
 
+
+
             updateColumns(type);
 
             if (packet.entities.Count != 0) {
                 updateItems(type, packet.entities.ToList());
             }
 
-            listView.control.EndUpdate();
+            listView.control.EndUpdate();*/
             viewerForm.Open();
         }
 
-        internal void updateColumns(Type type) {
+        public void Start() {
+            throw new NotImplementedException();
+        }
+
+        public void Stop() {
+            throw new NotImplementedException();
+        }
+
+        /*internal void updateColumns(Type type) {
             listView.control.Columns.Clear();
 
             PropertyInfo[] fields = type.GetProperties();
@@ -94,9 +91,9 @@ namespace NexusCore.Components.Controller {
             foreach (PropertyInfo column in columns) {
                 listView.control.Columns.Add(column.Name);
             }
-        }
+        }*/
 
-        internal void updateItems(Type type, List<INexusEntity> entities) {
+        /*internal void updateItems(Type type, List<INexusEntity> entities) {
             listView.control.Items.Clear();
 
             foreach (INexusEntity entity in entities) {
@@ -108,12 +105,12 @@ namespace NexusCore.Components.Controller {
                     IQueryable<INexusEntity> query = getQuery(type).Where(e => e.Id == entity.Id);
                     Packet packet = Packet.Create<EditorController, PacketSingleEditor>(type, query, listView);
                     string textItem = "error";
-                    Font fontItem = fontDefault;
+                    Font fontItem = Fonts.fontDefault;
                     Color foreColor = Color.Black;
 
                     if (value is null) {
                         textItem = "NULL";
-                        fontItem = fontNull;
+                        fontItem = Fonts.fontNull;
                         foreColor = Color.Gray;
                     } else {
                         bool list = isList(value);
@@ -141,7 +138,7 @@ namespace NexusCore.Components.Controller {
 
                                 packet = Packet.Create<ViewerController, PacketSingle>(referenceType, queryOfRelatedEntities, listView);
                                 textItem = referenceType.Name;
-                                fontItem = fontReference;
+                                fontItem = Fonts.fontReference;
                                 foreColor = Color.Blue;
                             }
                         }
@@ -159,22 +156,22 @@ namespace NexusCore.Components.Controller {
                             );
 
                             packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, listView);
-                            fontItem = fontReference;
+                            fontItem = Fonts.fontReference;
                             foreColor = Color.Blue;
                             textItem = getListType(value).Name + "[]";
                         }
                     }
 
-                    /*listViewItem.SubItems.Add(new ListViewSubItem()
-                    {
-                        Tag = packet,
-                        Text = textItem,
-                        Font = fontItem,
-                        ForeColor = foreColor
-                    });*/
+                    ///*listViewItem.SubItems.Add(new ListViewSubItem()
+                    //{
+                    //    Tag = packet,
+                    //    Text = textItem,
+                    //    Font = fontItem,
+                    //    ForeColor = foreColor
+                    //});
                 }
                 listView.control.Items.Add(listViewItem);
             }
-        }
+        }*/
     }
 }

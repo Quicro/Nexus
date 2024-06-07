@@ -9,9 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Control.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="Control.cs" />
   </ItemGroup>
 
 </Project>

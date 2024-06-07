@@ -8,12 +8,21 @@ namespace NexusCore.Components.Controller {
     /// </summary>
     public class MainController : IMainController, IPacketReceiver {
         public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public NexusApp nexusApp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Handles the specified packet.
         /// </summary>
         /// <param name="packet">The packet to handle.</param>
         public void handle(Packet packet) {
+            throw new NotImplementedException();
+        }
+
+        public void Start() {
+            throw new NotImplementedException();
+        }
+
+        public void Stop() {
             throw new NotImplementedException();
         }
     }

@@ -1,6 +1,7 @@
 using NexusCore;
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+using NexusCore.Interfaces.Widgets;
 
 namespace Nexus.WindowsForms {
     internal static class WindowsFormsProgram {
@@ -30,6 +31,7 @@ namespace Nexus.WindowsForms {
 
         private class MyViewerForm : Form, IViewerForm {
             public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public event EventHandler OnDataLoading;
             public event EventHandler OnDataLoaded;
@@ -37,7 +39,7 @@ namespace Nexus.WindowsForms {
             public event EventHandler OnOpen;
             public event EventHandler OnClose;
 
-            public void End() {
+            public void Stop() {
                 throw new NotImplementedException();
             }
 
@@ -56,6 +58,7 @@ namespace Nexus.WindowsForms {
 
         private class MyEditorForm : Form, IEditorForm {
             public IController controller { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public event EventHandler OnDataLoading;
             public event EventHandler OnDataLoaded;
@@ -63,7 +66,7 @@ namespace Nexus.WindowsForms {
             public event EventHandler OnOpen;
             public event EventHandler OnClose;
 
-            public void End() {
+            public void Stop() {
                 throw new NotImplementedException();
             }
 
@@ -86,6 +89,7 @@ namespace Nexus.WindowsForms {
             private readonly ToolStripMenuItem adresToolStripMenuItem;
 
             public NexusApp nexusApp { get; set; }
+            public List<IElementWidget> widgets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public event EventHandler<Packet> OnPacket;
             public event EventHandler OnOpen;
@@ -94,7 +98,7 @@ namespace Nexus.WindowsForms {
             public new void Close() {
             }
 
-            public void End() {
+            public void Stop() {
             }
 
             public void Open() {
