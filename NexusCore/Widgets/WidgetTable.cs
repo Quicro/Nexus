@@ -3,64 +3,34 @@ using NexusCore.Interfaces;
 using NexusCore.Interfaces.Widgets;
 using NexusEF;
 using NexusEF.Models;
+using System.Collections;
 using System.Drawing;
 using System.Reflection;
 using static NexusCore.Helper;
 
 namespace NexusCore.Widgets {
 
-    public class MenuItem {
-        private Packet packet;
-        private Font fontItem;
-        private Color foreColor;
-        private string? textItem;
 
-        public MenuItem(Packet packet, Font fontItem, Color foreColor, string? textItem) {
-            this.packet = packet;
-            this.fontItem = fontItem;
-            this.foreColor = foreColor;
-            this.textItem = textItem;
-        }
-    }
+    public class WidgetTable : IPacketSender, IWidget {
+        public List<WidgetTableRow> Rows { get; private set; }
 
-    public class MenuRow {
-        public List<MenuItem> Cells { get; private set; }
-        private readonly int _columnCount;
-        public bool IsSelected { get; private set; }
+        public string Title;
+        public WidgetTableHeaderRow HeaderRow { get; private set; }
 
-        public MenuRow(int columnCount) {
-            _columnCount = columnCount;
-            Cells = new List<MenuItem>(new MenuItem[ columnCount ]);
-        }
-
-        public void SetCell(int index, MenuItem cell) {
-            Cells[ index ] = index >= 0 && index < _columnCount ? cell : throw new IndexOutOfRangeException("Index exceeds the column count.");
-        }
-
-        public void SelectRow() {
-            IsSelected = true;
-        }
-
-        public void DeselectRow() {
-            IsSelected = false;
-        }
-    }
-
-    public class MenuTable : IPacketSender, IElementWidget {
-        public List<MenuRow> Rows { get; private set; }
-        private readonly Dictionary<int, List<MenuRow>> _pageCache;
+        private readonly Dictionary<int, List<WidgetTableRow>> _pageCache;
         private readonly int _columnCount;
         private readonly int _pageSize;
         private bool _updating;
 
         public event EventHandler<Packet> sent;
 
-        public MenuTable(int columnCount, int pageSize) {
+        public WidgetTable(string title, int columnCount, int pageSize) {
             Rows = [];
             _pageCache = [];
             _columnCount = columnCount;
             _pageSize = pageSize;
             _updating = false;
+            this.Title = title;
         }
 
         public void BeginUpdate() {
@@ -72,7 +42,7 @@ namespace NexusCore.Widgets {
             // Optional: Refresh the display or re-render if necessary
         }
 
-        public void AddRow(MenuRow row) {
+        public void AddRow(WidgetTableRow row) {
            // if (row.Cells.Count == _columnCount) {
                 Rows.Add(row);
             //} else {
@@ -80,12 +50,12 @@ namespace NexusCore.Widgets {
             //}
         }
 
-        public List<MenuRow> GetPage(int pageNumber) {
+        public List<WidgetTableRow> GetPage(int pageNumber) {
             if (_pageCache.ContainsKey(pageNumber)) {
                 return _pageCache[ pageNumber ];
             }
 
-            List<MenuRow> page = Rows.Skip(( pageNumber - 1 ) * _pageSize).Take(_pageSize).ToList();
+            List<WidgetTableRow> page = Rows.Skip(( pageNumber - 1 ) * _pageSize).Take(_pageSize).ToList();
             _pageCache[ pageNumber ] = page;
             return page;
         }
@@ -101,7 +71,7 @@ namespace NexusCore.Widgets {
 
             for (int i = startRow; i <= endRow; i++) {
                 for (int j = startCell; j <= endCell; j++) {
-                    MenuItem cell = Rows[ i ].Cells[ j ];
+                    WidgetTableCell cell = Rows[ i ].Cells[ j ];
                 }
             }
         }
@@ -141,10 +111,8 @@ namespace NexusCore.Widgets {
         }
 
         public void FillIn(List<PropertyInfo> columns, IEnumerable<INexusEntity> entities, Type type) {
-            Rows.Clear();
-
             foreach (INexusEntity entity in entities) {
-                MenuRow row = new(columnCount: columns.Count);
+                WidgetTableRow row = new(columnCount: columns.Count, false);
 
                 foreach (PropertyInfo column in columns) {
                     object value = column.GetValue(entity);
@@ -207,61 +175,77 @@ namespace NexusCore.Widgets {
                             foreColor = Color.Blue;
                             textItem = getListType(value).Name + "[]";
                         }
+
+                        WidgetTableCell tableCell = new WidgetTableCell(packet, fontItem, foreColor, textItem);
+                        row.Cells.Add(tableCell);
                     }
 
-                    MenuItem menuItem = new MenuItem(packet, fontItem, foreColor, textItem);
-                    row.Cells.Add(menuItem);
                 }
+
+                var rowPacketsHandlerEnums = row.Cells.Select(c => c.packet.handlerEnum).ToList();
 
                 AddRow(row);
             }
         }
 
-        // Example usage
-        public class Program {
-            public static void gg() {
-                int columnCount = 3;
-                int pageSize = 2;
+        internal void Headers(List<PropertyInfo> columns) {
 
-                MenuTable table = new(columnCount, pageSize);
+            WidgetTableHeaderRow headerRow = new();
+            foreach (PropertyInfo column in columns) {
+                headerRow.Cells.Add(new WidgetTableHeaderCell(column.Name));
+            }
+            this.HeaderRow = headerRow;
+        }
 
-                table.BeginUpdate();
+        public class WidgetTableHeaderCell {
+            public string name;
 
-                // Fetch initial data
+            public WidgetTableHeaderCell(string name) => this.name = name;
+        }
+        public class WidgetTableHeaderRow{
+            private int count;
 
-                List<MenuRow> page = table.GetPage(1);
+            public WidgetTableHeaderRow() {
+                this.count = count;
+                Cells = new();
+            }
 
-                foreach (MenuRow row in page) {
-                    foreach (MenuItem cell in row.Cells) {
-                    }
-                }
+            public List<WidgetTableHeaderCell> Cells { get; private set; }
+        }
 
-                table.ClearCache();
-                List<MenuRow> nextPage = table.GetPage(2);
+            public class WidgetTableCell {
+            public  Packet packet;
+            public  Font fontItem;
+            public  Color foreColor;
+            public  string? textItem;
 
-                foreach (MenuRow row in nextPage) {
-                    foreach (MenuItem cell in row.Cells) {
-                    }
-                }
+            public WidgetTableCell(Packet packet, Font fontItem, Color foreColor, string? textItem) {
+                this.packet = packet;
+                this.fontItem = fontItem;
+                this.foreColor = foreColor;
+                this.textItem = textItem;
+            }
+        }
 
-                table.EndUpdate();
+        public class WidgetTableRow {
+            public List<WidgetTableCell> Cells { get; private set; }
+            private readonly int _columnCount;
+            private readonly bool isHeader;
 
-                // Select and deselect rows
-                table.SelectRow(1);
-                table.DeselectRow(1);
+            public bool IsSelected { get; private set; }
 
-                // Select cell range
-                table.SelectCellRange(0, 0, 1, 1);
+            public WidgetTableRow(int columnCount, bool isHeader) {
+                _columnCount = columnCount;
+                this.isHeader = isHeader;
+                Cells = new List<WidgetTableCell>();
+            }
 
-                // Delete selected rows
-                table.SelectRow(0);
-                table.DeleteSelectedRows();
+            public void SelectRow() {
+                IsSelected = true;
+            }
 
-                Console.WriteLine("Remaining rows:");
-                foreach (MenuRow row in table.Rows) {
-                    foreach (MenuItem cell in row.Cells) {
-                    }
-                }
+            public void DeselectRow() {
+                IsSelected = false;
             }
         }
     }

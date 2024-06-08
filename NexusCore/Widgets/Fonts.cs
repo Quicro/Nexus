@@ -11,5 +11,7 @@ namespace NexusCore.Widgets {
         public static Font fontSelected = new("Microsoft Sans Serif", 8.5f, FontStyle.Bold);
         /// <summary> Italic text </summary>
         public static Font fontNull = new("Microsoft Sans Serif", 8.5f, FontStyle.Italic);
+        /// <summary> Italic text </summary>
+        public static Font fontHeader = new("Microsoft Sans Serif", 8.5f, FontStyle.Bold);
     }
 }

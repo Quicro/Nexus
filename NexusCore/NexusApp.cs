@@ -1,3 +1,4 @@
+using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusEF.Models;
 using NexusLogging;
@@ -9,7 +10,7 @@ namespace NexusCore {
         public Type editorFormType;
         public List<MenuItem> menuItems;
         public User currentUser;
-        private IMainForm mainForm;
+        public IMainForm mainForm;
 
         public NexusApp() {
         }
