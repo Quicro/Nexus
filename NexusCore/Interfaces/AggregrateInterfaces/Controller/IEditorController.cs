@@ -1,7 +1,7 @@
-﻿using NexusCore.Components.Forms;
+﻿using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 
 namespace NexusCore.Interfaces.AggregrateInterfaces.Controller {
     internal interface IEditorController : IForegroundController {
-        EditorForm EditorForm { get; set; }
+        IEditorForm editorForm { get; set; }
     }
 }

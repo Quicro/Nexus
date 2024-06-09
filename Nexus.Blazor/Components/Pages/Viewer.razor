@@ -1,14 +1,30 @@
 ﻿@page "/view/{type}"
+@using Nexus.Blazor.Wrappers
+
+@inject NexusCore.Components.Controller.ViewerController controller
+
+@inject NexusLogging.Logger logger
+
+@implements IDisposable
+
 
 @code {
     [Parameter]
     public string Type { get; set; }
 
-    private string Description { get; set; }
+    public ViewerWrapper viewerWrapper { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        Description =  Type;
+    protected override void OnInitialized() {
+        viewerWrapper = new(controller);
+        viewerWrapper.OnInitialized();
+    }
+
+    protected override void OnParametersSet() {
+        viewerWrapper.OnParametersSet(Type);
+    }
+
+    public void Dispose() {
+        viewerWrapper.Dispose();
     }
 }
 

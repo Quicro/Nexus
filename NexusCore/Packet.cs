@@ -1,4 +1,6 @@
+using NexusCore.Components.Controller;
 using NexusCore.Interfaces;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusEF.Models;
 using NexusLogging;
 using System.Reflection;
@@ -56,9 +58,9 @@ namespace NexusCore {
         public HandlerEnum handlerEnum = HandlerEnum.Null;
 
         /// <summary>
-        /// Gets or sets the packet handler.
+        /// Gets or sets the packet handler type.
         /// </summary>
-        public IPacketReceiver handler;
+        public Type handlerType;
 
         /// <summary>
         /// Gets or sets the packet sender.
@@ -101,12 +103,24 @@ namespace NexusCore {
 
             Packet packet = new P() {
                 sender = packetSender,
-                handler = new C(),
+                handlerType = typeof(C),
                 query = query,
                 packetType = type
             };
 
             return packet;
+        }
+
+        public void execute(NexusApp app) {
+            if (handlerType == typeof(ViewerController)) {
+                ViewerController handler = new(app);
+                handler.handle(this);
+            }
+
+            if (handlerType == typeof(EditorController)) {
+                EditorController handler = new(app);
+                handler.handle(this);
+            }
         }
 
         /// <summary>
@@ -217,6 +231,10 @@ namespace NexusCore {
             handlerEnum = HandlerEnum.Type;
             packetType = type;
             query = Helper.getQuery(packetType);
+        }
+
+        public PacketType() {
+            handlerEnum = HandlerEnum.Type;
         }
 
         public override string ToString() {

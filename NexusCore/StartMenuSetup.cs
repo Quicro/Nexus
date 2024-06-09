@@ -1,4 +1,5 @@
 using NexusCore.Components.Controller;
+using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusEF.Models;
 using System.Diagnostics;
 
@@ -13,13 +14,11 @@ namespace NexusCore {
         public bool Show { get; internal set; }
         public Packet packet { get; private set; }
 
-        public void Click() {
+        public void Click(NexusApp app) {
             Packet? packetType = packet;
 
             if (packetType is not null) {
-
-                packetType.handler = new ViewerController();
-                packetType.handler.handle(packetType);
+                packetType.execute(app);
             }
         }
 
@@ -70,7 +69,8 @@ namespace NexusCore {
                 Authorized = false,
                 Show = false,
                 Text = text,
-                packet = new PacketType(typeof(T)),
+               //packet = new PacketType(typeof(T)),
+                packet = Packet.Create<ViewerController, PacketType>(typeof(T), Helper.getQuery(typeof(T)), null),
                 Permissions = permissions.ToList()
             };
 

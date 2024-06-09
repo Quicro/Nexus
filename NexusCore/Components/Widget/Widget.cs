@@ -11,6 +11,17 @@ namespace NexusCore.Components.Widget {
 
         public event EventHandler<Packet> sent;
     }
+
+    public class ElementWidget : IElementWidget {
+        public ElementWidget(bool isElemental) {
+            this.isElemental = isElemental;
+        }
+
+        public bool isElemental { get; }
+
+        public event EventHandler<Packet> sent;
+    }
+
     public class ElementWidget<T> : ElementWidget where T : IControl {
         public ElementWidget(T control) : base(true) {
             this.control = control;

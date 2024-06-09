@@ -1,6 +1,9 @@
 using Nexus.Blazor.Components;
 using NexusCore;
+using NexusCore.Components.Controller;
+using NexusCore.Components.Forms;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
+using NexusLogging;
 
 public class MyMainForm : IMainForm {
     public static MyMainForm? singleton { get; private set; }
@@ -16,7 +19,7 @@ public class MyMainForm : IMainForm {
         singleton = null;
     }
 
-    public void End() {
+    public void Stop() {
 
     }
 
@@ -29,6 +32,10 @@ public class MyMainForm : IMainForm {
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
         builder.Services.AddSingleton(nexusApp);
+        builder.Services.AddScoped<ViewerController>();
+        builder.Services.AddScoped<EditorController>(); 
+        builder.Services.AddSingleton<Logger>();
+
 
         webapp = builder.Build();
 

@@ -14,7 +14,7 @@ namespace NexusCore {
         public Type editorFormType;
         public Type mainFormType;
 
-        public NexusApp app;
+        public NexusApp nexusApp;
 
         public NexusApp Build() {
             try {
@@ -30,7 +30,7 @@ namespace NexusCore {
                 currentPermissions = UserExtention.getPermissions(currentUser);
                 menuItems = RemoveUnauthorizedMenuItems(currentPermissions.Select(p => p.Name), menuItems);
 
-                app = new NexusApp() {
+                nexusApp = new NexusApp() {
                     mainFormType = mainFormType,
                     viewerFormType = viewerFormType,
                     editorFormType = editorFormType,
@@ -47,7 +47,7 @@ namespace NexusCore {
                 throw;
             }
 
-            return app;
+            return nexusApp;
         }
 
         /// <summary>

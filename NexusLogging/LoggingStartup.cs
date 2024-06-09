@@ -1,19 +1,12 @@
 namespace NexusLogging {
     public class LoggingStartup {
         private static void Main(string[] args) {
-            Logger.LogDebug("hi");
-            Logger.LogInfo("hi");
-            Logger.LogError("hi");
-
-            Logger.ApplicationStarted();
-            Logger.ApplicationEnded();
-            Logger.ApplicationCrashed();
         }
 
 
     }
 
-    public static class Logger {
+    public class Logger {
         public static void ApplicationStarted() {
             LogInfo(1, "Application started");
         }
@@ -62,12 +55,12 @@ namespace NexusLogging {
             LogError(-12, $"User tried to open the type {typeName} in typeViewer");
         }
 
-        public static void ViewerPacketHasNoEntitiesError() {
-            LogError(-13, $"Viewer Packet Has No Entities");
-        }
-
         public static void TEMPLATE() {
             LogInfo(0, $"");
+        }
+
+        public static void ViewerPacketHasNoEntitiesError() {
+            LogError(-13, $"Viewer Packet Has No Entities");
         }
 
         public static void logHeader(string text) { LogDebug(text); }
