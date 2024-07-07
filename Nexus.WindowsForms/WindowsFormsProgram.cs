@@ -1,14 +1,10 @@
 using NexusCore;
 using NexusCore.Components.Widget;
-using NexusCore.Forms;
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.Widgets;
 using NexusCore.Widgets;
-using NexusLogging;
 using System.Diagnostics;
-using System.Windows.Forms;
-using Label = System.Windows.Forms.Label;
 
 namespace Nexus.WindowsForms {
     internal static class WindowsFormsProgram {
@@ -72,18 +68,10 @@ namespace Nexus.WindowsForms {
                         // Voeg rijen toe aan de DataGridView
                         foreach (WidgetTable.WidgetTableRow row in table.Rows) {
                             DataGridViewRow dataGridViewRow = new();
-
-
-
-                            var rowPacketsHandlerEnums = row.Cells.Select(c => c.packet.handlerEnum).ToList();
-
-
                             foreach (WidgetTable.WidgetTableCell cell in row.Cells) {
-
-                                var packet = cell.packet;
-
+                                Packet packet = cell.packet;
                                 DataGridViewTextBoxCell dataGridViewCell = new() {
-                                   Value = cell?.textItem ?? string.Empty,
+                                    Value = cell?.textItem ?? string.Empty,
                                     //Value = cell?.packet.handlerEnum,
                                     Tag = cell?.packet
                                 };
@@ -92,7 +80,7 @@ namespace Nexus.WindowsForms {
                                 dataGridViewCell.Style.ForeColor = cell?.foreColor ?? Color.Black;
                                 dataGridViewCell.Style.Font = cell?.fontItem ?? new Font("Arial", 10);
 
-                                dataGridViewRow.Cells.Add(dataGridViewCell);
+                               dataGridViewRow.Cells.Add(dataGridViewCell);
                             }
 
                             dataGridView.Rows.Add(dataGridViewRow);
@@ -114,17 +102,14 @@ namespace Nexus.WindowsForms {
                 Point mousePositionInListView = listview.PointToClient(MousePosition);
                 DataGridView.HitTestInfo hitTest = listview.HitTest(mousePositionInListView.X, mousePositionInListView.Y);
 
-                DataGridViewCell dataGridViewCell = listview.Rows[ hitTest.RowIndex ].Cells[ hitTest.ColumnIndex ];
+                if (hitTest.ColumnIndex > 0 && hitTest.RowIndex > 0) {
+                    DataGridViewCell dataGridViewCell = listview.Rows[ hitTest.RowIndex ].Cells[ hitTest.ColumnIndex ];
 
-                Packet packet = (Packet)dataGridViewCell.Tag;
-                packet?.execute(nexusApp);
-
+                    Packet packet = (Packet)dataGridViewCell.Tag;
+                    packet?.execute(nexusApp);
+                }
             }
-
         }
-
-
-
         private class MyEditorForm : Form, IEditorForm {
             public required IController controller { get; set; }
             public required List<IWidget> widgets { get; set; }
@@ -149,18 +134,15 @@ namespace Nexus.WindowsForms {
                     if (widget is TextBoxWidget textBoxWidget) { control = textBoxWidget.control; }
                     if (widget is ListViewWidget listViewWidget) { control = listViewWidget.control; }
                     if (control is null) {
-                        var type = widget.GetType();
+                        widget.GetType();
                         Debugger.Break();
                     } else {
                         Controls.Add(control);
                     }
                 }
-
                 Show();
             }
         }
-
-
         private class MyMainForm : Form, IMainForm {
             private MenuStrip menuStrip1;
             private readonly ToolStripMenuItem adresToolStripMenuItem;

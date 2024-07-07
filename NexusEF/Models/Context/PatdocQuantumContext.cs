@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NexusEF.Models.Context;
 
-public partial class NexusOldContext : DbContext {
-    public NexusOldContext() {
+public partial class NexusContext : DbContext {
+    public NexusContext() {
     }
 
-    public NexusOldContext(DbContextOptions<NexusOldContext> options)
+    public NexusContext(DbContextOptions<NexusContext> options)
         : base(options) {
     }
 

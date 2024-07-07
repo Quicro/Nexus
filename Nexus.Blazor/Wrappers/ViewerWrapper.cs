@@ -18,7 +18,7 @@ namespace Nexus.Blazor.Wrappers {
 
         public static Type Convert(string entityName) {
             // Get the current assembly
-            var assembly = typeof(NexusOldContext).Assembly;
+            var assembly = typeof(NexusContext).Assembly;
 
             // Find the type in the assembly
             var type = assembly.GetTypes().FirstOrDefault(t => t.FullName == entityName);
