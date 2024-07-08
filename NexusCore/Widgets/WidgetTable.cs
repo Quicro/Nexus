@@ -2,13 +2,15 @@
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.Widgets;
 using NexusEF;
-using NexusEF.Models;
-using System.Collections;
+using NexusEF.DatabaseManager;
+using NexusEF.Extentions;
+using NexusEF.Models.Insurance.Extention;
+using NexusEF.Models.Nexus;
 using System.Drawing;
 using System.Reflection;
-using static NexusCore.Helper;
 
-namespace NexusCore.Widgets {
+namespace NexusCore.Widgets
+{
 
 
     public class WidgetTable : IPacketSender, IWidget {
@@ -110,14 +112,17 @@ namespace NexusCore.Widgets {
             _ = Rows.RemoveAll(row => row.IsSelected);
         }
 
-        public void FillIn(List<PropertyInfo> columns, IEnumerable<INexusEntity> entities, Type type) {
+        public void FillIn(NexusApp app, List<PropertyInfo> columns, IEnumerable<INexusEntity> entities, Type type) {
+            Helper helper = app.appDatabaseManager.Helper;
+
+
             foreach (INexusEntity entity in entities) {
                 WidgetTableRow row = new(columnCount: columns.Count, false);
 
                 foreach (PropertyInfo column in columns) {
                     object value = column.GetValue(entity);
                     Type columnType = column.PropertyType;
-                    IQueryable<INexusEntity> query = Helper.getQuery(type).Where(e => e.Id == entity.Id);
+                    IQueryable<INexusEntity> query = helper.getQuery(type).Where(e => e.Id == entity.Id);
                     Packet packet = Packet.Create<EditorController, PacketSingleEditor>(type, query, this);
                     string textItem = "error";
                     Font fontItem = Fonts.fontDefault;
@@ -128,11 +133,11 @@ namespace NexusCore.Widgets {
                         fontItem = Fonts.fontNull;
                         foreColor = Color.Gray;
                     } else {
-                        bool list = isList(value);
-                        bool subTypeOfEntity = isSubTypeOfEntity(columnType);
-                        bool listOf = isListOf<INexusEntity>(value);
+                        bool list = helper.isList(value);
+                        bool subTypeOfEntity = helper.isSubTypeOfEntity(columnType);
+                        bool listOf = helper.isListOf<INexusEntity>(value);
 
-                        PacketRelationshipType packetRelationshipType = getPacketRelationshipType(list, subTypeOfEntity, listOf);
+                        PacketRelationshipType packetRelationshipType = helper.getPacketRelationshipType(list, subTypeOfEntity, listOf);
 
                         if (packetRelationshipType == PacketRelationshipType.Dummy) {
                             textItem = value.ToString();
@@ -144,9 +149,9 @@ namespace NexusCore.Widgets {
                                 Type referenceType = reference.PropertyType;
                                 int refID = (int)value;
 
-                                IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)callStaticGenericMethod(
-                                    typeof(Extentions),
-                                    nameof(Extentions.getQueryableByID),
+                                IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)helper.callStaticGenericMethod(
+                                    typeof(InsuranceExtentions),
+                                    nameof(InsuranceExtentions.getQueryableByID),
                                     new Type[] { referenceType, type },
                                     new object[] { entity, refID }
                                 );
@@ -159,13 +164,13 @@ namespace NexusCore.Widgets {
                         }
 
                         if (packetRelationshipType == PacketRelationshipType.Array) {
-                            Type referenceType = getListType(value);
+                            Type referenceType = helper.getListType(value);
 
-                            referenceType = Extentions.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
+                            referenceType = genericHelper.getPossibleMoreMoreRelationType(type, referenceType) ?? referenceType;
 
-                            IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)callStaticGenericMethod(
-                                typeof(Extentions),
-                                nameof(Extentions.getRelatedQueryableByID),
+                            IQueryable<INexusEntity> queryOfRelatedEntities = (IQueryable<INexusEntity>)helper.callStaticGenericMethod(
+                                typeof(InsuranceExtentions),
+                                nameof(InsuranceExtentions.getRelatedQueryableByID),
                                 new Type[] { type, referenceType },
                                 new object[] { entity }
                             );
@@ -173,7 +178,7 @@ namespace NexusCore.Widgets {
                             packet = Packet.Create<ViewerController, PacketArray>(referenceType, queryOfRelatedEntities, this);
                             fontItem = Fonts.fontReference;
                             foreColor = Color.Blue;
-                            textItem = getListType(value).Name + "[]";
+                            textItem = helper.getListType(value).Name + "[]";
                         }
 
                         WidgetTableCell tableCell = new WidgetTableCell(packet, fontItem, foreColor, textItem);

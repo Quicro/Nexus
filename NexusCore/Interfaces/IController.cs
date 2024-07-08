@@ -1,4 +1,5 @@
-using NexusEF.Models;
+using NexusEF.Models.Nexus;
+using NexusEF.Models.Nexus;
 
 namespace NexusCore.Interfaces {
     public interface IController : IPacketReceiver {

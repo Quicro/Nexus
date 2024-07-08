@@ -1,4 +1,5 @@
-namespace NexusEF.Models;
+
+namespace NexusEF.Models.Insurance;
 
 public partial class Policy {
     public int Id { get; set; }

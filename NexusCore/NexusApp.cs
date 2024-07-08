@@ -1,6 +1,7 @@
-using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
-using NexusEF.Models;
+using NexusEF;
+using NexusEF.DatabaseManager;
+using NexusEF.Models.Nexus;
 using NexusLogging;
 
 namespace NexusCore {
@@ -11,6 +12,10 @@ namespace NexusCore {
         public List<MenuItem> menuItems;
         public User currentUser;
         public IMainForm mainForm;
+        internal Type appContextType;
+        public INexusDatabaseManager nexusDatabaseManager;
+        public IAppDatabaseManager appDatabaseManager;
+        public Helper helper;
 
         public NexusApp() {
         }

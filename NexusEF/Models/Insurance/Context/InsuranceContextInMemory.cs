@@ -1,13 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using NexusEF.Models.Nexus;
 
-namespace NexusEF.Models.Context;
+namespace NexusEF.Models.Insurance.Context;
 
-public partial class NexusContext : DbContext {
-    public NexusContext() {
+public partial class InsuranceContextInMemory : InsuranceContext
+{
+    public InsuranceContextInMemory()
+    {
     }
 
-    public NexusContext(DbContextOptions<NexusContext> options)
-        : base(options) {
+    public InsuranceContextInMemory(DbContextOptions<InsuranceContext> options)
+        : base(options)
+    {
     }
 
     public virtual DbSet<Claim> Claim { get; set; }
@@ -26,15 +30,15 @@ public partial class NexusContext : DbContext {
 
     public virtual DbSet<UserRole> UserRole { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        optionsBuilder.UseSqlServer("Data Source=;Initial Catalog=PatdocQuantum;Integrated Security=True;Encrypt=False", options => {
-            options.CommandTimeout(1);
-            optionsBuilder.EnableSensitiveDataLogging();
-        });
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseInMemoryDatabase("Data Source=;Initial Catalog=InsuranceInMemory;Integrated Security=True;Encrypt=False");
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<Claim>(entity => {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Claim>(entity =>
+        {
             entity.ToTable("Claim", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -47,7 +51,8 @@ public partial class NexusContext : DbContext {
                 .HasConstraintName("FK_Claim_Policy");
         });
 
-        modelBuilder.Entity<Client>(entity => {
+        modelBuilder.Entity<Client>(entity =>
+        {
             entity.ToTable("Client", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -55,14 +60,16 @@ public partial class NexusContext : DbContext {
             entity.Property(e => e.Number).IsUnicode(false);
         });
 
-        modelBuilder.Entity<Permission>(entity => {
+        modelBuilder.Entity<Permission>(entity =>
+        {
             entity.ToTable("Permission", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).IsUnicode(false);
         });
 
-        modelBuilder.Entity<Policy>(entity => {
+        modelBuilder.Entity<Policy>(entity =>
+        {
             entity.ToTable("Policy", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -75,14 +82,16 @@ public partial class NexusContext : DbContext {
                 .HasConstraintName("FK_Policy_Client");
         });
 
-        modelBuilder.Entity<Role>(entity => {
+        modelBuilder.Entity<Role>(entity =>
+        {
             entity.ToTable("Role", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).IsUnicode(false);
         });
 
-        modelBuilder.Entity<RolePermission>(entity => {
+        modelBuilder.Entity<RolePermission>(entity =>
+        {
             entity.ToTable("RolePermission", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -100,10 +109,12 @@ public partial class NexusContext : DbContext {
                 .HasConstraintName("FK_RolePermission_Role");
         });
 
-        modelBuilder.Entity<User>(entity => {
+        modelBuilder.Entity<User>(entity =>
+        {
             entity.ToTable("User", "pa");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e
+            .Id).HasColumnName("UserID");
             entity.Property(e => e.Adname)
                 .IsUnicode(false)
                 .HasColumnName("ADName");
@@ -113,7 +124,8 @@ public partial class NexusContext : DbContext {
             entity.Property(e => e.Phone).IsUnicode(false);
         });
 
-        modelBuilder.Entity<UserRole>(entity => {
+        modelBuilder.Entity<UserRole>(entity =>
+        {
             entity.ToTable("UserRole", "pa");
 
             entity.Property(e => e.Id).HasColumnName("ID");

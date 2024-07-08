@@ -1,5 +1,8 @@
-namespace NexusEF.Models;
+using NexusEF.Attributes;
 
+namespace NexusEF.Models.Nexus;
+
+[Nexus]
 public partial class User {
     public int Id { get; set; }
 

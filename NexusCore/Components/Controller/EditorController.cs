@@ -2,12 +2,12 @@ using NexusCore.Components.Widget;
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Controller;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
-using NexusCore.Interfaces.Widgets;
-using NexusEF.Models;
+using NexusEF;
+using NexusEF.DatabaseManager;
+using NexusEF.Models.Nexus;
 using NexusLogging;
 using System.Drawing;
 using System.Reflection;
-using static NexusCore.Helper;
 
 namespace NexusCore.Components.Controller {
     /// <summary>
@@ -24,7 +24,7 @@ namespace NexusCore.Components.Controller {
         public EditorController(NexusApp nexusApp) {
             this.nexusApp = nexusApp;
         }
-        public IEditorForm editorForm { get ; set; }
+        public IEditorForm editorForm { get; set; }
         public NexusApp nexusApp { get; set; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace NexusCore.Components.Controller {
             editorForm = (IEditorForm)Activator.CreateInstance(type);
             editorForm.controller = this;
             editorForm.widgets = [];
-            nexusApp = nexusApp;
+            this.nexusApp = nexusApp;
             editorForm.nexusApp = nexusApp;
         }
 
@@ -74,21 +74,21 @@ namespace NexusCore.Components.Controller {
         /// </summary>
         /// <param name="packet">The packet to handle.</param>
         public new void handle(Packet packet) {
+            Helper helper = packet.databaseManager.Helper;
+
             PacketSingleEditor packetSingleEditor = (PacketSingleEditor)packet;
             INexusEntity entity = packetSingleEditor.getEntities().Single();
 
             editorForm.widgets.Add(new LabelWidget(new() { Text = $"{entity.GetType().Name} id={entity.Id}" }));
-
-            PropertyInfo[] fields = typeof(T).GetProperties();
             int i = 1;
-            
+
 
             foreach (PropertyInfo column in typeof(T).GetProperties()) {
                 string? value = column.GetValue(entity)?.ToString();
                 Type columnType = column.PropertyType;
                 string fieldname = column.Name;
 
-                Logger.LogDebug($"Editor Field Name: {typeof(T).Name}.{fieldname} = {value} islist={isList(value)} isSub={isSubTypeOfEntity(columnType)} isListOf={isListOf<INexusEntity>(value)}");
+               // Logger.LogDebug($"Editor Field Name: {typeof(T).Name}.{fieldname} = {value} islist={'isList(value)} isSub={isSubTypeOfEntity(columnType)} isListOf={isListOf<INexusEntity>(value)}");
 
                 ///////
                 ///
@@ -97,11 +97,11 @@ namespace NexusCore.Components.Controller {
                     editorForm.widgets.Add(new LabelWidget(new() { Text = fieldname + ": ", Location = new Point(10, ( i * 40 ) + 10) }));
                     editorForm.widgets.Add(new LabelWidget(new() { Text = "NULL", Location = new Point(150, ( i * 40 ) + 10) }));
                 } else {
-                    bool list = isList(value);
-                    bool subTypeOfEntity = isSubTypeOfEntity(columnType);
-                    bool listOf = isListOf<INexusEntity>(value);
+                    bool list = helper.isList(value);
+                    bool subTypeOfEntity = helper.isSubTypeOfEntity(columnType);
+                    bool listOf = helper.isListOf<INexusEntity>(value);
 
-                    PacketRelationshipType packetRelationshipType = getPacketRelationshipType(list, subTypeOfEntity, listOf);
+                    PacketRelationshipType packetRelationshipType = helper.getPacketRelationshipType(list, subTypeOfEntity, listOf);
 
                     if (packetRelationshipType == PacketRelationshipType.Dummy) {
                         editorForm.widgets.Add(new LabelWidget(new() { Text = "Dummy", Location = new Point(200, ( i * 40 ) + 10) }));

@@ -50,7 +50,7 @@ namespace NexusCore.Components.Controller {
             WidgetTable table = new(packet.packetType.Name,columns.Count, PageSize);
             table.BeginUpdate();
             table.Headers(columns);
-            table.FillIn(columns, packet.entities, packet.packetType);
+            table.FillIn(nexusApp, columns, packet.entities, packet.packetType);
             viewerForm.widgets.Add(table);
 
 

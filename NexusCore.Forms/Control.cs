@@ -144,60 +144,62 @@ namespace NexusCore.Forms {
         public void FillIn(List<PropertyInfo> columns) {
             Rows.Clear();
 
-            foreach (NexusEF entity in entities) {
+            /*foreach (INexus entity in entities) {
 
-            }
-    }
+            }*/
+        }
 
-    // Example usage
-    public class Program {
-        public static void gg() {
-            int columnCount = 3;
-            int pageSize = 2;
+        // Example usage
+        public class Program {
+            public static void gg() {
+                int columnCount = 3;
+                int pageSize = 2;
 
-            MenuTable table = new(columnCount, pageSize);
+                MenuTable table = new(columnCount, pageSize);
 
-            table.BeginUpdate();
+                table.BeginUpdate();
 
-            // Fetch initial data
-            table.FetchData(0, 10);
+                // Fetch initial data
+                table.FetchData(0, 10);
 
-            List<MenuRow> page = table.GetPage(1);
+                List<MenuRow> page = table.GetPage(1);
 
-            foreach (MenuRow row in page) {
-                foreach (MenuItem cell in row.Cells) {
-                    Console.WriteLine($"Cell: {cell.Name}, IsLink: {cell.IsLink}");
+                foreach (MenuRow row in page) {
+                    foreach (MenuItem cell in row.Cells) {
+                        Console.WriteLine($"Cell: {cell.Name}, IsLink: {cell.IsLink}");
+                    }
                 }
-            }
 
-            table.ClearCache();
-            table.FetchData(10, 10);
-            List<MenuRow> nextPage = table.GetPage(2);
+                table.ClearCache();
+                table.FetchData(10, 10);
+                List<MenuRow> nextPage = table.GetPage(2);
 
-            foreach (MenuRow row in nextPage) {
-                foreach (MenuItem cell in row.Cells) {
-                    Console.WriteLine($"Cell: {cell.Name}, IsLink: {cell.IsLink}");
+                foreach (MenuRow row in nextPage) {
+                    foreach (MenuItem cell in row.Cells) {
+                        Console.WriteLine($"Cell: {cell.Name}, IsLink: {cell.IsLink}");
+                    }
                 }
-            }
 
-            table.EndUpdate();
+                table.EndUpdate();
 
-            // Select and deselect rows
-            table.SelectRow(1);
-            table.DeselectRow(1);
+                // Select and deselect rows
+                table.SelectRow(1);
+                table.DeselectRow(1);
 
-            // Select cell range
-            table.SelectCellRange(0, 0, 1, 1);
+                // Select cell range
+                table.SelectCellRange(0, 0, 1, 1);
 
-            // Delete selected rows
-            table.SelectRow(0);
-            table.DeleteSelectedRows();
+                // Delete selected rows
+                table.SelectRow(0);
+                table.DeleteSelectedRows();
 
-            Console.WriteLine("Remaining rows:");
-            foreach (MenuRow row in table.Rows) {
-                foreach (MenuItem cell in row.Cells) {
-                    Console.WriteLine($"Cell: {cell.Name}, IsLink: {cell.IsLink}");
+                Console.WriteLine("Remaining rows:");
+                foreach (MenuRow row in table.Rows) {
+                    foreach (MenuItem cell in row.Cells) {
+                        Console.WriteLine($"Cell: {cell.Name}, IsLink: {cell.IsLink}");
+                    }
                 }
             }
         }
     }
+}

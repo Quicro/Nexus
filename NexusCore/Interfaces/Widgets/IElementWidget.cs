@@ -1,4 +1,4 @@
-﻿using NexusCore.Forms;
+﻿using NexusCore.Components.Widget;
 
 namespace NexusCore.Interfaces.Widgets {
     public interface IElementWidget : IWidget {

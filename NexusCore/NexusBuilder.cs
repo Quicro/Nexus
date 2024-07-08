@@ -1,25 +1,36 @@
 using Microsoft.EntityFrameworkCore;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
-using NexusEF;
-using NexusEF.Models;
+using NexusEF.DatabaseManager;
+using NexusEF.Models.Nexus;
+using NexusEF.Models.Nexus.Context;
 using NexusLogging;
 
 namespace NexusCore {
     public class NexusBuilder {
-        public List<MenuItem> menuItems;
-        public User currentUser;
+        public required List<MenuItem> menuItems;
+        public required User currentUser;
         public List<Permission>? currentPermissions;
-        public IQueryable<User> userQuery;
-        public Type viewerFormType;
-        public Type editorFormType;
-        public Type mainFormType;
+        public required IQueryable<User> userQuery;
+        public required Type viewerFormType;
+        public required Type editorFormType;
+        public required Type mainFormType;
+        public required Type appDatabaseManagerType;
 
-        public NexusApp nexusApp;
+        public required NexusApp nexusApp;
 
         public NexusApp Build() {
             try {
+
+                NexusDatabaseManager nexusDatabaseManager = new();
+                NexusContext nexusContext = (NexusContext)nexusDatabaseManager.context;
+
+                TableExtention? userExtention = null;// nexusDatabaseManager.getTableExtention<User>();
+                userExtention.getFunction<Permission>();
+
+                static List<Permission> a(User p) { return []; }
+
                 currentUser = userQuery == null
-                    ? DatabaseManager.context.User
+                    ? nexusContext.User
                          .Where(u => u.Name == "Q")
                          .Include(u => u.UserRole)
                          .ThenInclude(ur => ur.Role)
@@ -27,7 +38,7 @@ namespace NexusCore {
                          .ThenInclude(rp => rp.Permission)
                          .Single()
                     : userQuery.Single();
-                currentPermissions = UserExtention.getPermissions(currentUser);
+                //currentPermissions = UserExtention.getPermissions(currentUser);
                 menuItems = RemoveUnauthorizedMenuItems(currentPermissions.Select(p => p.Name), menuItems);
 
                 nexusApp = new NexusApp() {
@@ -35,7 +46,11 @@ namespace NexusCore {
                     viewerFormType = viewerFormType,
                     editorFormType = editorFormType,
                     menuItems = menuItems,
-                    currentUser = currentUser
+                    currentUser = currentUser,
+                    appContextType = appDatabaseManagerType,
+                    nexusDatabaseManager = nexusDatabaseManager,
+                    appDatabaseManager = (IAppDatabaseManager)Activator.CreateInstance(appDatabaseManagerType)
+
                 };
 
                 string dateTime = $"{DateTime.Now:HH:mm:ss dd/MM/yy}";
@@ -75,7 +90,7 @@ namespace NexusCore {
                 menuItem.setAuthorized(currentPermissions);
 
                 if (menuItem.Authorized || IncludeUnauthorizedToo) {
-                    RemoveUnauthorizedMenuItems(currentPermissions, menuItem.Childs);
+                    _ = RemoveUnauthorizedMenuItems(currentPermissions, menuItem.Childs);
                     menuItem.Show = menuItem.Childs.Any(mi => mi.Authorized) || menuItem.Authorized;
                 }
 
@@ -136,12 +151,21 @@ namespace NexusCore {
 
         public NexusBuilder setUser(string username, string password) {
 
-            userQuery = DatabaseManager.context.User
-                         .Where(user => user.Name == username && user.Password == password)
-                         .Include(u => u.UserRole)
-                         .ThenInclude(ur => ur.Role)
-                         .ThenInclude(r => r.RolePermission)
-                         .ThenInclude(rp => rp.Permission);
+            /* userQuery = NexusDatabaseManager.context.User
+                          .Where(user => user.Name == username && user.Password == password)
+                          .Include(u => u.UserRole)
+                          .ThenInclude(ur => ur.Role)
+                          .ThenInclude(r => r.RolePermission)
+                          .ThenInclude(rp => rp.Permission);*/
+            return this;
+        }
+
+        public NexusBuilder setAppDbContext<T>() where T : IAppDatabaseManager {
+            if (typeof(T) == typeof(NexusDatabaseManager)) {
+                throw new InvalidOperationException($"{nameof(NexusDatabaseManager)} kan niet worden gebruikt als AppContext, je moet een zelfgemaakt DatabaseMangager geven");
+            }
+
+            appDatabaseManagerType = typeof(T);
             return this;
         }
     }

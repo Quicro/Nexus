@@ -1,4 +1,4 @@
-namespace NexusEF.Models;
+namespace NexusEF.Models.Insurance;
 
 public partial class Client {
     public int Id { get; set; }

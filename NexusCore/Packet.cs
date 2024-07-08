@@ -1,7 +1,9 @@
 using NexusCore.Components.Controller;
 using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
-using NexusEF.Models;
+using NexusEF;
+using NexusEF.DatabaseManager;
+using NexusEF.Models.Nexus;
 using NexusLogging;
 using System.Reflection;
 
@@ -49,7 +51,20 @@ namespace NexusCore {
     /// if it references all instances of a Entity type; if it's just a string or integer.
     /// All these different cases must be handled differently by the UI.
     /// </summary>
-    public abstract class Packet {
+    public abstract class Packet 
+   {
+        public required DatabaseManagerType databaseManagerType;
+        public IDatabaseManager databaseManager { 
+            get {
+                return databaseManagerType == DatabaseManagerType.Nexus ? 
+                    nexusApp.nexusDatabaseManager : 
+                    nexusApp.appDatabaseManager;
+            } 
+        }
+        
+        public NexusApp nexusApp;
+
+
         protected Packet() { }
 
         /// <summary>
@@ -96,12 +111,14 @@ namespace NexusCore {
         /// <param name="query">The query to retrieve entities.</param>
         /// <param name="packetSender">The packet sender.</param>
         /// <returns>A new instance of the packet.</returns>
-        public static Packet Create<C, P>(Type type, IQueryable query, IPacketSender packetSender)
+        public static Packet Create<C, P>(DatabaseManagerType databaseManagerType,NexusApp nexusApp,Type type, IQueryable query, IPacketSender packetSender)
             where C : IController, new()
             where P : Packet, new() {
             Logger.LogDebug($"Made new Packet: {typeof(C).Name} {typeof(P).Name} {type.Name}");
 
             Packet packet = new P() {
+                databaseManagerType = databaseManagerType,
+                nexusApp = nexusApp,
                 sender = packetSender,
                 handlerType = typeof(C),
                 query = query,
@@ -233,7 +250,7 @@ namespace NexusCore {
             query = Helper.getQuery(packetType);
         }
 
-        public PacketType() {
+        public PacketType(NexusApp nexusApp, Type realType) {
             handlerEnum = HandlerEnum.Type;
         }
 

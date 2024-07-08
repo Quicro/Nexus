@@ -4,6 +4,7 @@ using NexusCore.Interfaces;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
 using NexusCore.Interfaces.Widgets;
 using NexusCore.Widgets;
+using NexusEF.Models.Mevino.Context;
 using System.Diagnostics;
 
 namespace Nexus.WindowsForms {
@@ -18,6 +19,7 @@ namespace Nexus.WindowsForms {
             List<MenuItem> menuItem = MenuItem.getDefaultMenuStructure();
 
             NexusBuilder builder = new NexusBuilder()
+                .setAppDbContext<MevinoContextInMemory>()
                 .setMainForm<MyMainForm>()
                 .setViewerForm<MyViewerForm>()
                 .setEditorForm<MyEditorForm>()
@@ -128,17 +130,17 @@ namespace Nexus.WindowsForms {
 
                 foreach (IWidget widget in widgets) {
 
-                    Control control = null;
+                    /*Control control = null;
                     if (widget is LabelWidget labelWidget) { control = labelWidget.control; }
                     if (widget is ButtonWidget buttonWidget) { control = buttonWidget.control; }
                     if (widget is TextBoxWidget textBoxWidget) { control = textBoxWidget.control; }
-                    if (widget is ListViewWidget listViewWidget) { control = listViewWidget.control; }
+                    if (widget is ListViewWidget listViewWidget) { control = (ListView)listViewWidget.control; }
                     if (control is null) {
                         widget.GetType();
                         Debugger.Break();
                     } else {
                         Controls.Add(control);
-                    }
+                    }*/
                 }
                 Show();
             }

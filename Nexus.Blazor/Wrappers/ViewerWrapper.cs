@@ -1,14 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NexusCore;
 using NexusCore.Components.Controller;
-using NexusEF.Models;
-using NexusEF.Models.Context;
+using NexusEF.Models.Nexus;
+using NexusEF.Models.Insurance.Context;
 using NexusLogging;
 
 using NexusLogging;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Nexus.Blazor.Wrappers {
+namespace Nexus.Blazor.Wrappers
+{
     public class ViewerWrapper {
         ViewerController controller;
 
@@ -18,7 +20,7 @@ namespace Nexus.Blazor.Wrappers {
 
         public static Type Convert(string entityName) {
             // Get the current assembly
-            var assembly = typeof(NexusContext).Assembly;
+            var assembly = typeof(InsuranceContext).Assembly;
 
             // Find the type in the assembly
             var type = assembly.GetTypes().FirstOrDefault(t => t.FullName == entityName);
@@ -35,8 +37,8 @@ namespace Nexus.Blazor.Wrappers {
         }
         public void OnParametersSet(string type) {
             Type realType = Convert(type);
-
-            PacketType packet = new PacketType(realType);
+            
+            PacketType packet = new PacketType(controller.nexusApp, realType);
             controller.handle(packet);
 
             Logger.LogDebug(nameof(OnParametersSet) + " " + type + " " + GetType().Name);

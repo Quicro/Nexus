@@ -1,6 +1,8 @@
 using NexusCore.Components.Controller;
 using NexusCore.Interfaces.AggregrateInterfaces.Forms;
-using NexusEF.Models;
+using NexusEF.Models.Insurance;
+using NexusEF.Models.Mevino;
+using NexusEF.Models.Nexus;
 using System.Diagnostics;
 
 namespace NexusCore {
@@ -79,11 +81,26 @@ namespace NexusCore {
 
         public static List<MenuItem> getDefaultMenuStructure() {
             return [
-                new MenuItem("Beheer") {
+                /*new MenuItem("Beheer") {
                     Childs = [
                         newMenuItem<Policy>("Polissen", "StartMenu.Dossier.Polis"),
                         newMenuItem<Claim>("Schadegevallen", "StartMenu.Dossier.Schade"),
                         newMenuItem<Client>("Klanten", "StartMenu.Dossier.Schade", "StartMenu.Dossier.Polis")
+                    ]
+                },*/
+                new MenuItem("Beheer") {
+                    Childs = [
+                        newMenuItem<Seller>("Verkopers", "StartMenu.Dossier.Polis"),
+                        newMenuItem<Product>("Producten", "StartMenu.Dossier.Polis"),
+                        new MenuItem("Sub-producten", "StartMenu.Admin") {
+                            Childs = [
+                                newMenuItem<WineProduct>("Wijnen"),
+                                newMenuItem<BeerProduct>("Bieren"),
+                                newMenuItem<GlassProduct>("Glazen"),
+                                newMenuItem<MerchProduct>("Merchandise")
+                            ]
+                        },
+                        newMenuItem<Order>("Bestellingen", "StartMenu.Dossier.Schade"),
                     ]
                 },
                 new MenuItem("Administrator", "StartMenu.Admin") {
